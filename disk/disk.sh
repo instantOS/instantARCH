@@ -4,12 +4,12 @@
 
 fdisk -l
 
-DISK=$(fdisk -l | grep -oi '^Disk /.*:' | fzf --prompt "select disk")
+DISK=$(fdisk -l | grep -i '^Disk /.*:' | fzf --prompt "select disk")
 
 grep -o '/dev/[^:]*' <<<"$DISK" >/root/instantdisk
 DISK=$(cat /root/instantdisk)
 
-sed -i "s/instantdisk/$DISK/g" /root/instantARCH/disk/format.sh
+sed -i "s~instantdisk~$DISK~g" /root/instantARCH/disk/format.sh
 /root/instantARCH/disk/format.sh
 
 mkfs.ext4 ${DISK}1

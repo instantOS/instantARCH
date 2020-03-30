@@ -15,7 +15,7 @@ curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.tx
 
 echo "selecting fastest mirror"
 # sort mirrors
-pacman -Sy--noconfirm
+pacman -Sy --noconfirm
 pacman -S reflector --noconfirm
 reflector --sort rate --save /etc/pacman.d/mirrorlist
 

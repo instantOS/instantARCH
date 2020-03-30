@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # set up keyboard layout
-while [ -n "$LAYOUT" ]; do
+while [ -z "$LAYOUT" ]; do
     LAYOUT=$(cat /root/instantARCH/lang/layouts | fzf --prompt "select keyboard layout")
 done
 

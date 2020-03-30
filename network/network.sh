@@ -1,9 +1,9 @@
 #!/bin/bash
 
-while [ -z $NEWHOSTNAME ]; do
-    echo "enter hostname> "
-    read NEWHOSTNAME
-done
+source <(curl -Ls git.io/paperbash)
+pb dialog
+
+NEWHOSTNAME=$(textbox enter hostname)
 
 echo "$NEWHOSTNAME" >/etc/hostname
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # user and password creation
-source <(curl -Ls https://git.io/JerLG)
+source <(curl -Ls https://git.io/paperbash)
 pb dialog
 
 NEWUSER="$(textbox 'set username')"
@@ -14,3 +14,4 @@ groupadd docker
 
 useradd -m "$NEWUSER" -s /bin/bash -G wheel,docker,video
 echo "$NEWPASS" | passwd "$NEWUSER" --stdin
+echo "$NEWPASS" | passwd --stdin

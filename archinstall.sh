@@ -21,9 +21,6 @@ reflector --sort rate --save /etc/pacman.d/mirrorlist
 
 # install dependencies
 pacman -Syu --noconfirm
-pacman -S fzf --noconfirm
-pacman -S sdisk --noconfirm
-pacman -S expect --noconfirm
 pacman -S git --noconfirm
 
 cd /root
@@ -33,6 +30,7 @@ cd instantARCH
 chmod +x *.sh
 chmod +x **/*.sh
 
+./depend/depend.sh
 ./lang/keyboard.sh
 ./init/init.sh
 ./disk/disk.sh

@@ -13,8 +13,13 @@ fi
 # print logo
 curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt'
 
-# install dependencies
+echo "selecting fastest mirror"
+# sort mirrors
+pacman -Sy--noconfirm
+pacman -S reflector --noconfirm
+reflector --sort rate --save /etc/pacman.d/mirrorlist
 
+# install dependencies
 pacman -Syu --noconfirm
 pacman -S fzf --noconfirm
 pacman -S sdisk --noconfirm

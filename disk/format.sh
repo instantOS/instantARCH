@@ -1,6 +1,6 @@
 #!/usr/bin/expect
 set timeout 1000
-spawn fdisk /dev/sda
+spawn fdisk instantdisk
 
 expect "m for help"
 # create partition table

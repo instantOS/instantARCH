@@ -27,3 +27,8 @@ cd instantARCH
 
 chmod +x *.sh
 chmod +x **/*.sh
+
+./lang/keyboard.sh
+./init/init.sh
+./disk/disk.sh
+./pacstrap/pacstrap.sh

@@ -49,7 +49,7 @@ escript pacstrap/pacstrap
 # scripts executed in installed environment
 chrootscript() {
     rcd
-    ./chrootscript.sh $1.sh
+    ./chrootscript.sh "$1.sh"
 }
 
 chrootscript "depend/depend"
@@ -65,3 +65,5 @@ chrootscript "bootloader/config"
 
 chrootscript "user/user"
 chrootscript "network/network"
+
+echo "done installing arch linux"

@@ -1,5 +1,5 @@
 #!/bin/bash
-
+pacman -Sy
 echo "downloading installer dependencies"
 pacman -S --noconfirm --needed \
     fzf \
@@ -8,4 +8,3 @@ pacman -S --noconfirm --needed \
     dialog \
     bash \
     curl
-clear

@@ -6,7 +6,6 @@ pb dialog
 
 NEWUSER="$(textbox 'set username')"
 NEWPASS="$(passwordbox 'set password')"
-clear
 
 groupadd video &>/dev/null
 groupadd wheel &>/dev/null

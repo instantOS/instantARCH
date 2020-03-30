@@ -10,4 +10,7 @@ elif lspci | grep -i vga | grep -i intel; then
     echo "intel integrated detected"
     pacman -S xf86-video-intel --noconfirm
     pacman -S mesa --noconfirm
+else
+    echo "other graphics detected, possibly virtualbox"
+    pacman -S mesa --noconfirm
 fi

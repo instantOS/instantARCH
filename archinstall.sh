@@ -63,3 +63,4 @@ escript bootloader/install
 chrootscript bootloader/config
 
 chrootscript user/user
+chrootscript network/network

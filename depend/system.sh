@@ -2,7 +2,7 @@
 
 echo "installing additional system software"
 
-pacman -Sy
+pacman -Sy --noconfirm
 pacman -S xorg --noconfirm --needed
 
 pacman -S --noconfirm --needed \

@@ -1,5 +1,6 @@
 #!/bin/bash
-pacman -Sy
+pacman -Sy --noconfirm
+
 echo "downloading installer dependencies"
 pacman -S --noconfirm --needed \
     fzf \

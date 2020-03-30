@@ -22,7 +22,7 @@ reflector --sort rate --save /etc/pacman.d/mirrorlist
 
 # install dependencies
 pacman -Sy --noconfirm
-pacman -S git --noconfirm
+pacman -S git --noconfirm --needed
 
 cd /root
 git clone --depth=1 https://github.com/instantos/instantARCH.git
@@ -31,42 +31,7 @@ cd instantARCH
 chmod +x *.sh
 chmod +x **/*.sh
 
-rcd() {
-    cd /root/instantARCH
-}
-
-escript() {
-    rcd
-    ./$1.sh
-    echo "$1" >>/tmp/instantprogress
-}
-
-escript depend/depend
-escript lang/keyboard
-escript init/init
-escript disk/disk
-escript pacstrap/pacstrap
-sleep 1
-
-# scripts executed in installed environment
-chrootscript() {
-    rcd
-    ./chrootscript.sh "$1.sh"
-    echo "chroot: $1" >>/tmp/instantprogress
-}
-
-chrootscript "depend/depend"
-chrootscript "depend/system"
-chrootscript "chroot/chroot"
-chrootscript "chroot/drivers"
-chrootscript "lang/timezone"
-
-# grub: install package, install, generate config
-chrootscript "bootloader/bootloader"
-escript bootloader/install
-chrootscript "bootloader/config"
-
-chrootscript "user/user"
-chrootscript "network/network"
+./localinstall.sh
+./syteminstall.sh
 
 echo "done installing arch linux"

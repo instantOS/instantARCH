@@ -8,7 +8,7 @@ done
 if [ -d "$REGION" ]; then
     cd "$REGION"
     while [ -z "$CITY" ]; do
-        City=$(ls | fzf --prompt "select the City nearest to you")
+        CITY=$(ls | fzf --prompt "select the City nearest to you")
     done
 fi
 

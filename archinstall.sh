@@ -44,3 +44,6 @@ rcd
 rcd
 ./pacstrap/pacstrap.sh
 rcd
+./chrootscript depend/depend.sh
+rcd
+./chrootscript depend/system.sh

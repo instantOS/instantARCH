@@ -1,8 +1,11 @@
 #!/bin/bash
 
-pacman -S --noconfirm \
+echo "downloading installer dependencies"
+pacman -S --noconfirm --needed \
     fzf \
     expect \
     git \
-    dialog
+    dialog \
+    bash \
+    curl
 clear

@@ -1,4 +1,6 @@
 #!/bin/bash
+# auto detect graphics card and install drivers accordingly
+
 echo "installing video drivers"
 
 if lspci | grep -i vga | grep -i nvidia; then

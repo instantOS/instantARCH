@@ -1,8 +1,11 @@
 #!/bin/bash
 
-pacman -S xorg --noconfirm
+echo "installing additional system software"
 
-pacman -S --noconfirm \
+pacman -Sy
+pacman -S xorg --noconfirm --needed
+
+pacman -S --noconfirm --needed \
     sudo \
     lightdm \
     bash \

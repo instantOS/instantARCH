@@ -18,10 +18,12 @@ chrootscript() {
 }
 
 chrootscript "depend/depend"
+chrootscript "depend/depend"
 chrootscript "depend/system"
 chrootscript "chroot/chroot"
 chrootscript "chroot/drivers"
 chrootscript "lang/timezone"
+chrootscript "lang/locale"
 
 # grub: install package, install, generate config
 chrootscript "bootloader/bootloader"

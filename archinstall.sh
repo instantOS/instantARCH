@@ -30,8 +30,9 @@ cd instantARCH
 
 chmod +x *.sh
 chmod +x **/*.sh
-
+echo "local install"
 ./localinstall.sh
-./syteminstall.sh
+echo "in-system install"
+./systeminstall.sh
 
 echo "done installing arch linux"

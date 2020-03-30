@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pacman -S grub
+pacman -S grub --noconfirm

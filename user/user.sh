@@ -13,5 +13,5 @@ groupadd wheel
 groupadd docker
 
 useradd -m "$NEWUSER" -s /bin/bash -G wheel,docker,video
-echo "$NEWPASS" | passwd "$NEWUSER" --stdin
-echo "$NEWPASS" | passwd --stdin
+echo "root:$NEWPASS" | chpasswd
+echo "$NEWUSER:$NEWPASS" | chpasswd

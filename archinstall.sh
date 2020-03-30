@@ -34,15 +34,16 @@ rcd() {
     cd /root/instantARCH
 }
 
-./depend/depend.sh
-rcd
-./lang/keyboard.sh
-rcd
-./init/init.sh
-rcd
-./disk/disk.sh
-rcd
-./pacstrap/pacstrap.sh
+escript() {
+    rcd
+    ./$1.sh
+}
+
+escript depend/depend
+escript lang/keyboard.sh
+escript init/init.sh
+escript disk/disk.sh
+escript pacstrap/pacstrap.sh
 
 # scripts executed in installed environment
 chrootscript() {
@@ -55,3 +56,10 @@ chrootscript depend/system
 chrootscript chroot/chroot
 chrootscript chroot/drivers
 chrootscript lang/timezone
+
+# grub: install package, install, generate config
+chrootscript bootloader/bootloader
+escript bootloader/install
+chrootscript bootloader/config
+
+chrootscript user/user

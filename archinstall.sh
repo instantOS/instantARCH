@@ -43,7 +43,10 @@ rcd
 ./disk/disk.sh
 rcd
 ./pacstrap/pacstrap.sh
+# scripts executed in installed environment
 rcd
 ./chrootscript depend/depend.sh
 rcd
 ./chrootscript depend/system.sh
+rcd
+./chrootscript chroot/drivers.sh

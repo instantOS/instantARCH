@@ -43,14 +43,15 @@ rcd
 ./disk/disk.sh
 rcd
 ./pacstrap/pacstrap.sh
+
 # scripts executed in installed environment
-rcd
-./chrootscript depend/depend.sh
-rcd
-./chrootscript depend/system.sh
-rcd
-./chrootscript chroot/chroot.sh
-rcd
-./chrootscript chroot/drivers.sh
-rcd
-./chrootscript lang/timezone.sh
+chrootscript() {
+    rcd
+    ./chrootscript.sh $1.sh
+}
+
+chrootscript depend/depend
+chrootscript depend/system
+chrootscript chroot/chroot
+chrootscript chroot/drivers
+chrootscript lang/timezone

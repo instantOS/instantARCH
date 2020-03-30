@@ -49,4 +49,8 @@ rcd
 rcd
 ./chrootscript depend/system.sh
 rcd
+./chrootscript chroot/chroot.sh
+rcd
 ./chrootscript chroot/drivers.sh
+rcd
+./chrootscript lang/timezone.sh

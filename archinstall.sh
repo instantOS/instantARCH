@@ -12,6 +12,7 @@ fi
 
 # print logo
 curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt'
+echo ""
 
 echo "selecting fastest mirror"
 # sort mirrors
@@ -40,10 +41,10 @@ escript() {
 }
 
 escript depend/depend
-escript lang/keyboard.sh
-escript init/init.sh
-escript disk/disk.sh
-escript pacstrap/pacstrap.sh
+escript lang/keyboard
+escript init/init
+escript disk/disk
+escript pacstrap/pacstrap
 
 # scripts executed in installed environment
 chrootscript() {

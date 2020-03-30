@@ -11,3 +11,5 @@ fi
 # needed to get internet to work
 systemctl enable lightdm
 systemctl enable NetworkManager
+
+sed -i 's/# %wheel/%wheel/g' /etc/sudoers

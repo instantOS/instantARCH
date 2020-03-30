@@ -7,3 +7,4 @@ done
 
 loadkeys "$LAYOUT"
 echo "set layout to $LAYOUT"
+echo "$LAYOUT" >/root/instantARCH/keylayout

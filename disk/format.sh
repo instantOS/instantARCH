@@ -56,7 +56,7 @@ send "1\n"
 expect "m for help" 
 
 # set partition type to swap for partition 2
-send "t"
+send "t\n"
 expect "number"
 send "2\n"
 expect "code"

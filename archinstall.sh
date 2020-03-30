@@ -20,7 +20,7 @@ pacman -S reflector --noconfirm
 reflector --sort rate --save /etc/pacman.d/mirrorlist
 
 # install dependencies
-pacman -Syu --noconfirm
+pacman -Sy --noconfirm
 pacman -S git --noconfirm
 
 cd /root
@@ -30,8 +30,17 @@ cd instantARCH
 chmod +x *.sh
 chmod +x **/*.sh
 
+rcd() {
+    cd /root/instantARCH
+}
+
 ./depend/depend.sh
+rcd
 ./lang/keyboard.sh
+rcd
 ./init/init.sh
+rcd
 ./disk/disk.sh
+rcd
 ./pacstrap/pacstrap.sh
+rcd

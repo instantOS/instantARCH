@@ -4,13 +4,6 @@
 
 # DO NOT USE, NOT READY YET
 
-# check for internet
-while ! ping -c 1 google.com &>/dev/null; do
-    echo "no internet"
-    sleep 5
-    wifi-menu
-done
-
 # print logo
 curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt'
 echo ""

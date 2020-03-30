@@ -1,29 +1,24 @@
 #!/usr/bin/expect
 set timeout 1000
-spawn fdisk instantdisk
+spawn fdisk instantdisk 
 
 expect "m for help"
 # create partition table
-send "o\n"
-sleep 0.1
+send "o\n" 
 expect "m for help"
+
 # create root partition
 send "n\n"
-expect "Select"
-sleep 0.1
+expect "Select" 
 send "\n"
-expect "number"
-sleep 0.1
+expect "number" 
 send "\n"
-expect "First"
-sleep 0.1
+expect "First" 
 send "\n"
-expect "Last"
-sleep 0.1
+expect "Last" 
 # leave 2G for swap partition
 send -- "-2G\n"
-sleep 0.1
-
+# remove old signature
 expect {
 	"remove" {
 		send "Y\n"
@@ -33,39 +28,41 @@ expect {
 	"m for help" {
 		send "n\n"
 	}
-}
-
+} 
 # create swap partition
-expect "Select"
-sleep 0.1
+expect "Select" 
 send "\n"
-expect "number"
-sleep 0.1
+expect "number" 
 send "\n"
-expect "First"
-sleep 0.1
+expect "First" 
 send "\n"
-expect "Last"
-sleep 0.1
-send "\n"
-sleep 0.1
-
+expect "Last" 
+send "\n" 
+# remove old signature
 expect {
 	"remove" {
 		send "Y\n"
 		sleep 0.1
-		send "n\n"
+		send "a\n"
 	}
 	"m for help" {
 		send "a\n"
 	}
-}
+} 
 
+# toggle bootable
+expect "number" 
+send "1\n"  
+expect "m for help" 
+
+# set partition type to swap for partition 2
+send "t"
 expect "number"
-sleep 0.1
-send "1\n"
-sleep 0.1
+send "2\n"
+expect "code"
+send "82\n" 
 
-expect "m for help"
+# write changes to disk
+expect "m for help"  
 send "w\n"
 expect "m for help"

@@ -2,7 +2,7 @@
 
 # automatic disk partitioning
 
-DISK=$(cat /root/instantARCH/config/disk | grep -o '/dev/[^:]*')
+DISK=$(cat /root/instantARCH/config/disk)
 sed -i "s~instantdisk~$DISK~g" /root/instantARCH/disk/format.sh
 /root/instantARCH/disk/format.sh
 

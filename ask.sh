@@ -1,9 +1,12 @@
 #!/bin/bash
 
-mkdir root/instantARCH/config
+mkdir /root/instantARCH/config
+mkdir config
 
 source <(curl -Ls git.io/paperbash)
 pb dialog
+
+messagebox "welcome to instantARCH, the easy arch installer"
 
 cd /root/instantARCH/data/lang/keyboard
 while [ -z "$NEWKEY" ]; do
@@ -60,3 +63,5 @@ done
 
 echo "$NEWUSER" >/root/instantARCH/config/user
 echo "$NEWPASS" >/root/instantARCH/config/password
+
+messagebox "arch linux will now install. this could take a while. "

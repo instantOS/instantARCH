@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir root/instantARCH/config
+
 source <(curl -Ls git.io/paperbash)
 pb dialog
 
@@ -7,15 +9,16 @@ cd /root/instantARCH/data/lang/keyboard
 while [ -z "$NEWKEY" ]; do
     NEWKEY="$(ls | fzf --prompt 'Select keyboard layout')"
 done
+
 echo "$NEWKEY" >/root/instantARCH/config/keyboard
 
-loadkeys $(tail -1 /root/instantARCH/data/lang/keyboard/"$LAYOUT")
+loadkeys $(tail -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")
 
 cd ../locale
 while [ -z "$NEWLOCALE" ]; do
     NEWLOCALE="$(ls | fzf --prompt 'Select language')"
 done
-echo "$NEWKEY" >/root/instantARCH/config/locale
+echo "$NEWLOCALE" >/root/instantARCH/config/locale
 
 cd /usr/share/zoneinfo
 

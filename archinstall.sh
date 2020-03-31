@@ -19,6 +19,7 @@ pacman -Sy --noconfirm
 pacman -S git --noconfirm --needed
 
 cd /root
+[ -e instantARCH ] && rm -rf instantARCH
 git clone --depth=1 https://github.com/instantos/instantARCH.git
 cd instantARCH
 

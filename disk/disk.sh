@@ -2,21 +2,7 @@
 
 # automatic disk partitioning
 
-source <(curl -Ls git.io/paperbash)
-pb dialog
-
-fdisk -l
-
-while [ -z "$DISK" ]; do
-    DISK=$(fdisk -l | grep -i '^Disk /.*:' | fzf --prompt "select disk")
-    if ! confirm "Install on $DISK ? this will delete all data on $DISK"; then
-        unset DISK
-    fi
-done
-
-grep -o '/dev/[^:]*' <<<"$DISK" >/root/instantdisk
-DISK=$(cat /root/instantdisk)
-
+DISK=$(cat /root/instantARCH/config/disk | grep -o '/dev/[^:]*')
 sed -i "s~instantdisk~$DISK~g" /root/instantARCH/disk/format.sh
 /root/instantARCH/disk/format.sh
 

@@ -1,15 +1,10 @@
 #!/bin/bash
 cd /usr/share/zoneinfo
 
-while [ -z "$REGION" ]; do
-    REGION=$(ls | fzf --prompt "select region")
-done
+REGION=$(cat /root/instantARCH/config/region)
 
-if [ -d "$REGION" ]; then
-    cd "$REGION"
-    while [ -z "$CITY" ]; do
-        CITY=$(ls | fzf --prompt "select the City nearest to you")
-    done
+if [ -e /root/instantARCH/config/city ]; then
+    CITY=$(cat /root/instantARCH/config/city)
 fi
 
 if [ -n "$CITY" ]; then

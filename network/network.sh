@@ -1,9 +1,6 @@
 #!/bin/bash
 
-source <(curl -Ls git.io/paperbash)
-pb dialog
-
-NEWHOSTNAME=$(textbox "enter hostname")
+NEWHOSTNAME=$(cat /root/instantARCH/hostname)
 
 echo "$NEWHOSTNAME" >/etc/hostname
 

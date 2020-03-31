@@ -11,7 +11,6 @@ escript() {
 }
 
 escript depend/depend
-escript lang/keyboard
 escript init/init
 escript disk/disk
 escript pacstrap/pacstrap

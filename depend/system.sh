@@ -11,4 +11,5 @@ pacman -S --noconfirm --needed \
     bash \
     vim \
     openbox \
+    xterm \
     lightdm-gtk-greeter

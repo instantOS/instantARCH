@@ -5,7 +5,11 @@ source <(curl -Ls https://git.io/paperbash)
 pb dialog
 
 NEWUSER="$(textbox 'set username')"
-NEWPASS="$(passwordbox 'set password')"
+
+while ! [ "$NEWPASS" = "$NEWPASS2" ] || [ -z "$NEWPASS" ]; do
+    NEWPASS="$(passwordbox 'set password')"
+    NEWPASS2="$(passwordbox 'confirm password')"
+done
 
 groupadd video &>/dev/null
 groupadd wheel &>/dev/null

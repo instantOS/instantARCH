@@ -10,7 +10,6 @@ escript() {
     echo "$1" >>/tmp/instantprogress
 }
 
-escript depend/depend
 escript init/init
 escript disk/disk
 escript pacstrap/pacstrap

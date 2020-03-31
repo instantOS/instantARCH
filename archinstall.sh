@@ -22,6 +22,8 @@ cd /root
 git clone --depth=1 https://github.com/instantos/instantARCH.git
 cd instantARCH
 
+./depend/depend.sh
+cd /root/instantARCH
 ./ask.sh
 
 chmod +x *.sh

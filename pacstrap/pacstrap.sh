@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DISK=$(cat /root/instantdisk)
+DISK=$(cat /root/instantARCH/config/disk)
 
 mount ${DISK}1 /mnt
 

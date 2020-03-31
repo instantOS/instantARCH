@@ -5,7 +5,10 @@ DISK=$(cat /root/instantARCH/config/disk)
 mount ${DISK}1 /mnt
 
 pacman -Sy --noconfirm
-pacstrap /mnt base linux linux-firmware
+
+while ! pacstrap /mnt base linux linux-firmware; do
+    dialog --msgbox "package installation failed \nplease reconnect to internet" 700 700
+done
 
 genfstab -U /mnt >>/mnt/etc/fstab
 

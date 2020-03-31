@@ -8,11 +8,12 @@
 curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt'
 echo ""
 
-echo "selecting fastest mirror"
 # sort mirrors
 pacman -Sy --noconfirm
 pacman -S reflector --noconfirm
-reflector --sort rate --save /etc/pacman.d/mirrorlist
+
+echo "selecting fastest mirror"
+reflector --latest 20 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 # install dependencies
 pacman -Sy --noconfirm

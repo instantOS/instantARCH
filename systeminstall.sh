@@ -27,7 +27,6 @@ chrootscript "lang/xorg"
 chrootscript "lang/locale"
 
 # grub: install package, install, generate config
-chrootscript "bootloader/bootloader"
 escript bootloader/install
 chrootscript "bootloader/config"
 

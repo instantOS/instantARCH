@@ -23,8 +23,6 @@ chrootscript "depend/system"
 chrootscript "chroot/chroot"
 chrootscript "chroot/drivers"
 chrootscript "lang/timezone"
-chrootscript "lang/xorg"
-chrootscript "lang/locale"
 
 # grub: install package, install, generate config
 escript bootloader/install

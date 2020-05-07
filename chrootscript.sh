@@ -6,4 +6,3 @@ spawn arch-chroot /mnt
 expect "archiso"
 sleep 1
 send "bash /root/instantARCH/$scriptname; exit\n"
-interact

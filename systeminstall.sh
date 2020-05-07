@@ -19,7 +19,7 @@ escript() {
 # scripts executed in installed environment
 chrootscript() {
     rcd
-    ./chrootscript.sh "$1.sh" || serror
+    arch-chroot /mnt "/root/instantARCH/${1}.sh"
     echo "chroot: $1" >>/tmp/instantprogress
 }
 

@@ -3,11 +3,8 @@
 # automatic disk partitioning
 
 DISK=$(cat /root/instantARCH/config/disk)
-sed -i "s~instantdisk~$DISK~g" /root/instantARCH/disk/format.sh
-/root/instantARCH/disk/format.sh
 
-mkfs.ext4 ${DISK}1
-mkswap ${DISK}2
-swapon ${DISK}2
+echo "label: dos
+${DISK}1 type=83, bootable" | sfdisk "${DISK}"
 
-echo "done partitioning disks"
+mkfs.ext4 -F ${DISK}1

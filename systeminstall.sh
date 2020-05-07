@@ -4,16 +4,21 @@ rcd() {
     cd /root/instantARCH
 }
 
+serror() {
+    echo "script failed"
+    exit 1
+}
+
 escript() {
     rcd
-    ./$1.sh
+    ./$1.sh || serror
     echo "$1" >>/tmp/instantprogress
 }
 
 # scripts executed in installed environment
 chrootscript() {
     rcd
-    ./chrootscript.sh "$1.sh"
+    ./chrootscript.sh "$1.sh" || serror
     echo "chroot: $1" >>/tmp/instantprogress
 }
 

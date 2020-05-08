@@ -81,7 +81,7 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
     addsum "Target install drive" "disk"
     addsum "Hostname" "hostname"
     SUMMARY="$SUMMARY
-Should installation proceed with the following parameters?"
+Should installation proceed with these parameters?"
 
     if confirm "$SUMMARY"; then
         touch /root/instantARCH/config/confirm
@@ -99,3 +99,4 @@ Should installation proceed with the following parameters?"
 done
 
 messagebox "The installation will now begin. this could take a while. "
+clear

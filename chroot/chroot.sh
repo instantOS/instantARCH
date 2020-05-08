@@ -8,8 +8,15 @@ else
     sed -i 's/^\[Seat:\*\]/\[Seat:\*\]\ngreeter-session=lightdm-gtk-greeter/g' /etc/lightdm.conf
 fi
 
+# fix gui not showing up
+sed -i 's/^#logind-check-graphical=.*/logind-check-graphical=true/' /etc/lightdm.conf
+
 # needed to get internet to work
 systemctl enable lightdm
 systemctl enable NetworkManager
+
+# enable swap
+systemctl enable systemd-swap
+sed -i 's/^swapfc_enabled=.*/swapfc_enabled=1/' /etc/systemd/swap.conf
 
 sed -i 's/# %wheel/%wheel/g' /etc/sudoers

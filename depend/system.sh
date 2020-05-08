@@ -16,6 +16,7 @@ while ! pacman -S --noconfirm --needed \
     vim \
     openbox \
     xterm \
+    systemd-swap \
     lightdm-gtk-greeter \
     grub; do
     dialog --msgbox "package installation failed \nplease reconnect to internet" 700 700

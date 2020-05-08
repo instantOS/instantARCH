@@ -6,7 +6,7 @@ mount ${DISK}1 /mnt
 
 pacman -Sy --noconfirm
 
-while ! pacstrap /mnt base linux linux-firmware; do
+while ! pacstrap /mnt base linux linux-firmware reflector; do
     dialog --msgbox "package installation failed \nplease reconnect to internet" 700 700
 done
 

@@ -13,7 +13,7 @@ pacman -Sy --noconfirm
 pacman -S reflector --noconfirm
 
 echo "selecting fastest mirror"
-reflector --latest 20 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 # install dependencies
 pacman -Sy --noconfirm

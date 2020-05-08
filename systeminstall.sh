@@ -32,6 +32,7 @@ chrootscript "depend/depend" &&
 
 # grub: install package, install, generate config
 escript bootloader/install
-chrootscript "bootloader/config" &&
-    chrootscript "user/user" &&
-    chrootscript "network/network"
+
+chrootscript "user/user" &&
+    chrootscript "network/network" &&
+    chrootscript "bootloader/config"

@@ -39,7 +39,7 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
     fi
 
     echo "$REGION" >/root/instantARCH/config/region
-    [ -n "$CITY" ] echo "$CITY" >/root/instantARCH/config/city
+    [ -n "$CITY" ] && echo "$CITY" >/root/instantARCH/config/city
 
     while [ -z "$DISK" ]; do
         DISK=$(fdisk -l | grep -i '^Disk /.*:' | fzf --prompt "select disk> ")
@@ -85,6 +85,16 @@ Should installation proceed with the following parameters?"
 
     if confirm "$SUMMARY"; then
         touch /root/instantARCH/config/confirm
+    else
+        unset CITY
+        unset REGION
+        unset DISK
+        unset NEWKEY
+        unset NEWLOCALE
+        unset NEWPASS2
+        unset NEWPASS
+        unset NEWHOSTNAME
+        unset NEWUSER
     fi
 done
 

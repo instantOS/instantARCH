@@ -9,7 +9,7 @@ else
 fi
 
 # fix gui not showing up
-sed -i 's/^#logind-check-graphical=.*/logind-check-graphical=true/' /etc/lightdm.conf
+sed -i 's/^#logind-check-graphical=.*/logind-check-graphical=true/' /etc/lightdm/lightdm.conf
 
 # needed to get internet to work
 systemctl enable lightdm

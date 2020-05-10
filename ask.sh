@@ -80,6 +80,12 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
     addsum "Keyboard layout" "keyboard"
     addsum "Target install drive" "disk"
     addsum "Hostname" "hostname"
+    if efibootmgr; then
+        addsum "GRUB: UEFI"
+    else
+        addsum "GRUB: BIOS"
+    fi
+
     SUMMARY="$SUMMARY
 Should installation proceed with these parameters?"
 

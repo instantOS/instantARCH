@@ -1,0 +1,8 @@
+[Unit]
+Description=Post installation script for instantOS
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /root/instantARCH/postinstall.sh
+
+[Install]

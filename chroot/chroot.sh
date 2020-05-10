@@ -11,9 +11,13 @@ fi
 # fix gui not showing up
 sed -i 's/^#logind-check-graphical=.*/logind-check-graphical=true/' /etc/lightdm/lightdm.conf
 
+[ -e /etc/systemd/system ] || mkdir -p /etc/systemd/system
+mv /root/instantARCH/data/instantarch.service /etc/systemd/system/instantarc.service
+
 # needed to get internet to work
 systemctl enable lightdm
 systemctl enable NetworkManager
+systemctl enable instantarch
 
 # enable swap
 systemctl enable systemd-swap

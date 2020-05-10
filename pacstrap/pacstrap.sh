@@ -2,7 +2,12 @@
 
 DISK=$(cat /root/instantARCH/config/disk)
 
-mount ${DISK}1 /mnt
+if efibootmgr; then
+    mount ${DISK}2 /mnt
+    mount ${DISK}1 /efi
+else
+    mount ${DISK}1 /mnt
+fi
 
 pacman -Sy --noconfirm
 

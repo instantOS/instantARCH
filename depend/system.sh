@@ -18,6 +18,7 @@ while ! pacman -S --noconfirm --needed \
     xterm \
     systemd-swap \
     lightdm-gtk-greeter \
+    xdg-desktop-portal-gtk \
     grub; do
     dialog --msgbox "package installation failed \nplease reconnect to internet" 700 700
     reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist

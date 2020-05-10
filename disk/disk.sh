@@ -10,7 +10,7 @@ if efibootmgr; then
 ${DISK}1 : start=        4096, size=      614400, type=ef
 ${DISK}2: start=618496, type=83, bootable" | sfdisk "${DISK}"
 
-    mkfs.fat32 -F ${DISK}1
+    mkfs.fat -F32 ${DISK}1
     mkfs.ext4 -F ${DISK}2
 
 else

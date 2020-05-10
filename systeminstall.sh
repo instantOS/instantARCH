@@ -31,7 +31,11 @@ chrootscript "depend/depend" &&
     chrootscript "lang/timezone"
 
 # grub: install package, install, generate config
-escript bootloader/install
+if efibootmgr; then
+    chrootscript "bootloader/efi"
+else
+    escript bootloader/install
+fi
 
 chrootscript "user/user" &&
     chrootscript "network/network" &&

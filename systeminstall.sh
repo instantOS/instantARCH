@@ -26,6 +26,7 @@ chrootscript() {
 chrootscript "depend/depend" &&
     chrootscript "depend/depend" &&
     chrootscript "depend/system" &&
+    chrootscript "instantos/install.sh" &&
     chrootscript "chroot/chroot" &&
     chrootscript "chroot/drivers" &&
     chrootscript "lang/timezone"

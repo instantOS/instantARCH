@@ -40,4 +40,4 @@ fi
 chrootscript "user/user" &&
     chrootscript "network/network" &&
     chrootscript "bootloader/config" &&
-    chrootscript "instantos/install.sh"
+    chrootscript "instantos/install"

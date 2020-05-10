@@ -5,7 +5,10 @@
 # DO NOT USE, NOT READY YET
 
 # print logo
+echo ""
+echo ""
 curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt'
+echo ""
 echo ""
 
 # sort mirrors

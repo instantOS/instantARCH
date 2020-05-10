@@ -12,7 +12,7 @@ fi
 sed -i 's/^#logind-check-graphical=.*/logind-check-graphical=true/' /etc/lightdm/lightdm.conf
 
 [ -e /etc/systemd/system ] || mkdir -p /etc/systemd/system
-mv /root/instantARCH/data/instantarch.service /etc/systemd/system/instantarc.service
+cp /root/instantARCH/data/instantarch.service /etc/systemd/system/instantarch.service
 
 # needed to get internet to work
 systemctl enable lightdm

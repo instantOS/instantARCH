@@ -16,6 +16,7 @@ while ! pacman -S --noconfirm --needed \
     vim \
     xterm \
     systemd-swap \
+    neofetch \
     lightdm-gtk-greeter \
     xdg-desktop-portal-gtk \
     grub; do

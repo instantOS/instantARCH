@@ -39,5 +39,8 @@ fi
 
 chrootscript "user/user" &&
     chrootscript "network/network" &&
-    chrootscript "bootloader/config" &&
+    chrootscript "bootloader/config" || exit 1
+
+if ! [ -e /root/instantARCH/config/onlyarch ]; then
     chrootscript "instantos/install"
+fi

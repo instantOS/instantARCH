@@ -18,4 +18,7 @@ gpasswd -a "$NEWUSER" autologin
 
 sed -i "s/^#autologin-user=.*/autologin-user=$NEWUSER/" /etc/lightdm/lightdm.conf
 sed -i "s/^#autologin-user-timeout=.*/autologin-user-timeout=0/" /etc/lightdm/lightdm.conf
-sed -i "s/^#autologin-session=.*/autologin-session=instantos/" /etc/lightdm/lightdm.conf
+
+if ! [ -e /root/instantARCH/config/onlyarch ]; then
+    sed -i "s/^#autologin-session=.*/autologin-session=instantos/" /etc/lightdm/lightdm.conf
+fi

@@ -1,13 +1,18 @@
 #!/bin/bash
 
+###################################################
+## This is the official installer for instantOS  ##
+## instantOS is migrating from calamares to this ##
+###################################################
+
 # main script calling others
 
-# DO NOT USE, NOT READY YET
+# DO NOT USE ON ACTUAL HARDWARE YET
 
 # print logo
 echo ""
 echo ""
-curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt'
+curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt' | sed 's/^/    /g'
 echo ""
 echo ""
 

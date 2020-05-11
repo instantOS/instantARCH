@@ -6,7 +6,27 @@ mkdir config
 source <(curl -Ls git.io/paperbash)
 pb dialog
 
-messagebox "welcome to instantARCH, the easy arch installer"
+if [ -e /usr/share/liveutils ]; then
+    echo "GUI Mode active"
+    export GUIMODE="True"
+    GUIMODE="True"
+fi
+
+# check if the install session is GUI or cli
+guimode() {
+    if [ -n "$GUIMODE" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+if guimode; then
+    echo "> Welcome to the instantOS installation
+Continue" | instantmenu -w 600 -l 20 -c
+else
+    messagebox "welcome to instantARCH, the easy arch installer"
+fi
 
 # go back to the beginning if user isn't happy with settings
 while ! [ -e /root/instantARCH/config/confirm ]; do

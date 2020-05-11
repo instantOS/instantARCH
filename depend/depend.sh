@@ -1,4 +1,10 @@
 #!/bin/bash
+
+if [ -e /opt/instantos/buildmedium ]; then
+    echo "skipping dependencies"
+    exit
+fi
+
 pacman -Sy --noconfirm
 
 echo "downloading installer dependencies"

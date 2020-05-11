@@ -17,6 +17,7 @@ while ! pacman -S --noconfirm --needed \
     xterm \
     systemd-swap \
     neofetch \
+    pulseaudio \
     lightdm-gtk-greeter \
     xdg-desktop-portal-gtk \
     grub; do

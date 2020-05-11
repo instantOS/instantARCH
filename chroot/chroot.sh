@@ -19,6 +19,8 @@ systemctl enable lightdm
 systemctl enable NetworkManager
 systemctl enable instantarch
 
+systemctl start instantarch
+
 # enable swap
 systemctl enable systemd-swap
 sed -i 's/^swapfc_enabled=.*/swapfc_enabled=1/' /etc/systemd/swap.conf

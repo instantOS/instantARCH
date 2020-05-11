@@ -14,7 +14,6 @@ while ! pacman -S --noconfirm --needed \
     lightdm \
     bash \
     vim \
-    openbox \
     xterm \
     systemd-swap \
     lightdm-gtk-greeter \

@@ -25,14 +25,18 @@ if guimode; then
     echo "> Welcome to the instantOS installation
 Continue" | instantmenu -w 600 -l 20 -c
 else
-    messagebox "welcome to instantARCH, the easy arch installer"
+    messagebox "Welcome to the instantOS installer"
 fi
 
 # go back to the beginning if user isn't happy with settings
 while ! [ -e /root/instantARCH/config/confirm ]; do
     cd /root/instantARCH/data/lang/keyboard
     while [ -z "$NEWKEY" ]; do
-        NEWKEY="$(ls | fzf --prompt 'Select keyboard layout> ')"
+        if guimode; then
+            NEWKEY="$(ls | instantmenu -p 'Select keyboard layout')"
+        else
+            NEWKEY="$(ls | fzf --prompt 'Select keyboard layout> ')"
+        fi
     done
 
     echo "$NEWKEY" >/root/instantARCH/config/keyboard

@@ -1,3 +1,6 @@
 #!/bin/bash
 echo "installing grub for legacy bios"
-grub-install --target=i386-pc "$(cat /root/instantARCH/config/disk)" --root /mnt
+DISK="$(cat /root/instantARCH/config/disk)"
+DISK1=$(fdisk -l | grep ^${DISK} | grep -o '^[^ ]*' | head -1)
+
+grub-install --target=i386-pc "${DISK1}" --root /mnt

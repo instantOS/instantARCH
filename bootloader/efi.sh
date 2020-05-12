@@ -2,7 +2,9 @@
 
 DISK=$(cat /root/instantARCH/config/disk)
 mkdir /efi
-mount "${DISK}1" /efi
+DISK1=$(fdisk -l | grep ^${DISK} | grep -o '^[^ ]*' | head -1)
+
+mount "${DISK1}" /efi
 
 sudo pacman -S efibootmgr grub --noconfirm
 

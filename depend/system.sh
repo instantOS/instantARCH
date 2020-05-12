@@ -18,6 +18,8 @@ while ! pacman -S --noconfirm --needed \
     systemd-swap \
     neofetch \
     pulseaudio \
+    alsa-utils \
+    usbutils \
     lightdm-gtk-greeter \
     xdg-desktop-portal-gtk \
     grub; do

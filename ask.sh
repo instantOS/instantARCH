@@ -105,9 +105,9 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
     addsum "Target install drive" "disk"
     addsum "Hostname" "hostname"
     if efibootmgr; then
-        addsum "GRUB: UEFI"
+        addsum "GRUB" "UEFI"
     else
-        addsum "GRUB: BIOS"
+        addsum "GRUB" "BIOS"
     fi
 
     SUMMARY="$SUMMARY
@@ -128,5 +128,5 @@ Should installation proceed with these parameters?"
     fi
 done
 
-messagebox "The installation will now begin. this could take a while. "
+messagebox "The installation will now begin. This could take a while. Keep the machine powered and connected to the internet"
 clear

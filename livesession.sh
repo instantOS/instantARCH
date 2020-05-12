@@ -28,6 +28,8 @@ cd
 mkdir tmparch
 cd tmparch
 
+pacman-key --init
+
 sudo pacman -Sy --noconfirm git wget
 git clone --depth 1 https://github.com/instantOS/instantARCH
 git clone --depth 1 https://github.com/instantOS/instantOS

@@ -14,6 +14,10 @@ fi
 
 # check if the install session is GUI or cli
 guimode() {
+    if [ -e /opt/noguimode ]; then
+        return 1
+    fi
+
     if [ -n "$GUIMODE" ]; then
         return 0
     else
@@ -42,23 +46,37 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
     echo "$NEWKEY" >/root/instantARCH/config/keyboard
 
     loadkeys $(tail -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")
+    guimode && setxkbmap -layout $(head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")
 
     cd ../locale
     while [ -z "$NEWLOCALE" ]; do
-        NEWLOCALE="$(ls | fzf --prompt 'Select language> ')"
+        if guimode; then
+            NEWLOCALE="$(ls | instantmenu -p 'Select language> ')"
+        else
+            NEWLOCALE="$(ls | fzf --prompt 'Select language> ')"
+        fi
     done
+
     echo "$NEWLOCALE" >/root/instantARCH/config/locale
 
     cd /usr/share/zoneinfo
 
     while [ -z "$REGION" ]; do
-        REGION=$(ls | fzf --prompt "select region> ")
+        if guimode; then
+            REGION=$(ls | instantmenu -p "select region")
+        else
+            REGION=$(ls | fzf --prompt "select region> ")
+        fi
     done
 
     if [ -d "$REGION" ]; then
         cd "$REGION"
         while [ -z "$CITY" ]; do
-            CITY=$(ls | fzf --prompt "select the City nearest to you> ")
+            if guimode; then
+                CITY=$(ls | instantmenu -p "select the City nearest to you")
+            else
+                CITY=$(ls | fzf --prompt "select the City nearest to you> ")
+            fi
         done
     fi
 
@@ -67,8 +85,14 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
 
     while [ -z "$DISK" ]; do
         DISK=$(fdisk -l | grep -i '^Disk /.*:' | fzf --prompt "select disk> ")
-        if ! confirm "Install on $DISK ?\n this will delete all existing data"; then
-            unset DISK
+        if guimode; then
+            if ! imenu -c "Install on $DISK ?\n this will delete all existing data"; then
+                unset DISK
+            fi
+        else
+            if ! confirm "Install on $DISK ?\n this will delete all existing data"; then
+                unset DISK
+            fi
         fi
     done
 
@@ -77,15 +101,24 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
     NEWUSER="$(textbox 'set username')"
 
     while ! [ "$NEWPASS" = "$NEWPASS2" ] || [ -z "$NEWPASS" ]; do
-        NEWPASS="$(passwordbox 'set password')"
-        NEWPASS2="$(passwordbox 'confirm password')"
+        if guimode; then
+            NEWPASS="$(imenu -P 'set password')"
+            NEWPASS2="$(imenu -P 'confirm password')"
+        else
+            NEWPASS="$(passwordbox 'set password')"
+            NEWPASS2="$(passwordbox 'confirm password')"
+        fi
     done
 
     echo "$NEWUSER" >/root/instantARCH/config/user
     echo "$NEWPASS" >/root/instantARCH/config/password
 
     while [ -z "$NEWHOSTNAME" ]; do
-        NEWHOSTNAME=$(textbox "enter name of this computer")
+        if guimode; then
+            NEWHOSTNAME=$(imenu -i "enter name of this computer")
+        else
+            NEWHOSTNAME=$(textbox "enter name of this computer")
+        fi
     done
 
     echo "$NEWHOSTNAME" >/root/instantARCH/config/hostname
@@ -113,18 +146,34 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
     SUMMARY="$SUMMARY
 Should installation proceed with these parameters?"
 
-    if confirm "$SUMMARY"; then
-        touch /root/instantARCH/config/confirm
+    if guimode; then
+        if imenu -C <<<"$SUMMARY"; then
+            touch /root/instantARCH/config/confirm
+        else
+            unset CITY
+            unset REGION
+            unset DISK
+            unset NEWKEY
+            unset NEWLOCALE
+            unset NEWPASS2
+            unset NEWPASS
+            unset NEWHOSTNAME
+            unset NEWUSER
+        fi
     else
-        unset CITY
-        unset REGION
-        unset DISK
-        unset NEWKEY
-        unset NEWLOCALE
-        unset NEWPASS2
-        unset NEWPASS
-        unset NEWHOSTNAME
-        unset NEWUSER
+        if confirm "$SUMMARY"; then
+            touch /root/instantARCH/config/confirm
+        else
+            unset CITY
+            unset REGION
+            unset DISK
+            unset NEWKEY
+            unset NEWLOCALE
+            unset NEWPASS2
+            unset NEWPASS
+            unset NEWHOSTNAME
+            unset NEWUSER
+        fi
     fi
 done
 

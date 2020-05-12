@@ -1,6 +1,14 @@
 #!/bin/bash
 
+#######################################################################################
+## execute this script in a chroot of archiso to build an instantOS installation ISO ##
+#######################################################################################
+
+echo "building instantOS installation ISO"
+
 touch /opt/livebuilder
+
+echo "adding user"
 
 useradd -m -s /bin/bash instantos
 echo "instantos:instantos" | chpasswd
@@ -34,11 +42,13 @@ sudo pacman -Sy --noconfirm instantdepend
 # declare as live session
 sudo pacman -Sy --noconfirm liveutils
 
+echo "instantOS rootinstall"
 bash instantOS/rootinstall.sh
 
 [ -e /etc/lightdm ] || mkdir -p /etc/lightdm
 cat /usr/share/instantdotfiles/lightdm-gtk-greeter.conf >/etc/lightdm/lightdm-gtk-greeter.conf
 
+echo "preparing lightdm"
 # enable greeter
 sed -i 's/^\[Seat:\*\]/\[Seat:\*\]\ngreeter-session=lightdm-gtk-greeter/g' /etc/lightdm.conf
 # enable autologin
@@ -50,3 +60,10 @@ echo "root ALL=(ALL) NOPASSWD:ALL #instantosroot" >>/etc/sudoers
 echo "" >>/etc/sudoers
 
 rm /opt/livebuilder
+
+systemctl enable lightdm
+
+cd
+rm -rf tmparch
+
+echo "finished building instantOS installation ISO"

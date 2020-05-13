@@ -10,8 +10,8 @@ if efibootmgr; then
 start=        4096, size=      614400, type=ef
 start=618496, type=83, bootable" | sfdisk "${DISK}"
 
-    DISK1=$(fdisk -l | grep ^${DISK} | grep -o '^[^ ]*' | head -1)
-    DISK2=$(fdisk -l | grep ^${DISK} | grep -o '^[^ ]*' | tail -1)
+    DISK1=$(fdisk -l | grep "^${DISK}" | grep -o '^[^ ]*' | head -1)
+    DISK2=$(fdisk -l | grep "^${DISK}" | grep -o '^[^ ]*' | tail -1)
 
     mkfs.fat -F32 "$DISK1"
     mkfs.ext4 -F "$DISK2"
@@ -20,7 +20,7 @@ else
     echo "legacy bios"
     echo "label: dos
 type=83, bootable" | sfdisk "${DISK}"
-    DISK1="$(fdisk -l | grep ^${DISK} | grep -o '^[^ ]*' | head -1)"
+    DISK1="$(fdisk -l | grep "^${DISK}" | grep -o '^[^ ]*' | head -1)"
 
     mkfs.ext4 -F "$DISK1"
 

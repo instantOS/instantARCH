@@ -9,7 +9,7 @@ if efibootmgr; then
     mount ${DISK2} /mnt
     mount ${DISK1} /efi
 else
-    DISK1=$(fdisk -l | grep ^${DISK} | grep -o '^[^ ]*' | head -1)
+    DISK1=$(fdisk -l | grep "^${DISK}" | grep -o '^[^ ]*' | head -1)
     mount ${DISK1} /mnt
 fi
 

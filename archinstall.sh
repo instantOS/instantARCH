@@ -9,16 +9,16 @@
 
 # DO NOT USE ON ACTUAL HARDWARE YET
 
+if [ -e /usr/share/liveutils ]; then
+    imenu -m "preparing installation" &
+fi
+
 # print logo
 echo ""
 echo ""
 curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt' | sed 's/^/    /g'
 echo ""
 echo ""
-
-if [ -e /usr/share/liveutils ]; then
-    imenu -m "preparing installation" &
-fi
 
 # sort mirrors
 pacman -Sy --noconfirm

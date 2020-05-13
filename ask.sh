@@ -26,6 +26,7 @@ guimode() {
 }
 
 if guimode; then
+    pgrep instantmenu && pkill instantmenu
     imenu -m "Welcome to the instantOS installer"
 else
     messagebox "Welcome to the instantOS installer"
@@ -197,7 +198,7 @@ done
 if guimode; then
     imenu -M <<<"The installation will now begin.
     This could take a while.
-    Keep the machine powered and connected to the internet"
+    Keep the machine powered and connected to the internet" &
 else
     messagebox "The installation will now begin. This could take a while. Keep the machine powered and connected to the internet"
     clear

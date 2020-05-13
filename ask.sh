@@ -85,7 +85,8 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
     while [ -z "$DISK" ]; do
         if guimode; then
             DISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk> ")
-            if ! echo "Install on $DISK ?\n this will delete all existing data" | imenu -C; then
+            if ! echo "Install on $DISK ?
+this will delete all existing data" | imenu -C; then
                 unset DISK
             fi
         else
@@ -194,7 +195,9 @@ Should installation proceed with these parameters?"
 done
 
 if guimode; then
-    imenu -m "The installation will now begin. This could take a while. Keep the machine powered and connected to the internet"
+    imenu -M <<<"The installation will now begin.
+    This could take a while.
+    Keep the machine powered and connected to the internet"
 else
     messagebox "The installation will now begin. This could take a while. Keep the machine powered and connected to the internet"
     clear

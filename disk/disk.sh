@@ -20,7 +20,7 @@ else
     echo "legacy bios"
     echo "label: dos
 type=83, bootable" | sfdisk "${DISK}"
-    DISK1="$(fdisk -l | grep ^${DISK} | head -1)"
+    DISK1="$(fdisk -l | grep ^${DISK} | grep -o '^[^ ]*' | head -1)"
 
     mkfs.ext4 -F "$DISK1"
 

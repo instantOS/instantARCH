@@ -22,13 +22,17 @@ escript() {
     ./$1.sh || serror
     echo "$1" >>/tmp/instantprogress
     setinfo "${2:-info}"
-
 }
 
 # scripts executed in installed environment
 chrootscript() {
+    if ! mount | grep -q '/mnt.*ext4'; then
+        echo "mount failed"
+        exit 1
+    fi
+
     rcd
-    arch-chroot /mnt "/root/instantARCH/${1}.sh"
+    arch-chroot /mnt "/root/instantARCH/${1}.sh" || serror
     echo "chroot: $1" >>/tmp/instantprogress
     setinfo "${2:-info}"
 }

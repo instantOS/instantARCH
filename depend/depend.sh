@@ -5,10 +5,6 @@ if [ -e /opt/instantos/buildmedium ]; then
     exit
 fi
 
-if [ -e /usr/share/liveutils ]; then
-    imenu -m "preparing installation"
-fi
-
 pacman -Sy --noconfirm
 
 echo "downloading installer dependencies"

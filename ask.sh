@@ -85,7 +85,7 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
     while [ -z "$DISK" ]; do
         if guimode; then
             DISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk> ")
-            if ! imenu -c "Install on $DISK ?\n this will delete all existing data"; then
+            if ! echo "Install on $DISK ?\n this will delete all existing data" | imenu -C; then
                 unset DISK
             fi
         else

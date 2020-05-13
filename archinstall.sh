@@ -16,6 +16,10 @@ curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.tx
 echo ""
 echo ""
 
+if [ -e /usr/share/liveutils ]; then
+    imenu -m "preparing installation" &
+fi
+
 # sort mirrors
 pacman -Sy --noconfirm
 pacman -S reflector --noconfirm

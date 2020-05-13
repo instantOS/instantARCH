@@ -3,14 +3,19 @@
 DISK=$(cat /root/instantARCH/config/disk)
 
 if efibootmgr; then
-    DISK1=$(fdisk -l | grep ^${DISK} | grep -o '^[^ ]*' | head -1)
-    DISK2=$(fdisk -l | grep ^${DISK} | grep -o '^[^ ]*' | tail -1)
+    DISK1=$(fdisk -l | grep "^${DISK}" | grep -o '^[^ ]*' | head -1)
+    DISK2=$(fdisk -l | grep "^${DISK}" | grep -o '^[^ ]*' | tail -1)
 
     mount ${DISK2} /mnt
     mount ${DISK1} /efi
 else
     DISK1=$(fdisk -l | grep ^${DISK} | grep -o '^[^ ]*' | head -1)
     mount ${DISK1} /mnt
+fi
+
+if ! mount | grep '/mnt.*ext4'; then
+    echo "mount failed"
+    exit 1
 fi
 
 pacman -Sy --noconfirm

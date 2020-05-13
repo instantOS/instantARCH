@@ -58,3 +58,6 @@ chrootscript "user/user" "setting up user" &&
 if ! [ -e /root/instantARCH/config/onlyarch ]; then
     chrootscript "instantos/install" "configuring instantOS, this will take a while"
 fi
+
+# mark installation as susccessful
+touch /opt/installsuccess

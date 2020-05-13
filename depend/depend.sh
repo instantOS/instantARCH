@@ -5,6 +5,10 @@ if [ -e /opt/instantos/buildmedium ]; then
     exit
 fi
 
+if [ -e /usr/share/liveutils ]; then
+    imenu -m "preparing installation"
+fi
+
 pacman -Sy --noconfirm
 
 echo "downloading installer dependencies"
@@ -24,3 +28,7 @@ while ! pacman -S --noconfirm --needed \
     sleep 10
     reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 done
+
+if [ -e /usr/share/liveutils ]; then
+    pkill instantmenu
+fi

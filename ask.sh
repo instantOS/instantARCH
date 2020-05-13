@@ -26,8 +26,7 @@ guimode() {
 }
 
 if guimode; then
-    echo "> Welcome to the instantOS installation
-Continue" | instantmenu -w 600 -l 20 -c
+    imenu -m "Welcome to the instantOS installer"
 else
     messagebox "Welcome to the instantOS installer"
 fi
@@ -37,7 +36,7 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
     cd /root/instantARCH/data/lang/keyboard
     while [ -z "$NEWKEY" ]; do
         if guimode; then
-            NEWKEY="$(ls | instantmenu -p 'Select keyboard layout')"
+            NEWKEY="$(ls | imenu -l 'Select keyboard layout')"
         else
             NEWKEY="$(ls | fzf --prompt 'Select keyboard layout> ')"
         fi
@@ -51,7 +50,7 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
     cd ../locale
     while [ -z "$NEWLOCALE" ]; do
         if guimode; then
-            NEWLOCALE="$(ls | instantmenu -p 'Select language> ')"
+            NEWLOCALE="$(ls | imenu -l 'Select language> ')"
         else
             NEWLOCALE="$(ls | fzf --prompt 'Select language> ')"
         fi
@@ -63,7 +62,7 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
 
     while [ -z "$REGION" ]; do
         if guimode; then
-            REGION=$(ls | instantmenu -p "select region")
+            REGION=$(ls | imenu -l "select region")
         else
             REGION=$(ls | fzf --prompt "select region> ")
         fi
@@ -73,7 +72,7 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
         cd "$REGION"
         while [ -z "$CITY" ]; do
             if guimode; then
-                CITY=$(ls | instantmenu -p "select the City nearest to you")
+                CITY=$(ls | imenu -l "select the City nearest to you")
             else
                 CITY=$(ls | fzf --prompt "select the City nearest to you> ")
             fi
@@ -84,12 +83,13 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
     [ -n "$CITY" ] && echo "$CITY" >/root/instantARCH/config/city
 
     while [ -z "$DISK" ]; do
-        DISK=$(fdisk -l | grep -i '^Disk /.*:' | fzf --prompt "select disk> ")
         if guimode; then
+            DISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk> ")
             if ! imenu -c "Install on $DISK ?\n this will delete all existing data"; then
                 unset DISK
             fi
         else
+            DISK=$(fdisk -l | grep -i '^Disk /.*:' | fzf --prompt "select disk> ")
             if ! confirm "Install on $DISK ?\n this will delete all existing data"; then
                 unset DISK
             fi
@@ -98,7 +98,23 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
 
     echo "$DISK" | grep -o '/dev/[^:]*' >/root/instantARCH/config/disk
 
-    NEWUSER="$(textbox 'set username')"
+    while [ -z $NEWUSER ]; do
+        if guimode; then
+            NEWUSER="$(imenu -i 'set username')"
+        else
+            NEWUSER="$(textbox 'set username')"
+        fi
+
+        # validate input as a unix name
+        if ! grep -Eq '^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$' <<<"$NEWUSER"; then
+            if guimode; then
+                imenu -m "invalid username"
+            else
+                msgbox "invalid username"
+            fi
+            unset NEWUSER
+        fi
+    done
 
     while ! [ "$NEWPASS" = "$NEWPASS2" ] || [ -z "$NEWPASS" ]; do
         if guimode; then
@@ -177,5 +193,9 @@ Should installation proceed with these parameters?"
     fi
 done
 
-messagebox "The installation will now begin. This could take a while. Keep the machine powered and connected to the internet"
-clear
+if guimode; then
+    imenu -m "The installation will now begin. This could take a while. Keep the machine powered and connected to the internet"
+else
+    messagebox "The installation will now begin. This could take a while. Keep the machine powered and connected to the internet"
+    clear
+fi

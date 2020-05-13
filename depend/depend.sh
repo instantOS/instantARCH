@@ -9,10 +9,6 @@ pacman -Sy --noconfirm
 
 echo "downloading installer dependencies"
 
-wget http://instantos.surge.sh/instantmenu.pkg.tar.xz
-pacman -U --noconfirm instantmenu*
-rm instantmenu*
-
 while ! pacman -S --noconfirm --needed \
     fzf \
     expect \

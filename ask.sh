@@ -44,6 +44,11 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
         fi
     done
 
+    # option to cancel the installer
+    if [ "${NEWKEY}" = "forcequit" ]; then
+        exit 1
+    fi
+
     echo "$NEWKEY" >/root/instantARCH/config/keyboard
 
     loadkeys $(tail -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")

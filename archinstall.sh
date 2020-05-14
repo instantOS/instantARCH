@@ -38,7 +38,7 @@ cd instantARCH
 
 ./depend/depend.sh
 cd /root/instantARCH
-./ask.sh
+./ask.sh || exit
 
 chmod +x *.sh
 chmod +x **/*.sh

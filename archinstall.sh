@@ -11,14 +11,21 @@
 
 if [ -e /usr/share/liveutils ]; then
     imenu -m "preparing installation" &
+else
+    # print logo
+    echo ""
+    echo ""
+    curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt' | sed 's/^/    /g'
+    echo ""
+    echo ""
 fi
 
-# print logo
-echo ""
-echo ""
-curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt' | sed 's/^/    /g'
-echo ""
-echo ""
+setinfo() {
+    if [ -e /usr/share/liveutils ]; then
+        pkill instantmenu
+    fi
+    echo "$@" >/opt/instantprogress
+}
 
 # sort mirrors
 pacman -Sy --noconfirm
@@ -47,4 +54,4 @@ echo "local install"
 echo "in-system install"
 ./systeminstall.sh
 
-echo "done installing arch linux"
+echo "installation finished"

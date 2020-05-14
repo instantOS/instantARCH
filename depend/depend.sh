@@ -9,6 +9,15 @@ pacman -Sy --noconfirm
 
 echo "downloading installer dependencies"
 
+setinfo() {
+    if [ -e /usr/share/liveutils ]; then
+        pkill instantmenu
+    fi
+    echo "$@" >/opt/instantprogress
+}
+
+setinfo "downloading installer dependencies"
+
 while ! pacman -S --noconfirm --needed \
     fzf \
     expect \

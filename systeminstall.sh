@@ -18,14 +18,15 @@ setinfo() {
 }
 
 escript() {
+    setinfo "${2:-info}"
     rcd
     ./$1.sh || serror
     echo "$1" >>/tmp/instantprogress
-    setinfo "${2:-info}"
 }
 
 # scripts executed in installed environment
 chrootscript() {
+    setinfo "${2:-info}"
     if ! mount | grep -q '/mnt.*ext4'; then
         echo "mount failed"
         exit 1
@@ -34,7 +35,6 @@ chrootscript() {
     rcd
     arch-chroot /mnt "/root/instantARCH/${1}.sh" || serror
     echo "chroot: $1" >>/tmp/instantprogress
-    setinfo "${2:-info}"
 }
 
 chrootscript "depend/depend" "preparing installer packages" &&

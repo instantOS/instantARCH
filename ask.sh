@@ -51,8 +51,11 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
 
     echo "$NEWKEY" >/root/instantARCH/config/keyboard
 
-    loadkeys $(tail -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")
-    guimode && setxkbmap -layout $(head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")
+    if head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY" | greo -q ..; then
+        loadkeys $(head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")
+    fi
+
+    guimode && setxkbmap -layout $(tail -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")
 
     cd ../locale
     while [ -z "$NEWLOCALE" ]; do
@@ -164,10 +167,13 @@ this will delete all existing data" | imenu -C; then
     addsum "Keyboard layout" "keyboard"
     addsum "Target install drive" "disk"
     addsum "Hostname" "hostname"
+
     if efibootmgr; then
-        addsum "GRUB" "UEFI"
+        SUMMARY="$SUMMARY
+GRUB: UEFI"
     else
-        addsum "GRUB" "BIOS"
+        SUMMARY="$SUMMARY
+GRUB: BIOS"
     fi
 
     SUMMARY="$SUMMARY

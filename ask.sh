@@ -37,6 +37,7 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
     cd /root/instantARCH/data/lang/keyboard
     while [ -z "$NEWKEY" ]; do
         if guimode; then
+            feh --bg-scale /usr/share/liveutils/worldmap.jpg &
             NEWKEY="$(ls | imenu -l 'Select keyboard layout')"
         else
             NEWKEY="$(ls | fzf --prompt 'Select keyboard layout> ')"
@@ -85,6 +86,7 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
 
     while [ -z "$DISK" ]; do
         if guimode; then
+            feh --bg-scale /usr/share/liveutils/install.jpg &
             DISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk> ")
             if ! echo "Install on $DISK ?
 this will delete all existing data" | imenu -C; then
@@ -102,6 +104,7 @@ this will delete all existing data" | imenu -C; then
 
     while [ -z $NEWUSER ]; do
         if guimode; then
+            feh --bg-scale /usr/share/liveutils/user.jpg &
             NEWUSER="$(imenu -i 'set username')"
         else
             NEWUSER="$(textbox 'set username')"
@@ -141,6 +144,7 @@ this will delete all existing data" | imenu -C; then
 
     echo "$NEWHOSTNAME" >/root/instantARCH/config/hostname
 
+    guimode && feh --bg-scale /usr/share/liveutils/install.jpg &
     SUMMARY="Installation Summary:"
 
     addsum() {

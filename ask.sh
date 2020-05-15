@@ -42,6 +42,23 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
         else
             NEWKEY="$(ls | fzf --prompt 'Select keyboard layout> ')"
         fi
+
+        # allow directly typing in layout name
+        if [ "$NEWKEY" = "other" ]; then
+            if guimode; then
+                OTHERKEY="$(localectl list-x11-keymap-layouts | instantmenu -l 20 -c -p 'select keyboard layout')"
+            else
+                OTHERKEY="$(localectl list-x11-keymap-layouts | fzf --prompt 'select keyboard layout')"
+            fi
+
+            if [ -z "$OTHERKEY" ]; then
+                unset NEWKEY
+            else
+                echo "
+$OTHERKEY" >/root/instantARCH/data/lang/keyboard/other
+            fi
+        fi
+
     done
 
     # option to cancel the installer
@@ -51,7 +68,7 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
 
     echo "$NEWKEY" >/root/instantARCH/config/keyboard
 
-    if head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY" | greo -q ..; then
+    if head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY" | greo -q '[^ ][^ ]'; then
         loadkeys $(head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")
     fi
 

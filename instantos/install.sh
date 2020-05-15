@@ -5,8 +5,24 @@ git clone --depth 1 https://github.com/instantOS/instantOS
 cd instantOS
 bash repo.sh
 pacman -Sy --noconfirm
-pacman -S instantos --noconfirm
-pacman -S instantdepend --noconfirm
+
+while ! pacman -S instantos --noconfirm; do
+    if [ -e /usr/share/liveutils ]; then
+        imenu -m "package installation failed.
+Please ensure you are connected to the internet"
+    fi
+
+    reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+done
+
+while ! pacman -S instantdepend --noconfirm; do
+    if [ -e /usr/share/liveutils ]; then
+        imenu -m "package installation failed.
+Please ensure you are connected to the internet"
+    fi
+
+    reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+done
 cd ~/instantOS
 bash rootinstall.sh
 

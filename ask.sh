@@ -127,6 +127,63 @@ this will delete all existing data" | imenu -C; then
 
     echo "$DISK" | grep -o '/dev/[^:]*' >/root/instantARCH/config/disk
 
+    # select drivers
+    if lspci | grep -iq 'nvidia'; then
+        echo "nvidia card detected"
+        while [ -z "$DRIVERCHOICE" ]; do
+            if guimode; then
+                if (lspci | grep -i 'nvidia' | grep -iq 'nvidia.*\[.*7[5678]0.*\]'); then
+                    DRIVERCHOICE="$(echo 'nouveau open source
+install without graphics drivers (not recommended)' | imenu -l 'select graphics drivers')"
+                else
+                    DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
+nouveau open source
+install without graphics drivers (not recommended)' | imenu -l 'select graphics drivers')"
+                fi
+
+                if grep -q "without" <<<"$DRIVERCHOICE"; then
+                    if ! echo "are you sure you do not want to install graphics drivers?
+This could prevent the system from booting" | imenu -C; then
+                        unset DRIVERCHOICE
+                    fi
+                fi
+            else
+
+                while [ -z "$DRIVERCHOICE" ]; do
+                    while [ -z "$DRIVERCHOICE" ]; do
+                        if (lspci | grep -i 'nvidia' | grep -iq 'nvidia.*\[.*7[5678]0.*\]'); then
+                            DRIVERCHOICE="$(echo 'nouveau open source
+install without graphics (not recommended)' | fzf --prompt 'select graphics drivers')"
+                        else
+                            DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
+nouveau open source
+install without graphics (not recommended)' | fzf --prompt 'select graphics drivers')"
+                        fi
+                    done
+
+                    if grep -q "without" <<<"$DRIVERCHOICE"; then
+                        if ! confirm "are you sure you do not want to install graphics drivers?
+This could prevent the system from booting"; then
+                            unset DRIVERCHOICE
+                        fi
+                    fi
+                done
+
+            fi
+        done
+
+        if grep -qi "nvidia" <<<"$DRIVERCHOICE"; then
+            echo "nvidia" >/root/instantARCH/config/graphics
+        elif grep -qi "open" <<<"$DRIVERCHOICE"; then
+            echo "open" >/root/instantARCH/config/graphics
+        elif [ -z "$DRIVERCHOICE" ]; then
+            echo "nodriver" >/root/instantARCH/config/graphics
+        fi
+
+    else
+        echo "no nvidia card detected"
+    fi
+
     while [ -z $NEWUSER ]; do
         if guimode; then
             feh --bg-scale /usr/share/liveutils/user.jpg &

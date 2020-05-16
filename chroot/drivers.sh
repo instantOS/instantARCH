@@ -3,7 +3,9 @@
 
 echo "installing video drivers"
 
+# nvidia
 if lspci | grep -i vga | grep -i nvidia; then
+    # user chooses open source, proprietary or no driver
     if [ -e /root/instantARCH/config/graphics ]; then
         DRIVERFILE="/root/instantARCH/config/graphics"
         if grep -iq "nodriver" "$DRIVERFILE"; then

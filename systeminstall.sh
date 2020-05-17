@@ -33,8 +33,15 @@ chrootscript() {
     fi
 
     rcd
-    arch-chroot /mnt "/root/instantARCH/${1}.sh" || serror
+    
+    if command -v arch-chroot; then
+        arch-chroot /mnt "/root/instantARCH/${1}.sh" || serror
+    else
+        manjaro-chroot /mnt "/root/instantARCH/${1}.sh" || serror
+    fi
+
     echo "chroot: $1" >>/tmp/instantprogress
+
 }
 
 chrootscript "depend/depend" "preparing installer packages" &&

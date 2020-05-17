@@ -20,11 +20,21 @@ fi
 
 pacman -Sy --noconfirm
 
-while ! pacstrap /mnt base linux linux-firmware reflector; do
-    dialog --msgbox "package installation failed \nplease reconnect to internet" 700 700
-done
+if command -v pacstrap; then
+    while ! pacstrap /mnt base linux linux-firmware reflector; do
+        dialog --msgbox "package installation failed \nplease reconnect to internet" 700 700
+    done
+else
+    while ! basestrap /mnt base linux linux-firmware reflector; do
+        dialog --msgbox "manjaro package installation failed \nplease reconnect to internet" 700 700
+    done
+fi
 
-genfstab -U /mnt >>/mnt/etc/fstab
 
+if command -v genfstab; then
+    genfstab -U /mnt >>/mnt/etc/fstab
+else
+    fstabgen -U /mnt >>/mnt/etc/fstab
+fi
 cd /root
 cp -r ./instantARCH /mnt/root/instantARCH

@@ -12,7 +12,7 @@ while ! pacman -S instantos --noconfirm; do
 Please ensure you are connected to the internet"
     fi
 
-    reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+    command -v reflector && reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 done
 
 while ! pacman -S instantdepend --noconfirm; do
@@ -21,7 +21,7 @@ while ! pacman -S instantdepend --noconfirm; do
 Please ensure you are connected to the internet"
     fi
 
-    reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+    command -v reflector && reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 done
 cd ~/instantOS
 bash rootinstall.sh

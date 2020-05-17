@@ -25,7 +25,7 @@ if command -v pacstrap; then
         dialog --msgbox "package installation failed \nplease reconnect to internet" 700 700
     done
 else
-    while ! basestrap /mnt base linux linux-firmware reflector; do
+    while ! basestrap /mnt base linux linux-firmware; do
         dialog --msgbox "manjaro package installation failed \nplease reconnect to internet" 700 700
     done
 fi

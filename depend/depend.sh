@@ -27,7 +27,10 @@ while ! pacman -S --noconfirm --needed \
     curl; do
     echo "downloading packages failed, please reconnect to internet"
     sleep 10
-    reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+    if command -v reflector; then
+        reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+    fi
+
 done
 
 if [ -e /usr/share/liveutils ]; then

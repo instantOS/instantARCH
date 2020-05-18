@@ -6,23 +6,21 @@ cd instantOS
 bash repo.sh
 pacman -Sy --noconfirm
 
-while ! pacman -S instantos --noconfirm; do
-    if [ -e /usr/share/liveutils ]; then
+while ! pacman -S instantos instantdepend --noconfirm; do
+    if [ -e /usr/share/liveutils ] && ! grep -iq manjaro /etc/os-release; then
         imenu -m "package installation failed.
 Please ensure you are connected to the internet"
     fi
-
-    command -v reflector && reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-done
-
-while ! pacman -S instantdepend --noconfirm; do
-    if [ -e /usr/share/liveutils ]; then
-        imenu -m "package installation failed.
-Please ensure you are connected to the internet"
+    # fetch new mirrors if on arch
+    if command -v reflector; then
+        reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+    else
+        pacman-mirrors --geoip
     fi
+    pacman -Sy --noconfirm
 
-    command -v reflector && reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 done
+
 cd ~/instantOS
 bash rootinstall.sh
 

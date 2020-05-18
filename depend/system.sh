@@ -25,6 +25,8 @@ while ! pacman -S --noconfirm --needed \
     grub; do
 
     sleep 10
-    command -v reflector && reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+    command -v reflector &&
+        reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist &&
+        pacman -Sy --noconfirm
 
 done

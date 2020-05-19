@@ -133,6 +133,7 @@ this will delete all existing data" | imenu -C; then
         while [ -z "$DRIVERCHOICE" ]; do
             if guimode; then
                 DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
+nvidia-dkms (try if proprietary doesn't work)
 nouveau open source
 install without graphics drivers (not recommended)' | imenu -l 'select graphics drivers')"
 
@@ -146,15 +147,11 @@ This could prevent the system from booting" | imenu -C; then
 
                 while [ -z "$DRIVERCHOICE" ]; do
                     while [ -z "$DRIVERCHOICE" ]; do
-                        if (lspci | grep -i 'nvidia' | grep -iq 'nvidia.*\[.*7[5678]0.*\]'); then
-                            DRIVERCHOICE="$(echo 'nouveau open source
-install without graphics (not recommended)' | fzf --prompt 'select graphics drivers')"
-                        else
-                            DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
+                        DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
 nvidia-dkms (try if proprietary doesn't work)
 nouveau open source
 install without graphics (not recommended)' | fzf --prompt 'select graphics drivers')"
-                        fi
+
                     done
 
                     if grep -q "without" <<<"$DRIVERCHOICE"; then

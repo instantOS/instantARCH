@@ -132,14 +132,9 @@ this will delete all existing data" | imenu -C; then
         echo "nvidia card detected"
         while [ -z "$DRIVERCHOICE" ]; do
             if guimode; then
-                if (lspci | grep -i 'nvidia' | grep -iq 'nvidia.*\[.*7[5678]0.*\]'); then
-                    DRIVERCHOICE="$(echo 'nouveau open source
-install without graphics drivers (not recommended)' | imenu -l 'select graphics drivers')"
-                else
-                    DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
+                DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
 nouveau open source
 install without graphics drivers (not recommended)' | imenu -l 'select graphics drivers')"
-                fi
 
                 if grep -q "without" <<<"$DRIVERCHOICE"; then
                     if ! echo "are you sure you do not want to install graphics drivers?

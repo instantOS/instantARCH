@@ -21,11 +21,11 @@ fi
 pacman -Sy --noconfirm
 
 if command -v pacstrap; then
-    while ! pacstrap /mnt base linux linux-firmware reflector; do
+    while ! pacstrap /mnt base linux linux-headers linux-lts linux-lts-headers linux-firmware reflector; do
         dialog --msgbox "package installation failed \nplease reconnect to internet" 700 700
     done
 else
-    while ! basestrap /mnt base linux linux-firmware; do
+    while ! basestrap /mnt base linux linux-headers linux-lts linux-lts-headers linux-firmware; do
         dialog --msgbox "manjaro package installation failed \nplease reconnect to internet" 700 700
     done
 fi

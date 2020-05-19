@@ -21,6 +21,7 @@ while ! pacman -S --noconfirm --needed \
     alsa-utils \
     usbutils \
     lightdm-gtk-greeter \
+    inetutils \
     xdg-desktop-portal-gtk \
     grub; do
 

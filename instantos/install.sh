@@ -6,7 +6,7 @@ cd instantOS
 bash repo.sh
 pacman -Sy --noconfirm
 
-while ! pacman -S instantos instantdepend --noconfirm; do
+while ! pacman -S libxft-bgra instantos instantdepend --noconfirm; do
     if [ -e /usr/share/liveutils ] && ! grep -iq manjaro /etc/os-release; then
         imenu -m "package installation failed.
 Please ensure you are connected to the internet"

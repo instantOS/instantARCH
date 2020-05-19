@@ -156,6 +156,7 @@ This could prevent the system from booting" | imenu -C; then
 install without graphics (not recommended)' | fzf --prompt 'select graphics drivers')"
                         else
                             DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
+nvidia-dkms (try if proprietary doesn't work)
 nouveau open source
 install without graphics (not recommended)' | fzf --prompt 'select graphics drivers')"
                         fi
@@ -172,7 +173,9 @@ This could prevent the system from booting"; then
             fi
         done
 
-        if grep -qi "nvidia" <<<"$DRIVERCHOICE"; then
+        if grep -qi "dkms" <<<"$DRIVERCHOICE"; then
+            echo "dkms" >/root/instantARCH/config/graphics
+        elif grep -qi "nvidia" <<<"$DRIVERCHOICE"; then
             echo "nvidia" >/root/instantARCH/config/graphics
         elif grep -qi "open" <<<"$DRIVERCHOICE"; then
             echo "open" >/root/instantARCH/config/graphics

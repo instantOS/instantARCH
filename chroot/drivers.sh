@@ -12,6 +12,8 @@ if grep -iq '^name.*arch' /etc/os-release; then
             DRIVERFILE="/root/instantARCH/config/graphics"
             if grep -iq "nodriver" "$DRIVERFILE"; then
                 exit
+            elif grep -iq "dkms" "$DRIVERFILE"; then
+                pacman -S --noconfirm nvidia-dkms nvidia-utils
             elif grep -iq "nvidia" "$DRIVERFILE"; then
                 pacman -S --noconfirm nvidia nvidia-utils
             elif grep -iq "open" "$DRIVERFILE"; then

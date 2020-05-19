@@ -15,7 +15,7 @@ if grep -iq '^name.*arch' /etc/os-release; then
             elif grep -iq "dkms" "$DRIVERFILE"; then
                 pacman -S --noconfirm nvidia-dkms nvidia-utils
             elif grep -iq "nvidia" "$DRIVERFILE"; then
-                pacman -S --noconfirm nvidia nvidia-utils
+                pacman -S --noconfirm nvidia nvidia-utils nvidia-lts
             elif grep -iq "open" "$DRIVERFILE"; then
                 pacman -S --noconfirm mesa xf86-video-nouveau
             fi

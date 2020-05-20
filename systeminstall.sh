@@ -33,7 +33,7 @@ chrootscript() {
     fi
 
     rcd
-    
+
     if command -v arch-chroot; then
         arch-chroot /mnt "/root/instantARCH/${1}.sh" || serror
     else
@@ -62,7 +62,9 @@ chrootscript "user/user" "setting up user" &&
     chrootscript "network/network" "setting up networkmanager" &&
     chrootscript "bootloader/config" "configuring bootloader" || exit 1
 
-if ! [ -e /root/instantARCH/config/onlyarch ]; then
+# make instantOS packages optional
+if ! [ -e /root/instantARCH/config/onlyarch ] &&
+    ! [ -e /opt/onlyarch ]; then
     chrootscript "instantos/install" "configuring instantOS, this will take a while"
 fi
 

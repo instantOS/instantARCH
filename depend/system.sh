@@ -13,6 +13,7 @@ while ! pacman -S --noconfirm --needed \
     sudo \
     lightdm \
     bash \
+    zsh \
     vim \
     xterm \
     systemd-swap \

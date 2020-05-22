@@ -22,3 +22,10 @@ if ! grep -iq manjaro /etc/os-release; then
 
     sed -i 's/# %wheel/%wheel/g' /etc/sudoers
 fi
+
+if ! command -v update-grub &>/dev/null; then
+    # can't include this in package
+    echo '#! /bin/sh
+grub-mkconfig -o /boot/grub/grub.cfg' >/usr/bin/update-grub
+    chmod 755 /usr/bin/update-grub
+fi

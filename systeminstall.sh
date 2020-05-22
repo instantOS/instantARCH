@@ -61,6 +61,7 @@ fi
 chrootscript "user/user" "setting up user" &&
     chrootscript "network/network" "setting up networkmanager" &&
     chrootscript "bootloader/config" "configuring bootloader" || exit 1
+    chrootscript "lang/locale" "setting locale" || exit 1
 
 # make instantOS packages optional
 if ! [ -e /root/instantARCH/config/onlyarch ] &&

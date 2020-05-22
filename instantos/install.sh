@@ -31,5 +31,5 @@ bash rootinstall.sh
 cat /usr/share/instantdotfiles/lightdm-gtk-greeter.conf >/etc/lightdm/lightdm-gtk-greeter.conf
 
 # custom grub theme
-sed -i 's/^#GRUB_THEME.*/GRUB_THEME=/usr/share/grub/themes/instantos/theme.txt/g' /etc/default/grub
+sed -i 's~^#GRUB_THEME.*~GRUB_THEME=/usr/share/grub/themes/instantos/theme.txt~g' /etc/default/grub
 update-grub

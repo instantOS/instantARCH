@@ -24,6 +24,8 @@ while ! pacman -S --noconfirm --needed \
     lightdm-gtk-greeter \
     inetutils \
     xdg-desktop-portal-gtk \
+    steam \
+    firefox \
     grub; do
 
     sleep 10

@@ -5,8 +5,6 @@ if [ -e /opt/instantos/buildmedium ]; then
     exit
 fi
 
-pacman -Sy --noconfirm
-
 echo "downloading installer dependencies"
 
 setinfo() {
@@ -17,6 +15,16 @@ setinfo() {
 }
 
 setinfo "downloading installer dependencies"
+
+# enable multilib
+if ! uname -m | grep -q '^i'; then
+    if ! grep -qi 'manjaro' /etc/os-release; then
+        echo "[multilib]" >>/etc/pacman.conf
+        "Include = /etc/pacman.d/mirrorlist" >>/etc/pacman.conf
+    fi
+fi
+
+pacman -Sy --noconfirm
 
 while ! pacman -S --noconfirm --needed \
     fzf \

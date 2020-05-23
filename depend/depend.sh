@@ -18,9 +18,11 @@ setinfo "downloading installer dependencies"
 
 # enable multilib
 if ! uname -m | grep -q '^i'; then
-    if ! grep -qi 'manjaro' /etc/os-release; then
-        echo "[multilib]" >>/etc/pacman.conf
-        echo "Include = /etc/pacman.d/mirrorlist" >>/etc/pacman.conf
+    if ! grep -qi '^\[multilib' /etc/pacman.conf; then
+        if ! grep -qi 'manjaro' /etc/os-release; then
+            echo "[multilib]" >>/etc/pacman.conf
+            echo "Include = /etc/pacman.d/mirrorlist" >>/etc/pacman.conf
+        fi
     fi
 fi
 

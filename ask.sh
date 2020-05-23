@@ -133,7 +133,7 @@ this will delete all existing data" | imenu -C; then
         while [ -z "$DRIVERCHOICE" ]; do
             if guimode; then
                 DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
-nvidia-dkms (try if proprietary doesn't work)
+nvidia-dkms (try if proprietary does not work)
 nouveau open source
 install without graphics drivers (not recommended)' | imenu -l 'select graphics drivers')"
 

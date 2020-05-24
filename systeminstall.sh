@@ -6,8 +6,13 @@ rcd() {
 }
 
 serror() {
-    echo "script failed"
-    exit 1
+    if [ -e /opt/noerror ]; then
+        echo "skipping error"
+        rm /opt/noerror
+    else
+        echo "script failed"
+        exit 1
+    fi
 }
 
 setinfo() {
@@ -60,8 +65,11 @@ fi
 
 chrootscript "user/user" "setting up user" &&
     chrootscript "network/network" "setting up networkmanager" &&
-    chrootscript "bootloader/config" "configuring bootloader" || exit 1
-    chrootscript "lang/locale" "setting locale"
+    chrootscript "bootloader/config" "configuring bootloader"
+
+touch /opt/noerror
+chrootscript "lang/locale" "setting locale"
+[ -e /opt/noerror ] && rm /opt/noerror
 
 # make instantOS packages optional
 if ! [ -e /root/instantARCH/config/onlyarch ] &&

@@ -42,7 +42,7 @@ while ! [ -e /root/instantARCH/config/confirm ]; do
 
         # allow directly typing in layout name
         if [ "$NEWKEY" = "other" ]; then
-            OTHERKEY="$(localectl list-x11-keymap-layouts | imenu 'select keyboard layout ')"
+            OTHERKEY="$(localectl list-x11-keymap-layouts | imenu -l 'select keyboard layout ')"
 
             if [ -z "$OTHERKEY" ]; then
                 unset NEWKEY
@@ -61,7 +61,7 @@ $OTHERKEY" >/root/instantARCH/data/lang/keyboard/other
 
     echo "$NEWKEY" >/root/instantARCH/config/keyboard
 
-    if head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY" | greo -q '[^ ][^ ]'; then
+    if head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY" | grep -q '[^ ][^ ]'; then
         loadkeys $(head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")
     fi
 

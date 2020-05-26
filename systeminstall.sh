@@ -75,6 +75,10 @@ chrootscript "lang/locale" "setting locale"
 if ! [ -e /root/instantARCH/config/onlyarch ] &&
     ! [ -e /opt/onlyarch ]; then
     chrootscript "instantos/install" "configuring instantOS, this will take a while"
+    if grep -iq 'manjaro' /etc/os-release; then
+        echo "manjaro extra steps"
+        chrootscript "chroot/chroot" "extra steps for manjaro"
+    fi
 fi
 
 # mark installation as susccessful

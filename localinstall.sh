@@ -9,6 +9,7 @@ setinfo() {
         pkill instantmenu
     fi
     echo "$@" >/opt/instantprogress
+    echo "$@"
 }
 
 escript() {

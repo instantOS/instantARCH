@@ -47,6 +47,7 @@ setinfo() {
         pkill instantmenu
     fi
     echo "$@" >/opt/instantprogress
+    echo "$@"
 }
 
 # sort mirrors
@@ -68,7 +69,9 @@ cd instantARCH
 
 ./depend/depend.sh
 cd /root/instantARCH
-./ask.sh || exit
+./ask.sh || {
+    echo "ask failed" && exit
+}
 
 chmod +x *.sh
 chmod +x **/*.sh

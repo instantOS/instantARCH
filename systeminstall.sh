@@ -20,6 +20,7 @@ setinfo() {
         pkill instantmenu
     fi
     echo "$@" >/opt/instantprogress
+    echo "$@"
 }
 
 escript() {
@@ -49,11 +50,11 @@ chrootscript() {
 
 }
 
-chrootscript "depend/depend" "preparing installer packages" &&
-    chrootscript "depend/depend" "preparing installer packages" &&
-    chrootscript "depend/system" "installing dependencies" &&
-    chrootscript "chroot/chroot" "configuring system" &&
-    chrootscript "chroot/drivers" "installing drivers" &&
+chrootscript "depend/depend" "preparing installer packages"
+    chrootscript "depend/depend" "preparing installer packages"
+    chrootscript "depend/system" "installing dependencies"
+    chrootscript "chroot/chroot" "configuring system"
+    chrootscript "chroot/drivers" "installing drivers"
     chrootscript "lang/timezone" "settings time"
 
 # grub: install package, install, generate config

@@ -12,6 +12,7 @@ setinfo() {
         pkill instantmenu
     fi
     echo "$@" >/opt/instantprogress
+    echo "$@"
 }
 
 setinfo "downloading installer dependencies"

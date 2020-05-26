@@ -216,8 +216,6 @@ Should installation proceed with these parameters?"
     fi
 done
 
-
 imenu -M <<<"The installation will now begin.
 This could take a while.
-Keep the machine powered and connected to the internet" &
-clear
+Keep the machine powered and connected to the internet"

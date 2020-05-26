@@ -25,31 +25,24 @@ guimode() {
     fi
 }
 
-if guimode; then
-    pgrep instantmenu && pkill instantmenu
-    imenu -m "Welcome to the instantOS installer"
-else
-    messagebox "Welcome to the instantOS installer"
+# switch imenu to fzf and dialog
+if ! guimode; then
+    touch /tmp/climenu
 fi
+
+imenu -m "Welcome to the instantOS installer"
 
 # go back to the beginning if user isn't happy with settings
 while ! [ -e /root/instantARCH/config/confirm ]; do
     cd /root/instantARCH/data/lang/keyboard
     while [ -z "$NEWKEY" ]; do
-        if guimode; then
-            feh --bg-scale /usr/share/liveutils/worldmap.jpg &
-            NEWKEY="$(ls | imenu -l 'Select keyboard layout')"
-        else
-            NEWKEY="$(ls | fzf --prompt 'Select keyboard layout> ')"
-        fi
+
+        guimode && feh --bg-scale /usr/share/liveutils/worldmap.jpg &
+        NEWKEY="$(ls | imenu -l 'Select keyboard layout ')"
 
         # allow directly typing in layout name
         if [ "$NEWKEY" = "other" ]; then
-            if guimode; then
-                OTHERKEY="$(localectl list-x11-keymap-layouts | instantmenu -l 20 -c -p 'select keyboard layout')"
-            else
-                OTHERKEY="$(localectl list-x11-keymap-layouts | fzf --prompt 'select keyboard layout')"
-            fi
+            OTHERKEY="$(localectl list-x11-keymap-layouts | imenu 'select keyboard layout ')"
 
             if [ -z "$OTHERKEY" ]; then
                 unset NEWKEY
@@ -76,11 +69,7 @@ $OTHERKEY" >/root/instantARCH/data/lang/keyboard/other
 
     cd ../locale
     while [ -z "$NEWLOCALE" ]; do
-        if guimode; then
-            NEWLOCALE="$(ls | imenu -l 'Select language> ')"
-        else
-            NEWLOCALE="$(ls | fzf --prompt 'Select language> ')"
-        fi
+        NEWLOCALE="$(ls | imenu -l 'Select language> ')"
     done
 
     echo "$NEWLOCALE" >/root/instantARCH/config/locale
@@ -88,21 +77,13 @@ $OTHERKEY" >/root/instantARCH/data/lang/keyboard/other
     cd /usr/share/zoneinfo
 
     while [ -z "$REGION" ]; do
-        if guimode; then
-            REGION=$(ls | imenu -l "select region")
-        else
-            REGION=$(ls | fzf --prompt "select region> ")
-        fi
+        REGION=$(ls | imenu -l "select region ")
     done
 
     if [ -d "$REGION" ]; then
         cd "$REGION"
         while [ -z "$CITY" ]; do
-            if guimode; then
-                CITY=$(ls | imenu -l "select the City nearest to you")
-            else
-                CITY=$(ls | fzf --prompt "select the City nearest to you> ")
-            fi
+            CITY=$(ls | imenu -l "select the City nearest to you ")
         done
     fi
 
@@ -110,18 +91,11 @@ $OTHERKEY" >/root/instantARCH/data/lang/keyboard/other
     [ -n "$CITY" ] && echo "$CITY" >/root/instantARCH/config/city
 
     while [ -z "$DISK" ]; do
-        if guimode; then
-            feh --bg-scale /usr/share/liveutils/install.jpg &
-            DISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk> ")
-            if ! echo "Install on $DISK ?
+        guimode && feh --bg-scale /usr/share/liveutils/install.jpg &
+        DISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk> ")
+        if ! echo "Install on $DISK ?
 this will delete all existing data" | imenu -C; then
-                unset DISK
-            fi
-        else
-            DISK=$(fdisk -l | grep -i '^Disk /.*:' | fzf --prompt "select disk> ")
-            if ! confirm "Install on $DISK ?\n this will delete all existing data"; then
-                unset DISK
-            fi
+            unset DISK
         fi
     done
 
@@ -131,38 +105,18 @@ this will delete all existing data" | imenu -C; then
     if lspci | grep -iq 'nvidia'; then
         echo "nvidia card detected"
         while [ -z "$DRIVERCHOICE" ]; do
-            if guimode; then
-                DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
+            DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
 nvidia-dkms (try if proprietary does not work)
 nouveau open source
 install without graphics drivers (not recommended)' | imenu -l 'select graphics drivers')"
 
-                if grep -q "without" <<<"$DRIVERCHOICE"; then
-                    if ! echo "are you sure you do not want to install graphics drivers?
+            if grep -q "without" <<<"$DRIVERCHOICE"; then
+                if ! echo "are you sure you do not want to install graphics drivers?
 This could prevent the system from booting" | imenu -C; then
-                        unset DRIVERCHOICE
-                    fi
+                    unset DRIVERCHOICE
                 fi
-            else
-
-                while [ -z "$DRIVERCHOICE" ]; do
-                    while [ -z "$DRIVERCHOICE" ]; do
-                        DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
-nvidia-dkms (try if proprietary doesn't work)
-nouveau open source
-install without graphics (not recommended)' | fzf --prompt 'select graphics drivers')"
-
-                    done
-
-                    if grep -q "without" <<<"$DRIVERCHOICE"; then
-                        if ! confirm "are you sure you do not want to install graphics drivers?
-This could prevent the system from booting"; then
-                            unset DRIVERCHOICE
-                        fi
-                    fi
-                done
-
             fi
+
         done
 
         if grep -qi "dkms" <<<"$DRIVERCHOICE"; then
@@ -180,43 +134,26 @@ This could prevent the system from booting"; then
     fi
 
     while [ -z $NEWUSER ]; do
-        if guimode; then
-            feh --bg-scale /usr/share/liveutils/user.jpg &
-            NEWUSER="$(imenu -i 'set username')"
-        else
-            NEWUSER="$(textbox 'set username')"
-        fi
+        guimode && feh --bg-scale /usr/share/liveutils/user.jpg &
+        NEWUSER="$(imenu -i 'set username')"
 
         # validate input as a unix name
         if ! grep -Eq '^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$' <<<"$NEWUSER"; then
-            if guimode; then
-                imenu -m "invalid username"
-            else
-                msgbox "invalid username"
-            fi
+            imenu -m "invalid username"
             unset NEWUSER
         fi
     done
 
     while ! [ "$NEWPASS" = "$NEWPASS2" ] || [ -z "$NEWPASS" ]; do
-        if guimode; then
-            NEWPASS="$(imenu -P 'set password')"
-            NEWPASS2="$(imenu -P 'confirm password')"
-        else
-            NEWPASS="$(passwordbox 'set password')"
-            NEWPASS2="$(passwordbox 'confirm password')"
-        fi
+        NEWPASS="$(imenu -P 'set password')"
+        NEWPASS2="$(imenu -P 'confirm password')"
     done
 
     echo "$NEWUSER" >/root/instantARCH/config/user
     echo "$NEWPASS" >/root/instantARCH/config/password
 
     while [ -z "$NEWHOSTNAME" ]; do
-        if guimode; then
-            NEWHOSTNAME=$(imenu -i "enter name of this computer")
-        else
-            NEWHOSTNAME=$(textbox "enter name of this computer")
-        fi
+        NEWHOSTNAME=$(imenu -i "enter name of this computer")
     done
 
     echo "$NEWHOSTNAME" >/root/instantARCH/config/hostname
@@ -279,11 +216,8 @@ Should installation proceed with these parameters?"
     fi
 done
 
-if guimode; then
-    imenu -M <<<"The installation will now begin.
-    This could take a while.
-    Keep the machine powered and connected to the internet" &
-else
-    messagebox "The installation will now begin. This could take a while. Keep the machine powered and connected to the internet"
-    clear
-fi
+
+imenu -M <<<"The installation will now begin.
+This could take a while.
+Keep the machine powered and connected to the internet" &
+clear

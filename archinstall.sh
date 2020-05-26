@@ -16,7 +16,9 @@ if ! whoami | grep -iq '^root'; then
 fi
 
 if [ -e /usr/share/liveutils ]; then
-    imenu -m "preparing installation" &
+    echo "preparing isntallation
+OK" | instantmenu -c -bw 4 -l 2 &
+    sleep 1
 else
     # print logo
     echo ""

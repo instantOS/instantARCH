@@ -1,6 +1,11 @@
 #!/bin/bash
 
-NEWHOSTNAME=$(cat /root/instantARCH/hostname)
+NEWHOSTNAME=$(cat /root/instantARCH/config/hostname)
+
+# default hostname
+if [ -z "$NEWHOSTNAME" ]; then
+    NEWHOSTNAME="instantos"
+fi
 
 echo "$NEWHOSTNAME" >/etc/hostname
 

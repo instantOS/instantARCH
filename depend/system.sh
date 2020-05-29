@@ -26,6 +26,7 @@ while ! pacman -S --noconfirm --needed \
     xdg-desktop-portal-gtk \
     steam \
     firefox \
+    mpv \
     grub; do
 
     sleep 10

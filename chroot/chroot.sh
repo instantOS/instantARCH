@@ -12,10 +12,12 @@ fi
 sed -i 's/^#logind-check-graphical=.*/logind-check-graphical=true/' /etc/lightdm/lightdm.conf
 
 # needed to get internet to work
-if ! grep -iq manjaro /etc/os-release; then
-    # enable swap
-    systemctl enable systemd-swap
-    sed -i 's/^swapfc_enabled=.*/swapfc_enabled=1/' /etc/systemd/swap.conf
+if ! [ -e /opt/topinstall ]; then
+    if ! grep -iq manjaro /etc/os-release; then
+        # enable swap
+        systemctl enable systemd-swap
+        sed -i 's/^swapfc_enabled=.*/swapfc_enabled=1/' /etc/systemd/swap.conf
+    fi
 fi
 
 sed -i 's/# %wheel/%wheel/g' /etc/sudoers

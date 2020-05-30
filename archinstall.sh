@@ -7,8 +7,6 @@
 
 # main script calling others
 
-# DO NOT USE ON ACTUAL HARDWARE YET
-
 if ! whoami | grep -iq '^root'; then
     echo "not running as root, switching"
     curl -Lg git.io/instantarch | sudo bash

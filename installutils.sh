@@ -34,7 +34,7 @@ escript() {
 # scripts executed in installed environment
 chrootscript() {
     setinfo "${2:-info}"
-    if ! mount | grep -q '/mnt.*ext4'; then
+    if ! mount | grep -q '/mnt'; then
         echo "mount failed"
         exit 1
     fi

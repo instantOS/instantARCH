@@ -16,6 +16,9 @@ start=618496, type=83, bootable" | sfdisk "${DISK}"
     mkfs.fat -F32 "$DISK1"
     mkfs.ext4 -F "$DISK2"
 
+    echo "$DISK1" >/root/instantARCH/config/partefi
+    echo "$DISK2" >/root/instantARCH/config/partroot
+
 else
     echo "legacy bios"
     echo "label: dos
@@ -23,5 +26,6 @@ type=83, bootable" | sfdisk "${DISK}"
     DISK1="$(fdisk -l | grep "^${DISK}" | grep -o '^[^ ]*' | head -1)"
 
     mkfs.ext4 -F "$DISK1"
+    echo "$DISK1" >/root/instantARCH/config/partroot
 
 fi

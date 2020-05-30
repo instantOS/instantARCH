@@ -22,13 +22,12 @@ are you sure you want to run this?" | imenu -C || {
     }
 fi
 
-touch /tmp/removeimenu
+touch /tmp/climenu
 touch /opt/topinstall
 
 curl -s https://raw.githubusercontent.com/instantOS/imenu/master/imenu.sh >/usr/bin/imenu
 chmod 755 /usr/bin/imenu
 
-rm /tmp/removeimenu
 pacman -Sy --noconfirm
 
 pacman -S reflector --noconfirm --needed
@@ -54,3 +53,7 @@ pacman -S --noconfirm --needed base linux linux-headers linux-lts linux-lts-head
 # drivers todo
 ./network/network.sh
 ./bootloader/config.sh
+./user/modify.sh
+
+echo "finished installing instantOS"
+rm /tmp/climenu

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /root/instantARCH/askutils.sh
+source /root/instantARCH/installutils.sh
 
 chrootscript "depend/depend" "preparing installer packages"
 chrootscript "depend/depend" "preparing installer packages"

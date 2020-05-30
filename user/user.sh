@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# user and password creation
+# create user account
+# make user default lightdm user
+# add user to required groups
 
 NEWUSER="$(cat /root/instantARCH/config/user)"
 NEWPASS="$(cat /root/instantARCH/config/password)"

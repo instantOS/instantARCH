@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# install all instantOS software
+# and apply instantOS specific changes and workarounds
+
 cd
 git clone --depth 1 https://github.com/instantOS/instantOS
 cd instantOS

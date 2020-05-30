@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# mount all disks (TODO: make mounting its own module to allow manual partitioning)
+# install base system to target root partition
+
 DISK=$(cat /root/instantARCH/config/disk)
 
 if efibootmgr; then

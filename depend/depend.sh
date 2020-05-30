@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# this installs dependencies needed for the installer
+# like fzf for menus
+
 if [ -e /opt/instantos/buildmedium ]; then
     echo "skipping dependencies"
     exit
@@ -18,13 +21,15 @@ setinfo() {
 setinfo "downloading installer dependencies"
 
 # enable multilib
-if ! uname -m | grep -q '^i'; then
-    if ! grep -qi '^\[multilib' /etc/pacman.conf; then
-        if ! grep -qi 'manjaro' /etc/os-release; then
-            echo "[multilib]" >>/etc/pacman.conf
-            echo "Include = /etc/pacman.d/mirrorlist" >>/etc/pacman.conf
-        fi
-    fi
+# do it before updating mirrors
+if uname -m | grep -q '^i' ||
+    grep -qi '^\[multilib' /etc/pacman.conf ||
+    grep -qi 'manjaro' /etc/os-release; then
+    echo "not enabling multilib"
+else
+    echo "enabling multilib"
+    echo "[multilib]" >>/etc/pacman.conf
+    echo "Include = /etc/pacman.d/mirrorlist" >>/etc/pacman.conf
 fi
 
 pacman -Sy --noconfirm

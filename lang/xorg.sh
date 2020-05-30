@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# apply user keymap
+
 KEYLANG=$(cat /root/instantARCH/config/keyboard)
 
 NEWXORG=$(tail -1 /root/instantARCH/data/lang/keyboard/$KEYLANG)

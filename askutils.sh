@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# User questions are seperated into functions to be reused in alternative installers
+# like topinstall.sh
+
+
 # check if the install session is GUI or cli
 guimode() {
     if [ -e /opt/noguimode ]; then

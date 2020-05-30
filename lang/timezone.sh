@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# symlink timezone from user selected region
+
 cd /usr/share/zoneinfo
 
 REGION=$(cat /root/instantARCH/config/region)

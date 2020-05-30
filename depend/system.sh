@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# installs basic dependencies not specific to instantOS
+
 echo "installing additional system software"
 
 pacman -Sy --noconfirm

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# start this on the first reboot after the actual install
+# This is run as root by instantautostart
+# on the actual installation after the first reboot
 
 cd /root/instantARCH
 

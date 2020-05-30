@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# This is the interactive part of the installer
+# Everything requiring user input is asked first, 
+# NO INSTALLATION IS DONE IN THIS SCRIPT
+# Results get saved in /root/instantARCH/config
+# and read out during installation
+# results also get copied to the target root partition
+
 mkdir /root/instantARCH/config
 mkdir config
 

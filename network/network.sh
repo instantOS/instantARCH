@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# change hostname and 
+# follow arch install guide for hosts
+
 NEWHOSTNAME=$(cat /root/instantARCH/config/hostname)
 
 # default hostname

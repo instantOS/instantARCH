@@ -1,5 +1,6 @@
 #!/bin/bash
 # auto detect graphics card and install drivers accordingly
+# if the system uses nvidia, read out the user choice
 
 echo "installing video drivers"
 

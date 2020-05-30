@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# enable all sorts of configuration concerning login, lightdm, networking and grub
+
 # enable lightdm greeter
 if grep -q 'greeter-session' /etc/lightdm/lightdm.conf; then
     LASTSESSION="$(grep 'greeter-session' /etc/lightdm/lightdm.conf | tail -1)"

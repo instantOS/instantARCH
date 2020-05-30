@@ -4,6 +4,9 @@ rcd() {
     cd /root/instantARCH
 }
 
+# $ gets displayed at the bottom of the screen
+# during installation
+
 setinfo() {
     if [ -e /usr/share/liveutils ]; then
         pkill instantmenu
@@ -12,6 +15,7 @@ setinfo() {
     echo "$@"
 }
 
+# run script in installation medium
 escript() {
     setinfo "$2"
     rcd

@@ -13,7 +13,7 @@ if ! whoami | grep -iq '^root'; then
 fi
 
 # only runs on arch based distros
-if ! grep -Eiq '(arch|manjaro)'; then
+if ! grep -Eiq '(arch|manjaro)' /etc/os-release; then
     echo "system does not appear to be arch based.
 instantARCH only works on arch based systems like Arch and Manjaro
 are you sure you want to run this?" | imenu -C || {

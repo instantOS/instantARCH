@@ -61,9 +61,18 @@ pacman -S --noconfirm --needed base \
 ./chroot/drivers.sh
 ./network/network.sh
 ./bootloader/config.sh
-./user/modify.sh
 
-rm /tmp/climenu
+if ! ls /home/ | grep -q ..; then
+    ./user/modify.sh
+else
+    ./user/user.sh
+fi
+
+./lang/timezone.sh
+./lang/locale.sh
+./lang/xorg.sh
+./instantos/install.sh
 
 echo "finished installing instantOS"
-imenu -c "a reboot is required. reboot now?" && reboot
+imenu -c "a reboot is required. reboot now?" && touch /tmp/instantosreboot
+rm /tmp/climenu

@@ -17,5 +17,5 @@ echo "::1 localhost" >>/etc/hosts
 echo "127.0.1.1 $NEWHOSTNAME.localdomain $NEWHOSTNAME" >>/etc/hosts
 hostnamectl set-hostname "$NEWHOSTNAME"
 
-pacman -S --noconfirm networkmanager
+pacman -S --noconfirm --needed networkmanager
 systemctl enable NetworkManager

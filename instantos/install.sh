@@ -4,7 +4,10 @@
 # and apply instantOS specific changes and workarounds
 
 cd
-git clone --depth 1 https://github.com/instantOS/instantOS
+while ! git clone --depth 1 https://github.com/instantOS/instantOS; do
+    imenu -m "pull failed, please connect to the internet"
+done
+
 cd instantOS
 bash repo.sh
 pacman -Sy --noconfirm

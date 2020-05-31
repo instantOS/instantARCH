@@ -12,3 +12,7 @@ asklayout
 askregion
 asklocale
 askdrivers
+
+if ! ls /home/ | grep -q ..; then
+    askuser
+fi

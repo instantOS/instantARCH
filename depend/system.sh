@@ -37,3 +37,9 @@ while ! pacman -S --noconfirm --needed \
         pacman -Sy --noconfirm
 
 done
+
+# don't install arch pamac on Manjaro
+if ! grep -iq Manjaro /etc/os-release && ! command -v pamac; then
+    echo "installing pamac"
+    sudo pacman -S pamac-aur --noconfirm
+fi

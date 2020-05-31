@@ -45,15 +45,25 @@ cd instantARCH
 chmod 755 ./*/*.sh
 
 ./depend/depend.sh
-./init/init
 
-pacman -S --noconfirm --needed base linux linux-headers linux-lts linux-lts-headers linux-firmware
+# do all actions requiring user input first
+./topask.sh
+
+./init/init.sh
+
+pacman -S --noconfirm --needed base \
+    linux linux-headers \
+    linux-lts linux-lts-headers \
+    linux-firmware
+
 ./depend/system.sh
 ./chroot/chroot.sh
-# drivers todo
+./chroot/drivers.sh
 ./network/network.sh
 ./bootloader/config.sh
 ./user/modify.sh
 
-echo "finished installing instantOS"
 rm /tmp/climenu
+
+echo "finished installing instantOS"
+imenu -c "a reboot is required. reboot now?" && reboot

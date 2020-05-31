@@ -4,6 +4,9 @@
 # and apply instantOS specific changes and workarounds
 
 cd
+
+[ -e instantOS ] && rm -rf instantOS
+
 while ! git clone --depth 1 https://github.com/instantOS/instantOS; do
     imenu -m "pull failed, please connect to the internet"
 done

@@ -30,17 +30,21 @@ chmod 755 /usr/bin/imenu
 
 pacman -Sy --noconfirm
 
-pacman -S reflector --noconfirm --needed
-echo "selecting fastest mirror"
-reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+if ! command -v mhwd; then
+    pacman -S reflector --noconfirm --needed
+    echo "selecting fastest mirror"
+    reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+    pacman -Sy --noconfirm
+fi
 
-pacman -Sy --noconfirm
 pacman -S git --noconfirm --needed
 
 cd /root
 [ -e instantARCH ] && rm -rf instantARCH
 git clone --depth=1 https://github.com/instantos/instantARCH.git
 cd instantARCH
+
+mkdir config
 
 chmod 755 ./*/*.sh
 

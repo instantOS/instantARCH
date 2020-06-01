@@ -75,9 +75,9 @@ chmod +x *.sh
 chmod +x **/*.sh
 
 echo "local install"
-./localinstall.sh &>/opt/localinstall &&
+./localinstall.sh 2>&1 | tee /opt/localinstall &&
     echo "system install" &&
-    ./systeminstall.sh &>/opt/systeminstall
+    ./systeminstall.sh 2>&1 | tee /opt/systeminstall
 
 # ask to reboot, upload error data if install failed
 if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then

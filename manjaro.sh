@@ -26,6 +26,4 @@ pacman -S --noconfirm --needed base \
 ./user/modify.sh
 ./instantos/install.sh
 
-# not a whole lot of progress made here xD
-
 echo "done installing instantOS"

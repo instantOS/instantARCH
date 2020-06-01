@@ -30,6 +30,12 @@ Please ensure you are connected to the internet"
 
 done
 
+# don't install arch pamac on Manjaro
+if ! grep -iq Manjaro /etc/os-release && ! command -v pamac; then
+    echo "installing pamac"
+    sudo pacman -S pamac-aur --noconfirm
+fi
+
 yes | pacman -S libxft-bgra
 
 cd ~/instantOS

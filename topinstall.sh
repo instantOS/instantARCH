@@ -12,6 +12,13 @@ if ! whoami | grep -iq '^root'; then
     exit
 fi
 
+if ! command -v imenu; then
+    curl -s https://raw.githubusercontent.com/instantOS/imenu/master/imenu.sh >/usr/local/bin/imenu
+    chmod 755 /usr/local/bin/imenu
+fi
+
+touch /tmp/climenu
+
 # only runs on arch based distros
 if ! grep -Eiq '(arch|manjaro)' /etc/os-release; then
     echo "system does not appear to be arch based.
@@ -22,11 +29,7 @@ are you sure you want to run this?" | imenu -C || {
     }
 fi
 
-touch /tmp/climenu
 touch /opt/topinstall
-
-curl -s https://raw.githubusercontent.com/instantOS/imenu/master/imenu.sh >/usr/bin/imenu
-chmod 755 /usr/bin/imenu
 
 pacman -Sy --noconfirm
 
@@ -80,3 +83,6 @@ fi
 echo "finished installing instantOS"
 imenu -c "a reboot is required. reboot now?" && touch /tmp/instantosreboot
 rm /tmp/climenu
+
+[ -e /usr/local/bin/imenu ] && rm /usr/local/bin/imenu
+[ -e /tmp/instantosreboot ] && reboot

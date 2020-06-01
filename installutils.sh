@@ -7,10 +7,13 @@ rcd() {
 }
 
 serror() {
+    # touching noerror skips error checking for one check
     if [ -e /opt/noerror ]; then
         echo "skipping error"
         rm /opt/noerror
     else
+        # indicator file
+        touch /opt/installfailed
         echo "script failed"
         exit 1
     fi

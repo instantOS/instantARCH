@@ -73,13 +73,40 @@ cd /root/instantARCH
 
 chmod +x *.sh
 chmod +x **/*.sh
+
 echo "local install"
-./localinstall.sh
-echo "in-system install"
-./systeminstall.sh
+./localinstall.sh &>/opt/localinstall &&
+    echo "system install" &&
+    ./systeminstall.sh &>/opt/systeminstall
+
+# ask to reboot, upload error data if install failed
+if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
+    imenu -c "installation finished. reboot?" && touch /tmp/instantosreboot
+else
+    echo "installaion failed"
+    echo "uploading error data"
+
+    cat /opt/localinstall >/opt/install.log
+
+    if [ -e /opt/systeminstall ]; then
+        cat /opt/systeminstall >>/opt/install.log
+    fi
+
+    cd /opt
+    cp /root/instantARCH/data/netrc ~/.netrc
+    curl -n -F 'f:1=@install.log' ix.io
+    dialog --msgbox "installation failed
+please go to https://instantos.github.io/instantos.github.io/support
+for assistance or error reporting" 1000 1000
+
+fi
 
 if [ -e /tmp/removeimenu ]; then
     rm /usr/bin/imenu
 fi
 
 echo "installation finished"
+
+sleep 2
+
+[ -e /tmp/instantosreboot ] && reboot

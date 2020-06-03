@@ -2,10 +2,14 @@
 
 # functions used for the actual installation
 
+
+# reset working dir
 rcd() {
     cd /root/instantARCH
 }
 
+# this gets executed if a module fails
+# it marks the installation as failed
 serror() {
     # touching noerror skips error checking for one check
     if [ -e /opt/noerror ]; then
@@ -19,6 +23,8 @@ serror() {
     fi
 }
 
+# this sets the status message
+# displayed at the bottom of the screen when using the GUI installer
 setinfo() {
     if [ -e /usr/share/liveutils ]; then
         pkill instantmenu
@@ -27,6 +33,7 @@ setinfo() {
     echo "$@"
 }
 
+# run a script inside the installation medium
 escript() {
     setinfo "${2:-info}"
     rcd

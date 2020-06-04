@@ -29,6 +29,7 @@ while ! pacman -S --noconfirm --needed \
     steam \
     firefox \
     mpv \
+    accountsservice \
     grub; do
 
     sleep 10
@@ -37,4 +38,3 @@ while ! pacman -S --noconfirm --needed \
         pacman -Sy --noconfirm
 
 done
-

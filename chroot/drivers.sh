@@ -28,6 +28,7 @@ if grep -iq '^name.*arch' /etc/os-release; then
             echo "defaulting to open source driver"
             pacman -S --noconfirm mesa xf86-video-nouveau
         fi
+        pacman -S --noconfirm --needed vulkan-icd-loader lib32-vulkan-icd-loader
     ## Intel
     elif lspci | grep -i vga | grep -i intel; then
         echo "intel integrated detected"

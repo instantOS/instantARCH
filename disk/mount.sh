@@ -13,8 +13,12 @@ mountpart() {
     fi
 }
 
+# todo: optional efi
 mountpart efi /efi
+
 mountpart root /mnt
+# home is optional
+mountpart home /mnt/home
 sleep 2
 
 if ! mount | grep -q '/mnt'; then

@@ -137,6 +137,6 @@ askuser() {
     done
 
     iroot user "$NEWUSER"
-    iroot user "$NEWPASS"
+    iroot password "$NEWPASS"
 
 }

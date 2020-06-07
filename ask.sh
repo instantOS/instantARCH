@@ -30,7 +30,7 @@ imenu -m "Welcome to the instantOS installer"
 
 # go back to the beginning if user isn't happy with settings
 # this loop wraps the rest of the installer
-while ! [ -e /root/instantARCH/config/confirm ]; do
+while ! iroot confirm; do
 
     # ask for keyboard layout
     asklayout
@@ -52,10 +52,10 @@ this will delete all existing data" | imenu -C; then
         fi
     done
 
-    echo "$DISK" | grep -o '/dev/[^:]*' >/root/instantARCH/config/disk
+    echo "$DISK" | grep -o '/dev/[^:]*' | iroot i disk
 
     if ! efibootmgr; then
-        echo "$DISK" | grep -o '/dev/[^:]*' >/root/instantARCH/config/grubdisk
+        echo "$DISK" | grep -o '/dev/[^:]*' | iroot i grubdisk
     fi
 
     # choice between multiple nvidia drivers
@@ -93,7 +93,7 @@ GRUB: BIOS"
 Should installation proceed with these parameters?"
 
     if imenu -C <<<"$SUMMARY"; then
-        touch /root/instantARCH/config/confirm
+        iroot confirm 1
     else
         unset CITY
         unset REGION

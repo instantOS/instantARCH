@@ -57,3 +57,7 @@ done
 if [ -e /usr/share/liveutils ]; then
     pkill instantmenu
 fi
+
+# installer variables utility
+curl -s https://raw.githubusercontent.com/instantOS/instantARCH/master/iroot.sh >/usr/bin/iroot
+chmod 755 /usr/bin/iroot

@@ -3,7 +3,6 @@
 # User questions are seperated into functions to be reused in alternative installers
 # like topinstall.sh
 
-
 # check if the install session is GUI or cli
 guimode() {
     if [ -e /opt/noguimode ]; then
@@ -42,6 +41,7 @@ asklayout() {
             if [ -z "$OTHERKEY" ]; then
                 unset NEWKEY
             else
+                # newline is intentional!!!
                 echo "
 $OTHERKEY" >/root/instantARCH/data/lang/keyboard/other
             fi
@@ -52,8 +52,7 @@ $OTHERKEY" >/root/instantARCH/data/lang/keyboard/other
     if [ "${NEWKEY}" = "forcequit" ]; then
         exit 1
     fi
-
-    echo "$NEWKEY" >/root/instantARCH/config/keyboard
+    iroot keyboard "$NEWKEY"
 }
 
 # ask for default locale
@@ -62,7 +61,7 @@ asklocale() {
     while [ -z "$NEWLOCALE" ]; do
         NEWLOCALE="$(ls | imenu -l 'Select language> ')"
     done
-    echo "$NEWLOCALE" >/root/instantARCH/config/locale
+    iroot locale "$NEWLOCALE"
 
 }
 
@@ -80,8 +79,7 @@ askregion() {
         done
     fi
 
-    echo "$REGION" >/root/instantARCH/config/region
-    [ -n "$CITY" ] && echo "$CITY" >/root/instantARCH/config/city
+    [ -n "$CITY" ] && iroot city "$CITY"
 
 }
 
@@ -105,13 +103,13 @@ This could prevent the system from booting" | imenu -C; then
         done
 
         if grep -qi "dkms" <<<"$DRIVERCHOICE"; then
-            echo "dkms" >/root/instantARCH/config/graphics
+            iroot graphics "dkms"
         elif grep -qi "nvidia" <<<"$DRIVERCHOICE"; then
-            echo "nvidia" >/root/instantARCH/config/graphics
+            iroot graphics "nvidia"
         elif grep -qi "open" <<<"$DRIVERCHOICE"; then
-            echo "open" >/root/instantARCH/config/graphics
+            iroot graphics "open"
         elif [ -z "$DRIVERCHOICE" ]; then
-            echo "nodriver" >/root/instantARCH/config/graphics
+            iroot graphics "nodriver"
         fi
 
     else
@@ -138,7 +136,7 @@ askuser() {
         NEWPASS2="$(imenu -P 'confirm password')"
     done
 
-    echo "$NEWUSER" >/root/instantARCH/config/user
-    echo "$NEWPASS" >/root/instantARCH/config/password
+    iroot user "$NEWUSER"
+    iroot user "$NEWPASS"
 
 }

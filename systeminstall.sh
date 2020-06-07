@@ -25,7 +25,7 @@ chrootscript "lang/locale" "setting locale"
 [ -e /opt/noerror ] && rm /opt/noerror
 
 # make instantOS packages optional
-if ! [ -e /root/instantARCH/config/onlyarch ] &&
+if iroot onlyarch &&
     ! [ -e /opt/onlyarch ]; then
     chrootscript "instantos/install" "configuring instantOS, this will take a while"
     if grep -iq 'manjaro' /etc/os-release; then

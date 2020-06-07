@@ -68,7 +68,7 @@ this will delete all existing data" | imenu -C; then
         NEWHOSTNAME=$(imenu -i "enter name of this computer")
     done
 
-    echo "$NEWHOSTNAME" >/root/instantARCH/config/hostname
+    iroot hostname "$NEWHOSTNAME"
 
     wallstatus install
     SUMMARY="Installation Summary:"

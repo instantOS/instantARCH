@@ -59,5 +59,5 @@ if [ -e /usr/share/liveutils ]; then
 fi
 
 # installer variables utility
-curl -s https://raw.githubusercontent.com/instantOS/instantARCH/master/iroot.sh >/usr/bin/iroot
+cat /root/instantARCH/iroot.sh >/usr/bin/iroot
 chmod 755 /usr/bin/iroot

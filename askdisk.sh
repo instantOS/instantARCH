@@ -55,7 +55,7 @@ The Bootloader requires
         cfdisk "$DISK"
     fi
 
-    echo "$DISK" >/root/instantARCH/config/disk
+    iroot disk "$DISK"
     startchoice
 }
 
@@ -95,6 +95,7 @@ erase partition to start fresh' | imenu -l)" in
         touch /root/instantARCH/config/erasehome
         ;;
     esac
+    iroot parthome "$HOMEPART"
     echo "$HOMEPART" >/root/instantARCH/config/parthome
 
 }

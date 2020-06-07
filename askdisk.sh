@@ -28,6 +28,19 @@ back' | imenu -l)"
 
 # cfdisk wrapper to modify partition table during installation
 editparts() {
+    echo 'instantOS requires the following paritions: 
+ - a root partition, all data on it will be erased
+ - an optional home partition.
+    If not specified, the same partition as root will be used. 
+    Gives you the option to keep existing data on the partition
+ - an optional swap partition. 
+    If not specified a swap file will be used. 
+The Bootloader requires
+
+ - an EFI partition on uefi systems
+ - a disk to install it to on legacy-bios systems
+' | imenu -M
+
     DISK="$(fdisk -l | grep -i '^Disk /.*:' | imenu -l 'choose disk to edit> ')"
 
     if guimode; then
@@ -112,12 +125,33 @@ chooseroot() {
     done
 }
 
-# //weiter
+# choose wether to install grub and where to install it
 choosegrub() {
-    if efibootmgr; then
-        echo "efi setup detected"
-        choosepart 'select efi partition'
-    else
 
+    while [ -z $BOOTLOADERCONFIRM ]; do
+        if ! confirm -c "install bootloader (grub) ?"; then
+            if confirm -c "are you sure? This could make the system unbootable. "; then
+                touch /root/instantARCH/config/nobootloader
+                return
+            fi
+        else
+            BOOTLOADERCONFIRM="true"
+        fi
+    done
+
+    if efibootmgr; then
+
+        while [ -z "$EFICONFIRM" ]; do
+            choosepart 'select efi partition' >/root/instantARCH/config/partefi
+            if imenu -c "this will erase all data on $(cat /root/instantARCH/config/partefi)"; then
+                EFICONFIRM="true"
+            else
+                rm /root/instantARCH/config/partefi
+            fi
+        done
+
+    else
+        GRUBDISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk for grub > ")
+        echo "$GRUBDISK"
     fi
 }

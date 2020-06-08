@@ -2,10 +2,10 @@
 
 IROOT="/root/instantARCH/config"
 
-if ! [ -e /opt/instantARCH/config/manualpartitioning ]; then
+if ! iroot manualpartitioning; then
     # automatic disk partitioning
 
-    DISK=$(cat /root/instantARCH/config/disk)
+    DISK="$(iroot disk)"
 
     if efibootmgr; then
         echo "efi system"
@@ -19,8 +19,8 @@ start=618496, type=83, bootable" | sfdisk "${DISK}"
         mkfs.fat -F32 "$DISK1"
         mkfs.ext4 -F "$DISK2"
 
-        echo "$DISK1" >/root/instantARCH/config/partefi
-        echo "$DISK2" >/root/instantARCH/config/partroot
+        echo "$DISK1" | iroot i partefi
+        echo "$DISK2" | iroot i partroot
 
     else
         echo "legacy bios"
@@ -29,7 +29,7 @@ type=83, bootable" | sfdisk "${DISK}"
         DISK1="$(fdisk -l | grep "^${DISK}" | grep -o '^[^ ]*' | head -1)"
 
         mkfs.ext4 -F "$DISK1"
-        echo "$DISK1" >/root/instantARCH/config/partroot
+        echo "$DISK1" | iroot i partroot
 
     fi
 else

@@ -4,8 +4,8 @@
 
 # mountpart partname mountpoint
 mountpart() {
-    if [ -e /root/instantARCH/config/part$1 ]; then
-        TMPPART="$(cat /root/instantARCH/config/part$1)"
+    if iroot part$1; then
+        TMPPART="$(iroot part$1)"
         echo "mounting $TMPPART to $2"
         mount "$TMPPART" "$2"
     else

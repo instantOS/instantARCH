@@ -4,13 +4,13 @@
 # runs from inside the installation
 # unlike the legacy bios grub script
 
-if [ -e /root/instantARCH/config/nobootloader ]; then
+if iroot nobootloader; then
     echo "skipping bootloader install"
     exit
 fi
 
 mkdir /efi
-mount "$(cat /root/instantARCH/config/partefi)" /efi
+mount "$(iroot partefi)" /efi
 
 sudo pacman -S efibootmgr grub --noconfirm
 

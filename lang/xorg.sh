@@ -2,7 +2,7 @@
 
 # apply user keymap
 
-KEYLANG=$(cat /root/instantARCH/config/keyboard)
+KEYLANG=$(iroot keyboard)
 
 NEWXORG=$(tail -1 /root/instantARCH/data/lang/keyboard/$KEYLANG)
 NEWKEYMAP=$(head -1 /root/instantARCH/data/lang/keyboard/$KEYLANG)

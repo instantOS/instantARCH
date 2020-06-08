@@ -4,10 +4,10 @@
 
 cd /usr/share/zoneinfo
 
-REGION=$(cat /root/instantARCH/config/region)
+REGION=$(iroot region)
 
-if [ -e /root/instantARCH/config/city ]; then
-    CITY=$(cat /root/instantARCH/config/city)
+if iroot city; then
+    CITY=$(iroot city)
 fi
 
 if [ -n "$CITY" ]; then

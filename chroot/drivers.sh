@@ -9,7 +9,7 @@ if grep -iq '^name.*arch' /etc/os-release; then
     ## NVIDIA
     if lspci | grep -i vga | grep -i nvidia; then
         # user chooses open source, proprietary or no driver
-        if [ -e /root/instantARCH/config/graphics ]; then
+        if iroot graphics; then
             DRIVERFILE="/root/instantARCH/config/graphics"
             if grep -iq "nodriver" "$DRIVERFILE"; then
                 exit

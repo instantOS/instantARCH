@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -e /root/instantARCH/config/nobootloader ]; then
+if iroot nobootloader; then
     echo "skipping grub configuration"
     exit
 fi

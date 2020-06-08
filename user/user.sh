@@ -4,8 +4,8 @@
 # make user default lightdm user
 # add user to required groups
 
-NEWUSER="$(cat /root/instantARCH/config/user)"
-NEWPASS="$(cat /root/instantARCH/config/password)"
+NEWUSER="$(iroot user)"
+NEWPASS="$(iroot password)"
 
 groupadd video &>/dev/null
 groupadd wheel &>/dev/null

@@ -92,7 +92,7 @@ erase partition to start fresh' | imenu -l)" in
         ;;
     erase*)
         echo "erasing"
-        touch /root/instantARCH/config/erasehome
+        iroot erasehome 1
         ;;
     esac
     iroot parthome "$HOMEPART"

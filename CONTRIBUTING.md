@@ -16,7 +16,7 @@ Anything like that is an unavoidable obstacle for casual users.
 That said, any addition to instantARCH is more than welcome, all that means is that complex functionality should be put in an "advanced options" menu of some sort. 
 
 Anything requiring user input should be asked before installation. 
-This works by putting it in the ask.sh script, saving the result in /root/instantARCH/config/
+This works by putting it in the ask.sh script and saving the result with the iroot utility. 
 and later reading it out during installation. 
 You should be able to answer all questions before installation and then letting the computer sit for a while. 
 There's nothing more frustrating than letting your computer with german internet sit for an entire night to discover that it stopped at some confirmation prompt you didn't anticipate. 
@@ -25,7 +25,7 @@ There's nothing more frustrating than letting your computer with german internet
 
 instantARCH uses different modules for different stages of the installation. 
 This allows for reordering them and potentially reusing them or making some of them optional (like the uefi grub module)
-The central installer script asks all questions using ask.sh first and then saves the answers in /root/instantARCH/config/
+The central installer script asks all questions using ask.sh first and then saves the answers using the iroot utility. 
 Then it calls all the modules that read out the answers during installation. 
 It is important to distinguish between escript modules that run in the installation medium and chrootscript modules
 that get executed inside the (unfinished) installation. 

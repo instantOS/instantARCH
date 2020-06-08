@@ -3,7 +3,7 @@
 # change hostname and 
 # follow arch install guide for hosts
 
-NEWHOSTNAME=$(cat /root/instantARCH/config/hostname)
+NEWHOSTNAME=$(iroot hostname)
 
 # default hostname
 if [ -z "$NEWHOSTNAME" ]; then

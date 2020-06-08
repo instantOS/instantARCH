@@ -19,7 +19,7 @@ guimode() {
 # add installation info to summary
 addsum() {
     SUMMARY="$SUMMARY
-        $1: $(cat /root/instantARCH/config/$2)"
+        $1: $(iroot $2)"
 }
 
 # set status wallpaper

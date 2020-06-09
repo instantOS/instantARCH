@@ -140,8 +140,8 @@ chooseroot() {
 choosegrub() {
 
     while [ -z $BOOTLOADERCONFIRM ]; do
-        if ! confirm -c "install bootloader (grub) ?"; then
-            if confirm -c "are you sure? This could make the system unbootable. "; then
+        if ! imenu -c "install bootloader (grub) ?"; then
+            if imenu -c "are you sure? This could make the system unbootable. "; then
                 touch /root/instantARCH/config/nobootloader
                 return
             fi

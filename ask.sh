@@ -45,7 +45,7 @@ while ! iroot confirm; do
 
     while [ -z "$DISK" ]; do
         wallstatus install
-        DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed '\$aother (experimental)' | imenu -l "select disk> ")
+        DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed -e "\$aother (experimental)" | imenu -l "select disk> ")
         if ! grep -q '^other' <<<"$DISK"; then
             if ! echo "Install on $DISK ?
 this will delete all existing data" | imenu -C; then

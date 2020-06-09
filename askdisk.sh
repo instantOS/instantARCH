@@ -12,19 +12,14 @@ source /root/instantARCH/askutils.sh
 # first displayed menu
 startchoice() {
     STARTCHOICE="$(echo 'edit partitions
-choose partitions
-continue installation' | imenu -l)"
+choose partitions' | imenu -l)"
 
     case "$STARTCHOICE" in
-
     edit*)
         editparts
         ;;
     choose*)
         chooseparts
-        ;;
-    continue*)
-        exit
         ;;
     esac
 }
@@ -132,7 +127,7 @@ chooseroot() {
             echo "instantOS will be installed on $PARTROOT"
             sleep 1
         fi
-        echo "$PARTROOT" >/root/instantARCH/config/partroot
+        echo "$PARTROOT" | iroot i partroot
     done
 }
 
@@ -142,7 +137,7 @@ choosegrub() {
     while [ -z $BOOTLOADERCONFIRM ]; do
         if ! imenu -c "install bootloader (grub) ?"; then
             if imenu -c "are you sure? This could make the system unbootable. "; then
-                touch /root/instantARCH/config/nobootloader
+                iroot nobootloader 1
                 return
             fi
         else
@@ -153,7 +148,7 @@ choosegrub() {
     if efibootmgr; then
 
         while [ -z "$EFICONFIRM" ]; do
-            choosepart 'select efi partition' >/root/instantARCH/config/partefi
+            choosepart 'select efi partition' | iroot i partefi
             if imenu -c "this will erase all data on $(cat /root/instantARCH/config/partefi)"; then
                 EFICONFIRM="true"
             else
@@ -164,7 +159,9 @@ choosegrub() {
     else
         GRUBDISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk for grub > " | grep -o '/dev/[^:]*')
         echo "$GRUBDISK"
+        iroot grubdisk "$GRUBDISK"
     fi
 }
 
 startchoice
+iroot manualpartitioning 1

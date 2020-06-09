@@ -44,7 +44,7 @@ The Bootloader requires
  - a disk to install it to on legacy-bios systems
 ' | imenu -M
 
-    DISK="$(fdisk -l | grep -i '^Disk /.*:' | imenu -l 'choose disk to edit> ')"
+    DISK="$(fdisk -l | grep -i '^Disk /.*:' | imenu -l 'choose disk to edit> ' | grep -o '/dev/[^:]*')"
 
     if guimode; then
         if command -v st; then
@@ -158,7 +158,7 @@ choosegrub() {
         done
 
     else
-        GRUBDISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk for grub > ")
+        GRUBDISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk for grub > " | grep -o '/dev/[^:]*')
         echo "$GRUBDISK"
     fi
 }

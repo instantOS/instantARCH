@@ -75,7 +75,7 @@ chooseparts() {
 choosepart() {
     unset RETURNPART
     while [ -z "$RETURNPART" ]; do
-        fdisk -l | grep '^/dev' | imenu -l "$1" | grep -o '^[^ ]*' >/tmp/diskchoice
+        fdisk -l | grep '^/dev' | sed 's/\*/ * /g' | imenu -l "$1" | grep -o '^[^ ]*' >/tmp/diskchoice
         RETURNPART="$(cat /tmp/diskchoice)"
         if ! [ -e "$RETURNPART" ]; then
             imenu -m "$RETURNPART does not exist" &>/dev/null
@@ -127,8 +127,11 @@ use a swap partition' | imenu -l)" in
 chooseroot() {
     while [ -z "$ROOTCONFIRM" ]; do
         PARTROOT="$(choosepart 'choose root partition')"
-        imenu -c "This will erase all data on that partition. Continue?" &&
+        if imenu -c "This will erase all data on that partition. Continue?"; then
             ROOTCONFIRM="true"
+            echo "instantOS will be installed on $PARTROOT"
+            sleep 1
+        fi
         echo "$PARTROOT" >/root/instantARCH/config/partroot
     done
 }

@@ -44,21 +44,22 @@ The Bootloader requires
  - a disk to install it to on legacy-bios systems
 ' | imenu -M
 
-    DISK="$(fdisk -l | grep -i '^Disk /.*:' | imenu -l 'choose disk to edit> ' | grep -o '/dev/[^:]*')"
-
+    EDITDISK="$(fdisk -l | grep -i '^Disk /.*:' | imenu -l 'choose disk to edit> ' | grep -o '/dev/[^:]*')"
+    echo "editing disk $EDITDISK"
+    sleep 2
     if guimode; then
         if command -v st; then
-            st -e bash -c "cfdisk $DISK"
+            st -e bash -c "cfdisk $EDITDISK"
         elif command -v urxvt; then
-            urxvt -e bash -c "cfdisk $DISK"
+            urxvt -e bash -c "cfdisk $EDITDISK"
         else
-            xterm -e bash -c "cfdisk $DISK"
+            xterm -e bash -c "cfdisk $EDITDISK"
         fi
     else
-        cfdisk "$DISK"
+        cfdisk "$EDITDISK"
     fi
 
-    iroot disk "$DISK"
+    iroot disk "$EDITDISK"
     startchoice
 }
 

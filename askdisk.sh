@@ -56,7 +56,7 @@ The Bootloader requires
             xterm -e bash -c "cfdisk $EDITDISK"
         fi
     else
-        bash --init-file <(echo "cfdisk $EDITDISK && exit")
+        bash --init-file <(echo "cfdisk $EDITDISK")
     fi
 
     iroot disk "$EDITDISK"

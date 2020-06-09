@@ -20,7 +20,7 @@ fi
 sed -i 's/^#logind-check-graphical=.*/logind-check-graphical=true/' /etc/lightdm/lightdm.conf
 
 # needed to get internet to work
-if ! [ -e /opt/topinstall ]; then
+if ! [ -e /opt/topinstall ] && ! iroot partswap; then
     if ! grep -iq manjaro /etc/os-release; then
         # enable swap
         systemctl enable systemd-swap

@@ -29,6 +29,7 @@ while ! pacman -S --noconfirm --needed \
     steam \
     firefox \
     mpv \
+    xdg-user-dirs-gtk \
     accountsservice \
     grub; do
 

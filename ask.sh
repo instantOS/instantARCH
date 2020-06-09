@@ -45,17 +45,24 @@ while ! iroot confirm; do
 
     while [ -z "$DISK" ]; do
         wallstatus install
-        DISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk> ")
-        if ! echo "Install on $DISK ?
+        DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed '\$aother (experimental)' | imenu -l "select disk> ")
+        if ! grep -q '^other' <<<"$DISK"; then
+            if ! echo "Install on $DISK ?
 this will delete all existing data" | imenu -C; then
-            unset DISK
+                unset DISK
+            fi
+        else
+            bash /root/instantARCH/askdisk.sh
         fi
     done
 
-    echo "$DISK" | grep -o '/dev/[^:]*' | iroot i disk
+    if ! grep -q '^other' <<<"$DISK"; then
 
-    if ! efibootmgr; then
-        echo "$DISK" | grep -o '/dev/[^:]*' | iroot i grubdisk
+        echo "$DISK" | grep -o '/dev/[^:]*' | iroot i disk
+
+        if ! efibootmgr; then
+            echo "$DISK" | grep -o '/dev/[^:]*' | iroot i grubdisk
+        fi
     fi
 
     # choice between multiple nvidia drivers

@@ -18,6 +18,7 @@ mountpart efi /efi
 
 mountpart root /mnt
 # home is optional
+mkdir /mnt/home
 mountpart home /mnt/home
 sleep 2
 

@@ -47,9 +47,10 @@ cd /root
 git clone --depth=1 https://github.com/instantos/instantARCH.git
 cd instantARCH
 
-mkdir config
-
+chmod +x *.sh
 chmod 755 ./*/*.sh
+
+mkdir config
 
 ./depend/depend.sh
 

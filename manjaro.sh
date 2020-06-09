@@ -11,7 +11,7 @@ cd /root
 [ -e instantARCH ] && rm -rf instantARCH
 git clone --depth=1 https://github.com/instantos/instantARCH.git
 cd instantARCH
-
+chmod +x *.sh
 chmod 755 ./*/*.sh
 
 ./depend/depend.sh

@@ -13,7 +13,7 @@ source /root/instantARCH/askutils.sh
 startchoice() {
     STARTCHOICE="$(echo 'edit partitions
 choose partitions
-back' | imenu -l)"
+continue installation' | imenu -l)"
 
     case "$STARTCHOICE" in
 
@@ -22,6 +22,9 @@ back' | imenu -l)"
         ;;
     choose*)
         chooseparts
+        ;;
+    continue*)
+        exit
         ;;
     esac
 }
@@ -62,6 +65,9 @@ The Bootloader requires
 # choose all partitions
 chooseparts() {
     choosehome
+    chooseroot
+    chooseswap
+    choosegrub
 }
 
 # menu that allows choosing a partition and put it in stdout
@@ -156,3 +162,5 @@ choosegrub() {
         echo "$GRUBDISK"
     fi
 }
+
+startchoice

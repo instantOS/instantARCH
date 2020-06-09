@@ -52,6 +52,7 @@ this will delete all existing data" | imenu -C; then
                 unset DISK
             fi
         else
+            chmod +x /root/instantARCH/askdisk.sh
             /root/instantARCH/askdisk.sh
         fi
     done

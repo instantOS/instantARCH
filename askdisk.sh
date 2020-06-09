@@ -1,4 +1,4 @@
-#!/bash
+#!/bin/bash
 
 #########################################################
 ## Allow manual partitioning when installing instantOS ##

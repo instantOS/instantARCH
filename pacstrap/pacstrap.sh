@@ -19,7 +19,6 @@ else
     done
 fi
 
-
 if command -v genfstab; then
     genfstab -U /mnt >>/mnt/etc/fstab
 else
@@ -27,3 +26,4 @@ else
 fi
 cd /root
 cp -r ./instantARCH /mnt/root/instantARCH
+cat /etc/pacman.d/mirrorlist >/mnt/etc/pacman.d/mirrorlist

@@ -45,11 +45,13 @@ while ! pacman -S --noconfirm --needed \
     echo "downloading packages failed, please reconnect to internet"
     sleep 10
 
-    # download new mirrors if on arch
-    if command -v reflector; then
-        reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-    else
-        pacman-mirrors --geoip
+    if iroot automirror; then
+        # download new mirrors if on arch
+        if command -v reflector; then
+            reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+        else
+            pacman-mirrors --geoip
+        fi
     fi
     pacman -Sy --noconfirm
 

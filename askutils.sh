@@ -136,6 +136,7 @@ askmirrors() {
     else
         echo "ranking mirrors"
         reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+        iroot automirror 1
     fi
 }
 

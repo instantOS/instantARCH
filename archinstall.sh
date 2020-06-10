@@ -50,14 +50,7 @@ setinfo() {
 
 # sort mirrors
 pacman -Sy --noconfirm
-if command -v pacstrap; then
-    pacman -S reflector --noconfirm
-    echo "selecting fastest mirror"
-    reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-fi
 
-# install dependencies
-pacman -Sy --noconfirm
 pacman -S git --noconfirm --needed
 
 cd /root

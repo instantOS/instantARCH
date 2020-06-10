@@ -33,12 +33,7 @@ touch /opt/topinstall
 
 pacman -Sy --noconfirm
 
-if ! command -v mhwd; then
-    pacman -S reflector --noconfirm --needed
-    echo "selecting fastest mirror"
-    reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-    pacman -Sy --noconfirm
-fi
+# todo: askmirrors
 
 pacman -S git --noconfirm --needed
 
@@ -56,6 +51,13 @@ mkdir config
 
 # do all actions requiring user input first
 ./topask.sh
+
+if ! command -v mhwd && iroot automirror; then
+    pacman -S reflector --noconfirm --needed
+    echo "selecting fastest mirror"
+    reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+    pacman -Sy --noconfirm
+fi
 
 ./init/init.sh
 

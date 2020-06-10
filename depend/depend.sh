@@ -39,6 +39,7 @@ while ! pacman -S --noconfirm --needed \
     expect \
     git \
     dialog \
+    imvirt \
     bash \
     curl; do
     echo "downloading packages failed, please reconnect to internet"

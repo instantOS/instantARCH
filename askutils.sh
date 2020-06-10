@@ -118,6 +118,27 @@ This could prevent the system from booting" | imenu -C; then
 
 }
 
+# offer to choose mirror country
+askmirrors() {
+    curl -s 'https://www.archlinux.org/mirrorlist/' | grep -i '<option value' >/tmp/mirrors.html
+    grep -v '>All<' /tmp/mirrors.html | sed 's/.*<option value=".*">\(.*\)<\/option>.*/\1/g' |
+        sed -e "1iauto detect mirrors" |
+        imenu -l "choose mirror location" >/tmp/mirrorselect
+    if ! grep -q 'auto detect' </tmp/mirrorselect; then
+        cat /tmp/mirrors.html | grep ">$(cat /tmp/mirrorselect)<" | grep -o '".*"' | grep -o '[^"]*' >/tmp/countrycode
+        echo "fetching mirrors for $(cat /tmp/mirrorselect)"
+        curl -s "https://www.archlinux.org/mirrorlist/?country=$(cat /tmp/countrycode)&protocol=http&protocol=https&ip_version=4" |
+            sed 's/^#Server /Server /g' >/tmp/mirrorlist
+        cat /etc/pacman.d/mirrorlist >/tmp/oldmirrorlist
+
+        cat /tmp/mirrorlist >/etc/pacman.d/mirrorlist
+        cat /tmp/oldmirrorlist >>/etc/pacman.d/mirrorlist
+    else
+        echo "ranking mirrors"
+        reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+    fi
+}
+
 # ask for user details
 askuser() {
     while [ -z $NEWUSER ]; do

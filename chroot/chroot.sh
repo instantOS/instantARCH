@@ -38,3 +38,9 @@ if ! command -v update-grub &>/dev/null; then
 grub-mkconfig -o /boot/grub/grub.cfg' >/usr/bin/update-grub
     chmod 755 /usr/bin/update-grub
 fi
+
+# indicator file
+if iroot kvm; then
+    [ -e /opt/instantos ] || mkdir -p /opt/instantos
+    echo "kvm" >/opt/instantos/kvm
+fi

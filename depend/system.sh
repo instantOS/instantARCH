@@ -29,6 +29,7 @@ while ! pacman -S --noconfirm --needed \
     inetutils \
     xdg-desktop-portal-gtk \
     steam \
+    alacritty \
     firefox \
     mpv \
     xdg-user-dirs-gtk \

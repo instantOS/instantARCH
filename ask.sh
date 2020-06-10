@@ -40,7 +40,8 @@ while ! iroot confirm; do
     guimode && setxkbmap -layout $(tail -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")
 
     asklocale
-
+    askmirrors
+    askvm
     askregion
 
     while [ -z "$DISK" ]; do

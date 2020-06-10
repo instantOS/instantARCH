@@ -5,7 +5,19 @@
 echo "installing video drivers"
 
 # works differently on manjaro
-if grep -iq '^name.*arch' /etc/os-release; then
+if ! grep -iq '^name.*arch' /etc/os-release; then
+    exit
+fi
+
+if iroot isvm; then
+    echo "installing virtual machine drivers"
+    if iroot kvm; then
+        echo "installing QEMU drivers"
+        pacman -S --noconfirm --needed xorg-drivers
+    else
+        pacman -S mesa --noconfirm
+    fi
+else
     ## NVIDIA
     if lspci | grep -i vga | grep -i nvidia; then
         # user chooses open source, proprietary or no driver
@@ -34,13 +46,12 @@ if grep -iq '^name.*arch' /etc/os-release; then
         echo "intel integrated detected"
         pacman -S --noconfirm mesa xf86-video-intel
     else
-        echo "other graphics detected, possibly virtualbox"
+        echo "other graphics detected"
         pacman -S mesa --noconfirm
     fi
+fi
 
-    # 32 bit mesa
-    if ! uname -m | grep -q '^i'; then
-        pacman -S --noconfirm lib32-mesa
-    fi
-
+# 32 bit mesa
+if ! uname -m | grep -q '^i'; then
+    pacman -S --noconfirm lib32-mesa
 fi

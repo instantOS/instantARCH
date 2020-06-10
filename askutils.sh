@@ -162,3 +162,51 @@ askuser() {
     iroot password "$NEWPASS"
 
 }
+
+# ask about which hypervisor is used
+askvm() {
+    if imvirt | grep -iq 'physical'; then
+        echo "system does not appear to be a virtual machine"
+        return
+    fi
+
+    while [ -z "$VIRTCONFIRM" ]; do
+        if ! imenu -c "is this system a virtual machine?"; then
+            if echo "Are you sure it's not?
+giving the wrong answer here might greatly decrease performance. " | imenu -C; then
+                return
+            fi
+        else
+            VIRTCONFIRM="true"
+        fi
+    done
+    iroot isvm 1
+
+    echo "virtualbox
+kvm/qemu
+other" | imenu -l "what hypervisor is being used?" >/tmp/vmtype
+
+    HYPERVISOR="$(cat /tmp/vmtype)"
+    case "$HYPERVISOR" in
+    kvm*)
+        echo "WARNING:
+        kvm/QEMU is not meant for desktop use and
+        is lacking some graphics features.
+        This installation will work, but some features will have to be disabled and
+        others might not perform well. 
+        It is recommended to use Virtualbox instead.
+        It is also free and open source. 
+        If you have to use QEMU, set the video to QXL and its vram to 262144
+        If you are passing through an actual GPU, you can ignore this message. "
+        iroot kvm 1
+        ;;
+    virtualbox)
+        iroot virtualbox 1
+        ;;
+    other)
+        iroot othervm 1
+        echo "selecting other"
+        ;;
+    esac
+
+}

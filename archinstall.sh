@@ -50,7 +50,6 @@ setinfo() {
 
 # sort mirrors
 pacman -Sy --noconfirm
-
 pacman -S git --noconfirm --needed
 
 cd /root

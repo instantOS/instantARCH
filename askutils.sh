@@ -197,7 +197,7 @@ other" | imenu -l "what hypervisor is being used?" >/tmp/vmtype
         It is recommended to use Virtualbox instead.
         It is also free and open source. 
         If you have to use QEMU, set the video to QXL and its vram to 262144
-        If you are passing through an actual GPU, you can ignore this message. "
+        If you are passing through an actual GPU, you can ignore this message. " | imenu -M
         iroot kvm 1
         ;;
     virtualbox)

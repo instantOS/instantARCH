@@ -60,8 +60,8 @@ The Bootloader requires
 
 # choose all partitions
 chooseparts() {
-    choosehome
     chooseroot
+    choosehome
     chooseswap
     choosegrub
 }
@@ -121,7 +121,7 @@ use a swap partition' | imenu -l)" in
 # choose root partition for programs etc
 chooseroot() {
     while [ -z "$ROOTCONFIRM" ]; do
-        PARTROOT="$(choosepart 'choose root partition')"
+        PARTROOT="$(choosepart 'choose root partition (required) ')"
         if imenu -c "This will erase all data on that partition. Continue?"; then
             ROOTCONFIRM="true"
             echo "instantOS will be installed on $PARTROOT"
@@ -135,7 +135,7 @@ chooseroot() {
 choosegrub() {
 
     while [ -z $BOOTLOADERCONFIRM ]; do
-        if ! imenu -c "install bootloader (grub) ?"; then
+        if ! imenu -c "install bootloader (grub) ? (recommended)"; then
             if imenu -c "are you sure? This could make the system unbootable. "; then
                 iroot nobootloader 1
                 return

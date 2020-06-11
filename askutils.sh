@@ -189,16 +189,23 @@ other" | imenu -l "what hypervisor is being used?" >/tmp/vmtype
     HYPERVISOR="$(cat /tmp/vmtype)"
     case "$HYPERVISOR" in
     kvm*)
-        echo "WARNING:
-        kvm/QEMU is not meant for desktop use and
+        if grep 'vendor' /proc/cpuinfo | grep -iq 'AMD'; then
+            echo "WARNING:
+        kvm/QEMU on AMD is not meant for desktop use and
         is lacking some graphics features.
         This installation will work, but some features will have to be disabled and
         others might not perform well. 
-        It is recommended to use Virtualbox instead.
-        It is also free and open source. 
-        If you have to use QEMU, set the video to QXL and its vram to 262144
-        If you are passing through an actual GPU, you can ignore this message. " | imenu -M
-        iroot kvm 1
+        It is highly recommended to use Virtualbox instead." | imenu -M
+            iroot kvm 1
+            if lshw -c video | grep -iq 'qxl'; then
+                echo "WARNING:
+QXL graphics detected
+These may trigger a severe Xorg memory leak on kvm/QEMU on AMD,
+leading to degraded video and input performance,
+please switch your video card to either virtio or passthrough
+until this is fixed" | imenu -M
+            fi
+        fi
         ;;
     virtualbox)
         iroot virtualbox 1

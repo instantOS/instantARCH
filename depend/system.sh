@@ -31,6 +31,7 @@ while ! pacman -S --noconfirm --needed \
     steam \
     alacritty \
     firefox \
+    lshw \
     mpv \
     xdg-user-dirs-gtk \
     accountsservice \

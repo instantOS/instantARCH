@@ -32,6 +32,7 @@ while ! pacman -S --noconfirm --needed \
     alacritty \
     firefox \
     lshw \
+    gedit \
     mpv \
     xdg-user-dirs-gtk \
     accountsservice \

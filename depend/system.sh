@@ -31,6 +31,7 @@ while ! pacman -S --noconfirm --needed \
     steam \
     alacritty \
     firefox \
+    nitrogen \
     lshw \
     gedit \
     mpv \

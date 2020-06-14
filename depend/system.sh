@@ -35,6 +35,7 @@ while ! pacman -S --noconfirm --needed \
     lshw \
     gedit \
     mpv \
+    unzip \
     xdg-user-dirs-gtk \
     accountsservice \
     grub; do

@@ -19,3 +19,4 @@ hostnamectl set-hostname "$NEWHOSTNAME"
 
 pacman -S --noconfirm --needed networkmanager
 systemctl enable NetworkManager
+systemctl enable sshd

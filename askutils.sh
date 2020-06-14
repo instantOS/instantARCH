@@ -136,7 +136,7 @@ askmirrors() {
             touch /tmp/sortmirrors
         fi
 
-        if [ -e /tmp/sortmirrors]; then
+        if [ -e /tmp/sortmirrors ]; then
             cat /tmp/mirrorlist | head -20 >/tmp/mirrorlist2
             rankmirrors -n 6 /tmp/mirrorlist2 >/tmp/topmirrors
             touch /tmp/mirrorcontinue

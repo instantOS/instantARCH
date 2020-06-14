@@ -41,6 +41,7 @@ while ! pacman -S --noconfirm --needed \
     dialog \
     imvirt \
     bash \
+    pacman-contrib \
     curl; do
     echo "downloading packages failed, please reconnect to internet"
     sleep 10

@@ -131,6 +131,25 @@ askmirrors() {
             sed 's/^#Server /Server /g' >/tmp/mirrorlist
         cat /etc/pacman.d/mirrorlist >/tmp/oldmirrorlist
 
+        if echo "would you like to sort mirrors by speed? (recommended)" | imenu -C; then
+            touch /tmp/sortmirrors
+        fi
+
+        if [ -e /tmp/sortmirrors]; then
+            cat /tmp/mirrorlist >/tmp/mirrorlist2
+            rankmirrors -n 6 /tmp/mirrorlist2 | tee /tmp/mirrorlist
+            touch /tmp/mirrorcontinue
+        else
+            touch /tmp/mirrorcontinue
+        fi &
+
+        while ! [ -e /tmp/mirrorcontinue ]; do
+            imenu -m "sorting mirrors, please wait"
+        done
+
+        rm /tmp/mirrorcontinue
+        /tmp/sortmirrors
+
         cat /tmp/mirrorlist >/etc/pacman.d/mirrorlist
         cat /tmp/oldmirrorlist >>/etc/pacman.d/mirrorlist
     else
@@ -184,7 +203,7 @@ giving the wrong answer here might greatly decrease performance. " | imenu -C; t
 
     echo "virtualbox
 kvm/qemu
-other" | imenu -l "what hypervisor is being used?" >/tmp/vmtype
+other" | imenu -l "which hypervisor is being used?" >/tmp/vmtype
 
     HYPERVISOR="$(cat /tmp/vmtype)"
     case "$HYPERVISOR" in

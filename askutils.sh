@@ -139,6 +139,7 @@ askmirrors() {
             cat /tmp/mirrorlist >/tmp/mirrorlist2
             rankmirrors -n 6 /tmp/mirrorlist2 | tee /tmp/mirrorlist
             touch /tmp/mirrorcontinue
+            pkill imenu
         else
             touch /tmp/mirrorcontinue
         fi &

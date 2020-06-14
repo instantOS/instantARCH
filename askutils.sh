@@ -158,6 +158,7 @@ askmirrors() {
             cat /tmp/topmirrors
             sleep 2
             cat /tmp/topmirrors >/etc/pacman.d/mirrorlist
+            clear
         fi
 
         cat /tmp/mirrorlist >>/etc/pacman.d/mirrorlist

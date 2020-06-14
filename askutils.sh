@@ -127,7 +127,8 @@ askmirrors() {
     if ! grep -q 'auto detect' </tmp/mirrorselect; then
         cat /tmp/mirrors.html | grep ">$(cat /tmp/mirrorselect)<" | grep -o '".*"' | grep -o '[^"]*' >/tmp/countrycode
         echo "fetching mirrors for $(cat /tmp/mirrorselect)"
-        curl -s "https://www.archlinux.org/mirrorlist/?country=$(cat /tmp/countrycode)&protocol=http&protocol=https&ip_version=4" |
+        curl -s "https://www.archlinux.org/mirrorlist/?country=$(cat /tmp/countrycode)&protocol=http&protocol=https&ip_version=4&use_mirror_status=on" |
+            grep -iE '(Server|generated)' |
             sed 's/^#Server /Server /g' >/tmp/mirrorlist
         cat /etc/pacman.d/mirrorlist >/tmp/oldmirrorlist
 
@@ -136,8 +137,8 @@ askmirrors() {
         fi
 
         if [ -e /tmp/sortmirrors]; then
-            cat /tmp/mirrorlist >/tmp/mirrorlist2
-            rankmirrors -n 6 /tmp/mirrorlist2 | tee /tmp/mirrorlist
+            cat /tmp/mirrorlist | head -20 >/tmp/mirrorlist2
+            rankmirrors -n 6 /tmp/mirrorlist2 >/tmp/topmirrors
             touch /tmp/mirrorcontinue
             pkill imenu
         else
@@ -151,7 +152,15 @@ askmirrors() {
         rm /tmp/mirrorcontinue
         /tmp/sortmirrors
 
-        cat /tmp/mirrorlist >/etc/pacman.d/mirrorlist
+        if [ -e /tmp/topmirrors ]; then
+            echo "" >/etc/pacman.d/mirrorlist
+        else
+            cat /tmp/topmirrors
+            sleep 2
+            cat /tmp/topmirrors >/etc/pacman.d/mirrorlist
+        fi
+
+        cat /tmp/mirrorlist >>/etc/pacman.d/mirrorlist
         cat /tmp/oldmirrorlist >>/etc/pacman.d/mirrorlist
     else
         echo "ranking mirrors"

@@ -137,7 +137,9 @@ askmirrors() {
         fi
 
         if [ -e /tmp/sortmirrors ]; then
-            cat /tmp/mirrorlist | head -20 >/tmp/mirrorlist2
+            curl -s "https://www.archlinux.org/mirrorlist/?country=$(cat /tmp/countrycode)&protocol=http&protocol=https&ip_version=4&use_mirror_status=on" |
+                grep -iE '(Server|generated)' |
+                sed 's/^#Server /Server /g' | head -20 >/tmp/mirrorlist2
             rankmirrors -n 6 /tmp/mirrorlist2 >/tmp/topmirrors
             touch /tmp/mirrorcontinue
             pkill imenu

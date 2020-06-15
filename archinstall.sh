@@ -16,7 +16,6 @@ fi
 if [ -e /usr/share/liveutils ]; then
     echo "preparing isntallation
 OK" | instantmenu -c -bw 4 -l 2 &
-    sleep 1
 else
     # print logo
     echo ""
@@ -102,7 +101,5 @@ if [ -e /tmp/removeimenu ]; then
 fi
 
 echo "installation finished"
-
-sleep 2
 
 [ -e /tmp/instantosreboot ] && reboot

@@ -41,7 +41,6 @@ The Bootloader requires
 
     EDITDISK="$(fdisk -l | grep -i '^Disk /.*:' | imenu -l 'choose disk to edit> ' | grep -o '/dev/[^:]*')"
     echo "editing disk $EDITDISK"
-    sleep 2
     if guimode; then
         if command -v st; then
             st -e bash -c "cfdisk $EDITDISK"
@@ -134,7 +133,6 @@ chooseroot() {
         if imenu -c "This will erase all data on that partition. Continue?"; then
             ROOTCONFIRM="true"
             echo "instantOS will be installed on $PARTROOT"
-            sleep 1
         fi
         echo "$PARTROOT" | iroot i partroot
     done

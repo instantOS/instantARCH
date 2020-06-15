@@ -6,7 +6,7 @@
 cat /root/instantARCH/data/lang/locale/"$(iroot locale)" >>/etc/locale.gen
 
 echo "" >>/etc/locale.gen
-sleep 1
+sleep 0.3
 locale-gen
 
 if ! [ -e /usr/bin/liveutils ]; then

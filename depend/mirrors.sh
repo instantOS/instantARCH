@@ -9,6 +9,7 @@ echo "fetching mirrors"
 if ! iroot automirrors; then
     COUNTRYCODE="$(iroot countrycode)"
     echo "fetching mirrors for $COUNTRYCODE"
+
     curl -s "https://www.archlinux.org/mirrorlist/?country=$COUNTRYCODE&protocol=http&protocol=https&ip_version=4&use_mirror_status=on" |
         grep -iE '(Server|generated)' |
         sed 's/^#Server /Server /g' >/tmp/mirrorlist
@@ -16,7 +17,7 @@ if ! iroot automirrors; then
     cat /etc/pacman.d/mirrorlist >/tmp/oldmirrorlist
 
     if iroot sortmirrors; then
-        curl /tmp/mirrorlist | head -20 >/tmp/mirrorlist2
+        cat /tmp/mirrorlist | head -20 >/tmp/mirrorlist2
         rankmirrors -n 6 /tmp/mirrorlist2 >/tmp/topmirrors
         cat /tmp/topmirrors
         sleep 0.1

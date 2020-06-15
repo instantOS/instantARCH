@@ -4,6 +4,11 @@
 # and optionally sort them
 # auto detect all mirrors if no country is selected
 
+if ! iroot askmirrors; then
+    echo "skipping mirrors"
+    exit
+fi
+
 echo "fetching mirrors"
 
 if ! iroot automirrors; then

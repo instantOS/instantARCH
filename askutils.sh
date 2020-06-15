@@ -123,53 +123,14 @@ askmirrors() {
     curl -s 'https://www.archlinux.org/mirrorlist/' | grep -i '<option value' >/tmp/mirrors.html
     grep -v '>All<' /tmp/mirrors.html | sed 's/.*<option value=".*">\(.*\)<\/option>.*/\1/g' |
         sed -e "1iauto detect mirrors" |
-        imenu -l "choose mirror location" >/tmp/mirrorselect
+        imenu -l "choose mirror location" | >/tmp/mirrorselect
     if ! grep -q 'auto detect' </tmp/mirrorselect; then
-        cat /tmp/mirrors.html | grep ">$(cat /tmp/mirrorselect)<" | grep -o '".*"' | grep -o '[^"]*' >/tmp/countrycode
-        echo "fetching mirrors for $(cat /tmp/mirrorselect)"
-        curl -s "https://www.archlinux.org/mirrorlist/?country=$(cat /tmp/countrycode)&protocol=http&protocol=https&ip_version=4&use_mirror_status=on" |
-            grep -iE '(Server|generated)' |
-            sed 's/^#Server /Server /g' >/tmp/mirrorlist
-        cat /etc/pacman.d/mirrorlist >/tmp/oldmirrorlist
-
+        cat /tmp/mirrors.html | grep ">$(cat /tmp/mirrorselect)<" | grep -o '".*"' | grep -o '[^"]*' | iroot i countrycode
         if echo "would you like to sort mirrors by speed? (recommended)" | imenu -C; then
-            touch /tmp/sortmirrors
+            iroot sortmirrors 1
         fi
-
-        if [ -e /tmp/sortmirrors ]; then
-            curl -s "https://www.archlinux.org/mirrorlist/?country=$(cat /tmp/countrycode)&protocol=http&protocol=https&ip_version=4&use_mirror_status=on" |
-                grep -iE '(Server|generated)' |
-                sed 's/^#Server /Server /g' | head -20 >/tmp/mirrorlist2
-            rankmirrors -n 6 /tmp/mirrorlist2 >/tmp/topmirrors
-            touch /tmp/mirrorcontinue
-            pkill imenu
-        else
-            touch /tmp/mirrorcontinue
-        fi &
-
-        while ! [ -e /tmp/mirrorcontinue ]; do
-            imenu -m "sorting mirrors, please wait"
-        done
-
-        rm /tmp/mirrorcontinue
-        /tmp/sortmirrors
-
-        if [ -e /tmp/topmirrors ]; then
-            echo "" >/etc/pacman.d/mirrorlist
-        else
-            cat /tmp/topmirrors
-            sleep 2
-            cat /tmp/topmirrors >/etc/pacman.d/mirrorlist
-            sleep 2
-            clear
-        fi
-
-        cat /tmp/mirrorlist >>/etc/pacman.d/mirrorlist
-        cat /tmp/oldmirrorlist >>/etc/pacman.d/mirrorlist
     else
-        echo "ranking mirrors"
-        reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-        iroot automirror 1
+        iroot automirrors 1
     fi
 }
 

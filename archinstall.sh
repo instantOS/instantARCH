@@ -61,7 +61,9 @@ chmod +x */*.sh
 
 ./depend/depend.sh
 cd /root/instantARCH
+
 ./ask.sh || {
+    imenu -m "ask failed"
     echo "ask failed" && exit
 }
 

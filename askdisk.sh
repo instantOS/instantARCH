@@ -76,6 +76,15 @@ choosepart() {
             imenu -m "$RETURNPART does not exist" &>/dev/null
             unset RETURNPART
         fi
+
+        for i in /root/instantARCH/config/part*; do
+            if grep "^$RETURNPART$" "$i"; then
+                echo "partition $RETURNPART already taken"
+                imenu -m "partition $RETURNPART is already selected for $i"
+                unset RETURNPART
+            fi
+        done
+
     done
     echo "$RETURNPART"
 }

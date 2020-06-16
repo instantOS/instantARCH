@@ -127,7 +127,8 @@ askmirrors() {
         imenu -l "choose mirror location" >/tmp/mirrorselect
     if ! grep -q 'auto detect' </tmp/mirrorselect; then
         cat /tmp/mirrors.html | grep ">$(cat /tmp/mirrorselect)<" | grep -o '".*"' | grep -o '[^"]*' | iroot i countrycode
-        if echo 'use arch ranking score (recommended)
+        if echo '> manually sorting mirrors may take a long time
+use arch ranking score (recommended)
 sort all mirrors by speed' | imenu -l 'choose mirror settings' | grep -q 'speed'; then
             iroot sortmirrors 1
         fi

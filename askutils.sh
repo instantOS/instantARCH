@@ -124,10 +124,11 @@ askmirrors() {
     curl -s 'https://www.archlinux.org/mirrorlist/' | grep -i '<option value' >/tmp/mirrors.html
     grep -v '>All<' /tmp/mirrors.html | sed 's/.*<option value=".*">\(.*\)<\/option>.*/\1/g' |
         sed -e "1iauto detect mirrors" |
-        imenu -l "choose mirror location">/tmp/mirrorselect
+        imenu -l "choose mirror location" >/tmp/mirrorselect
     if ! grep -q 'auto detect' </tmp/mirrorselect; then
         cat /tmp/mirrors.html | grep ">$(cat /tmp/mirrorselect)<" | grep -o '".*"' | grep -o '[^"]*' | iroot i countrycode
-        if echo "would you like to sort mirrors by speed? (recommended)" | imenu -C; then
+        if echo 'use arch ranking score (recommended)
+sort all mirrors by speed' | imenu -l 'choose mirror settings' | grep -q 'speed'; then
             iroot sortmirrors 1
         fi
     else

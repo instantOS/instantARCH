@@ -13,7 +13,7 @@ chrootscript "lang/timezone" "settings time"
 if efibootmgr; then
     chrootscript "bootloader/efi" "installing bootloader"
 else
-    escript bootloader/install "installing bootloader"
+    chrootscript "bootloader/install" "installing bootloader"
 fi
 
 chrootscript "user/user" "setting up user" &&

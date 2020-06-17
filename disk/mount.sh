@@ -22,6 +22,11 @@ mkdir /mnt/home
 mountpart home /mnt/home
 sleep 2
 
+if iroot partswap; then
+    echo "activating swap"
+    swapon "$(iroot partswap)"
+fi
+
 if ! mount | grep -q '/mnt'; then
     echo "mount failed"
     exit 1

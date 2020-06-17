@@ -11,4 +11,4 @@ fi
 echo "installing grub for legacy bios"
 DISK="$(iroot grubdisk)"
 
-grub-install --target=i386-pc "${DISK}" --root /mnt
+grub-install "${DISK}"

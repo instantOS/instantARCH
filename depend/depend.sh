@@ -40,6 +40,7 @@ while ! pacman -S --noconfirm --needed \
     git \
     dialog \
     imvirt \
+    lshw \
     bash \
     pacman-contrib \
     curl; do

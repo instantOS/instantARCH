@@ -74,6 +74,10 @@ echo "local install"
     echo "system install" &&
     ./systeminstall.sh 2>&1 | tee /opt/systeminstall
 
+pkill instantmenu
+sudo pkill instantmenu
+sleep 2
+
 # ask to reboot, upload error data if install failed
 if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
     imenu -c "installation finished. reboot?" && touch /tmp/instantosreboot

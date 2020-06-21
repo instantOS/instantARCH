@@ -38,6 +38,7 @@ while ! pacman -S --noconfirm --needed \
     gvfs-mtp \
     unzip \
     xdg-user-dirs-gtk \
+    noto-fonts-emoji \
     accountsservice \
     grub; do
 

@@ -55,6 +55,10 @@ this will delete all existing data" | imenu -C; then
         else
             chmod +x /root/instantARCH/askdisk.sh
             /root/instantARCH/askdisk.sh
+            if [ -e /tmp/loopaskdisk ]; then
+                unset DISK
+                rm /tmp/loopaskdisk
+            fi
         fi
     done
 

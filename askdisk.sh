@@ -80,6 +80,15 @@ choosepart() {
             if grep "^$RETURNPART$" "$i"; then
                 echo "partition $RETURNPART already taken"
                 imenu -m "partition $RETURNPART is already selected for $i"
+                echo "> alternative options
+select another partition
+cancel partition selection" | imenu -l " " >/tmp/homecancel
+                if grep 'cancel' /tmp/homecancel; then
+                    touch /tmp/loopaskdisk
+                    rm /tmp/homecancel
+                    iroot r manualpartitioning
+                    exit
+                fi
                 unset RETURNPART
             fi
         done

@@ -80,7 +80,9 @@ sleep 2
 
 # ask to reboot, upload error data if install failed
 if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
-    zenity --question --text="installation finished. reboot?" && touch /tmp/instantosreboot
+    if command -v zenity; then
+        zenity --question --text="installation finished. reboot?" && touch /tmp/instantosreboot
+    fi
 else
     echo "installaion failed"
     echo "uploading error data"

@@ -80,7 +80,7 @@ sleep 2
 
 # ask to reboot, upload error data if install failed
 if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
-    imenu -c "installation finished. reboot?" && touch /tmp/instantosreboot
+    zenity --question --text="installation finished. reboot?" && touch /tmp/instantosreboot
 else
     echo "installaion failed"
     echo "uploading error data"

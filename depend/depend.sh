@@ -20,6 +20,10 @@ setinfo() {
 
 setinfo "downloading installer dependencies"
 
+# mark install as non-topinstall
+mkdir -p /opt/instantos
+touch /opt/instantos/realinstall
+
 # enable multilib
 # do it before updating mirrors
 if uname -m | grep -q '^i' ||

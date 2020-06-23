@@ -31,6 +31,7 @@ while ! pacman -S --noconfirm --needed \
     steam \
     steam-native-runtime \
     alacritty \
+    xorg-xinit \
     firefox \
     nitrogen \
     lshw \

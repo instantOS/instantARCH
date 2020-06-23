@@ -13,6 +13,9 @@ while ! pacman -S xorg --noconfirm --needed; do
 
 done
 
+# the comments are used for parsing while building a live iso. Do not remove
+
+# install begin
 while ! pacman -S --noconfirm --needed \
     sudo \
     lightdm \
@@ -42,7 +45,7 @@ while ! pacman -S --noconfirm --needed \
     xdg-user-dirs-gtk \
     noto-fonts-emoji \
     accountsservice \
-    grub; do
+    grub; do # install end
 
     sleep 10
     command -v reflector &&

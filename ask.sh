@@ -123,4 +123,5 @@ done
 
 imenu -M <<<"The installation will now begin.
 This could take a while.
-Keep the machine powered and connected to the internet"
+Keep the machine powered and connected to the internet. 
+After the installation, the machine will automatically reboot"

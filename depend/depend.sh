@@ -34,6 +34,14 @@ fi
 
 pacman -Sy --noconfirm
 
+# install reflector for automirror
+if ! grep -i 'manjaro' /etc/os-release; then
+    while ! pacman -S --noconfirm --needed reflector; do
+        echo "reflector install failed"
+        sleep 10
+    done
+fi
+
 while ! pacman -S --noconfirm --needed \
     fzf \
     expect \

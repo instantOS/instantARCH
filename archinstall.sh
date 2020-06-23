@@ -74,7 +74,9 @@ echo "local install"
     echo "system install" &&
     ./systeminstall.sh 2>&1 | tee /opt/systeminstall
 
+pkill imenu
 pkill instantmenu
+sudo pkill imenu
 sudo pkill instantmenu
 sleep 2
 

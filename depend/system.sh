@@ -42,6 +42,7 @@ while ! pacman -S --noconfirm --needed \
     mpv \
     gvfs-mtp \
     unzip \
+    mpm \
     xdg-user-dirs-gtk \
     noto-fonts-emoji \
     accountsservice \

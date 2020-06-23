@@ -16,6 +16,7 @@ if iroot isvm; then
         pacman -S --noconfirm --needed xorg-drivers
     else
         pacman -S mesa --noconfirm
+        pacman -S xf86-video-vmware --noconfirm
     fi
 else
     ## NVIDIA

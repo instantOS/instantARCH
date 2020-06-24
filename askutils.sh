@@ -153,6 +153,10 @@ askuser() {
     while ! [ "$NEWPASS" = "$NEWPASS2" ] || [ -z "$NEWPASS" ]; do
         NEWPASS="$(imenu -P 'set password')"
         NEWPASS2="$(imenu -P 'confirm password')"
+        if ! [ "$NEWPASS" = "$NEWPASS2" ]; then
+            echo "the confirmation password doesn't match.
+Please enter a new password" | imenu -M
+        fi
     done
 
     iroot user "$NEWUSER"

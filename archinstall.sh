@@ -47,9 +47,11 @@ setinfo() {
     echo "$@"
 }
 
-echo "import time; time.sleep(10009)" | python &
-sleep 2
-pkill python3
+if command -v python; then
+    echo "import time; time.sleep(10009)" | python &
+    sleep 2
+    pkill python3
+fi
 
 # sort mirrors
 pacman -Sy --noconfirm

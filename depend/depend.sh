@@ -24,22 +24,24 @@ setinfo "downloading installer dependencies"
 mkdir -p /opt/instantos
 touch /opt/instantos/realinstall
 
-# enable multilib
-# do it before updating mirrors
-if uname -m | grep -q '^i' ||
-    grep -qi '^\[multilib' /etc/pacman.conf ||
-    grep -qi 'manjaro' /etc/os-release; then
-    echo "not enabling multilib"
-else
-    echo "enabling multilib"
-    echo "[multilib]" >>/etc/pacman.conf
-    echo "Include = /etc/pacman.d/mirrorlist" >>/etc/pacman.conf
+if command -v systemctl; then
+    # enable multilib
+    # do it before updating mirrors
+    if uname -m | grep -q '^i' ||
+        grep -qi '^\[multilib' /etc/pacman.conf ||
+        grep -qi 'manjaro' /etc/os-release; then
+        echo "not enabling multilib"
+    else
+        echo "enabling multilib"
+        echo "[multilib]" >>/etc/pacman.conf
+        echo "Include = /etc/pacman.d/mirrorlist" >>/etc/pacman.conf
+    fi
 fi
 
 pacman -Sy --noconfirm
 
 # install reflector for automirror
-if ! grep -i 'manjaro' /etc/os-release; then
+if ! grep -i 'manjaro' /etc/os-release && command -v systemctl; then
     while ! pacman -S --noconfirm --needed reflector; do
         echo "reflector install failed"
         sleep 10

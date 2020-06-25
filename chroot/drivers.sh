@@ -29,7 +29,7 @@ else
             elif grep -iq "dkms" "$DRIVERFILE"; then
                 pacman -S --noconfirm nvidia-dkms nvidia-utils
 
-                if ! uname -m | grep -q '^i'; then
+                if ! uname -m | grep -q '^i' && command -v systemctl; then
                     pacman -S --noconfirm lib32-nvidia-utils
                 fi
             elif grep -iq "nvidia" "$DRIVERFILE"; then
@@ -41,7 +41,10 @@ else
             echo "defaulting to open source driver"
             pacman -S --noconfirm mesa xf86-video-nouveau
         fi
-        pacman -S --noconfirm --needed vulkan-icd-loader lib32-vulkan-icd-loader
+        pacman -S --noconfirm --needed vulkan-icd-loader
+        if command -v systemctl; then
+            pacman -S --noconfirm --needed lib32-vulkan-icd-loader
+        fi
     ## Intel
     elif lspci | grep -i vga | grep -i intel; then
         echo "intel integrated detected"
@@ -53,6 +56,6 @@ else
 fi
 
 # 32 bit mesa
-if ! uname -m | grep -q '^i'; then
+if ! uname -m | grep -q '^i' && command -v systemctl; then
     pacman -S --noconfirm lib32-mesa
 fi

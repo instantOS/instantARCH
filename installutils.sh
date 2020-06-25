@@ -2,7 +2,6 @@
 
 # functions used for the actual installation
 
-
 # reset working dir
 rcd() {
     cd /root/instantARCH
@@ -53,8 +52,10 @@ chrootscript() {
 
     if command -v arch-chroot; then
         arch-chroot /mnt "/root/instantARCH/${1}.sh" || serror
-    else
+    elif command -v manjaro-chroot; then
         manjaro-chroot /mnt "/root/instantARCH/${1}.sh" || serror
+    else
+        artools-chroot /mnt "/root/instantARCH/${1}.sh" || serror
     fi
 
     echo "chroot: $1" >>/tmp/instantprogress

@@ -31,8 +31,6 @@ while ! pacman -S --noconfirm --needed \
     lightdm-gtk-greeter \
     inetutils \
     xdg-desktop-portal-gtk \
-    steam \
-    steam-native-runtime \
     alacritty \
     xorg-xinit \
     firefox \
@@ -53,3 +51,8 @@ while ! pacman -S --noconfirm --needed \
         pacman -Sy --noconfirm
 
 done
+
+# not present on artix
+if command -v systemctl; then
+    pacman -S --noconfirm --needed steam steam-native-runtime
+fi

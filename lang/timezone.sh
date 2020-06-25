@@ -12,12 +12,15 @@ fi
 
 if [ -n "$CITY" ]; then
     ln -sf /usr/share/zoneinfo/$REGION/$CITY /etc/localtime
-    timedatectl set-timezone "$REGION/$CITY"
+    if command -v timedatectl; then
+        timedatectl set-timezone "$REGION/$CITY"
+    fi
     echo "setting timezone to $REGION/$CITY"
-
 else
     ln -sf /usr/share/zoneinfo/$REGION /etc/localtime
-    timedatectl set-timezone "$REGION"
+    if command -v timedatectl; then
+        timedatectl set-timezone "$REGION"
+    fi
     echo "setting timezone to $REGION"
 fi
 

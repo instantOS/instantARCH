@@ -21,16 +21,20 @@ sed -i 's/^#logind-check-graphical=.*/logind-check-graphical=true/' /etc/lightdm
 
 # needed to get internet to work
 if ! [ -e /opt/topinstall ] && ! iroot partswap; then
-    if ! grep -iq manjaro /etc/os-release; then
-        # enable swap
-        systemctl enable systemd-swap
-        sed -i 's/^swapfc_enabled=.*/swapfc_enabled=1/' /etc/systemd/swap.conf
+    if command -v systemctl; then
+        if ! grep -iq manjaro /etc/os-release; then
+            # enable swap
+            systemctl enable systemd-swap
+            sed -i 's/^swapfc_enabled=.*/swapfc_enabled=1/' /etc/systemd/swap.conf
+        fi
     fi
 fi
 
 sed -i 's/# %wheel/%wheel/g' /etc/sudoers
-systemctl enable lightdm
-systemctl enable NetworkManager
+if command -v systemctl; then
+    systemctl enable lightdm
+    systemctl enable NetworkManager
+fi
 
 if ! command -v update-grub &>/dev/null; then
     # can't include this in package

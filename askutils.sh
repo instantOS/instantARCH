@@ -36,16 +36,22 @@ asklayout() {
 
         # allow directly typing in layout name
         if [ "$NEWKEY" = "other" ]; then
-            OTHERKEY="$(localectl list-x11-keymap-layouts | imenu -l 'select keyboard layout ')"
+            if command -v localectl; then
+                OTHERKEY="$(localectl list-x11-keymap-layouts | imenu -l 'select keyboard layout ')"
 
-            if [ -z "$OTHERKEY" ]; then
-                unset NEWKEY
-            else
-                # newline is intentional!!!
-                echo "
+                if [ -z "$OTHERKEY" ]; then
+                    unset NEWKEY
+                else
+                    # newline is intentional!!!
+                    echo "
 $OTHERKEY" >/root/instantARCH/data/lang/keyboard/other
+                fi
+            else
+                imenu -m "not supported yet without systemd"
+                unset NEWKEY
             fi
         fi
+
     done
 
     # option to cancel the installer

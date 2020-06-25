@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# change hostname and 
+# change hostname and
 # follow arch install guide for hosts
 
 NEWHOSTNAME=$(iroot hostname)
@@ -15,8 +15,12 @@ echo "$NEWHOSTNAME" >/etc/hostname
 echo "127.0.0.1 localhost" >/etc/hosts
 echo "::1 localhost" >>/etc/hosts
 echo "127.0.1.1 $NEWHOSTNAME.localdomain $NEWHOSTNAME" >>/etc/hosts
-hostnamectl set-hostname "$NEWHOSTNAME"
-
 pacman -S --noconfirm --needed networkmanager
-systemctl enable NetworkManager
-systemctl enable sshd
+
+if command -v systemctl; then
+    hostnamectl set-hostname "$NEWHOSTNAME"
+    systemctl enable NetworkManager
+    systemctl enable sshd
+else
+    echo "no systemd detected, please manually enable sshd and networkmanager"
+fi

@@ -3,4 +3,6 @@
 # ensure system time is correct
 
 echo "configuring time"
-timedatectl set-ntp true
+if command -v timedatectl; then
+    timedatectl set-ntp true
+fi

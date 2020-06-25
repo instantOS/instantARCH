@@ -9,9 +9,13 @@ NEWKEYMAP=$(head -1 /root/instantARCH/data/lang/keyboard/$KEYLANG)
 
 echo "setting keymap to $NEWXORG"
 
-localectl --no-convert set-x11-keymap "$NEWXORG"
+if command -v localectl; then
+    localectl --no-convert set-x11-keymap "$NEWXORG"
+fi
 setxkbmap -layout "$NEWXORG"
 
 if grep -q .. <<<"$NEWKEYMAP"; then
-    localectl --no-convert set-keymap "$NEWKEYMAP"
+    if command -v localectl; then
+        localectl --no-convert set-keymap "$NEWKEYMAP"
+    fi
 fi

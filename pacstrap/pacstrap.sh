@@ -9,14 +9,22 @@ fi
 
 pacman -Sy --noconfirm
 
+# we're on arch
 if command -v pacstrap; then
     while ! pacstrap /mnt base linux linux-headers linux-lts linux-lts-headers linux-firmware reflector; do
         dialog --msgbox "package installation failed \nplease reconnect to internet" 700 700
     done
 else
-    while ! basestrap /mnt base linux linux-headers linux-lts linux-lts-headers linux-firmware; do
-        dialog --msgbox "manjaro package installation failed \nplease reconnect to internet" 700 700
-    done
+    # artix or manjaro
+    if command -v systemctl; then
+        while ! basestrap /mnt base linux linux-headers linux-lts linux-lts-headers linux-firmware; do
+            dialog --msgbox "manjaro package installation failed \nplease reconnect to internet" 700 700
+        done
+    else
+        while ! basestrap /mnt base base-devel openrc linux linux-headers linux-lts linux-lts-headers linux-firmware; do
+            dialog --msgbox "artix package installation failed \nplease reconnect to internet" 700 700
+        done
+    fi
 fi
 
 if command -v genfstab; then
@@ -24,6 +32,7 @@ if command -v genfstab; then
 else
     fstabgen -U /mnt >>/mnt/etc/fstab
 fi
+
 cd /root
 cp -r ./instantARCH /mnt/root/instantARCH
 cat /etc/pacman.d/mirrorlist >/mnt/etc/pacman.d/mirrorlist

@@ -40,7 +40,12 @@ while ! iroot confirm; do
     guimode && setxkbmap -layout $(tail -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")
 
     asklocale
-    askmirrors
+
+    # artix mirrors work differently
+    if command -v pacstrap; then
+        askmirrors
+    fi
+
     askvm
     askregion
 

@@ -52,6 +52,7 @@ while ! pacman -S --noconfirm --needed \
     fzf \
     expect \
     git \
+    os-prober \
     dialog \
     imvirt \
     lshw \

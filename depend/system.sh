@@ -55,4 +55,7 @@ done
 # not present on artix
 if command -v systemctl; then
     pacman -S --noconfirm --needed steam steam-native-runtime
+elif command -v sv; then
+    echo "installing additional runit packages"
+    pacman -S --noconfirm --needed lightdm-runit networkmanager-runit
 fi

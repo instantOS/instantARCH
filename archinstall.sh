@@ -89,6 +89,8 @@ chmod +x *.sh
 chmod +x */*.sh
 
 ./depend/depend.sh
+./artix/preinstall.sh
+
 cd /root/instantARCH
 
 ./ask.sh || {

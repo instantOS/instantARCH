@@ -17,3 +17,4 @@ trustrepo "world"
 trustrepo "galaxy"
 trustrepo "extra"
 trustrepo "community"
+pacman -Sy --noconfirm

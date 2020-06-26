@@ -4,6 +4,7 @@ source /root/instantARCH/installutils.sh
 
 chrootscript "depend/depend" "preparing installer packages"
 chrootscript "depend/depend" "preparing installer packages"
+chrootscript "artix/preinstall" "applying artix fixes"
 chrootscript "depend/system" "installing dependencies"
 chrootscript "chroot/chroot" "configuring system"
 chrootscript "chroot/drivers" "installing drivers"
@@ -33,6 +34,8 @@ if ! iroot onlyarch &&
         chrootscript "chroot/chroot" "extra steps for manjaro"
     fi
 fi
+
+chrootscript "artix/postinstall" "reverting artix fixes"
 
 # mark installation as susccessful
 touch /opt/installsuccess

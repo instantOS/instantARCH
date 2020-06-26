@@ -9,3 +9,4 @@ if command -v systemctl; then
 fi
 
 sed -i '/instantOS trust hook/d' /etc/pacman.conf
+sleep 1

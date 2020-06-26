@@ -8,5 +8,5 @@ if command -v systemctl; then
     exit
 fi
 
-sed -i '/instantOS trust hook/d' /etc/pacman.conf
+sed -i '/Optional TrustAll/d' /etc/pacman.conf
 sleep 1

@@ -9,7 +9,7 @@ fi
 
 echo "running artix hook"
 trustrepo() {
-    sed -i '/^\['"$1"'\]aSigLevel = Optional TrustAll # instantOS trust hook' /etc/pacman.conf
+    sed -i '/^\['"$1"'\]/aSigLevel = Optional TrustAll' /etc/pacman.conf
 }
 
 trustrepo "system"

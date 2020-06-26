@@ -61,6 +61,30 @@ cd /root
 [ -e instantARCH ] && rm -rf instantARCH
 git clone --depth=1 https://github.com/instantos/instantARCH.git
 cd instantARCH
+
+# use alternative versions of the installer
+if [ -n "$1" ]; then
+    case "$1" in
+    "test")
+        echo "switching to testing branch"
+        git checkout -b testing
+        ;;
+    "manual")
+        if ! [ -e /root/manualarch ]; then
+            echo "no manual instantARCH version found. Please clone it to /root/manualarch"
+            sleep 5
+            echo "exiting"
+            exit
+        fi
+        rm -rf ./*
+        cp -r /root/manualarch/* .
+        ;;
+    *)
+        echo "running normal installer version"
+        ;;
+    esac
+
+fi
 chmod +x *.sh
 chmod +x */*.sh
 

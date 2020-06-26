@@ -21,7 +21,7 @@ else
             dialog --msgbox "manjaro package installation failed \nplease reconnect to internet" 700 700
         done
     else
-        while ! basestrap /mnt base base-devel openrc linux linux-headers linux-lts linux-lts-headers linux-firmware; do
+        while ! basestrap /mnt base base-devel runit linux linux-headers linux-lts linux-lts-headers linux-firmware; do
             dialog --msgbox "artix package installation failed \nplease reconnect to internet" 700 700
         done
     fi

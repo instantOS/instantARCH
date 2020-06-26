@@ -15,5 +15,9 @@ if ! [ -e /usr/bin/liveutils ]; then
     echo "setting localectl locale to $SETLOCALE"
     if command -v localectl; then
         localectl set-locale LANG="$SETLOCALE"
+    else
+        echo "artix locale configuration"
+        echo 'export LANG="'"$SETLOCALE"'"' >/etc/locale.conf
+        echo 'export LC_COLLATE="C"' >>/etc/locale.conf
     fi
 fi

@@ -10,3 +10,7 @@ fi
 
 sed -i '/Optional TrustAll/d' /etc/pacman.conf
 sleep 1
+
+# enable services
+ln -s /etc/runit/sv/NetworkManager /run/runit/service
+ln -s /etc/runit/sv/lightdm /run/runit/service

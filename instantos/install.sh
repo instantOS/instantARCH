@@ -39,6 +39,12 @@ fi
 yes | pacman -S libxft-bgra
 
 cd ~/instantOS
+
+# disable plymouth on artix
+if ! command -v systemctl; then
+    touch /opt/instantos/noplymouth
+fi
+
 bash rootinstall.sh
 
 # change greeter appearance

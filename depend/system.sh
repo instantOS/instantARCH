@@ -31,11 +31,11 @@ while ! pacman -S --noconfirm --needed \
     lightdm-gtk-greeter \
     inetutils \
     xdg-desktop-portal-gtk \
-    alacritty \
     xorg-xinit \
     firefox \
     nitrogen \
     lshw \
+    udiskie \
     gedit \
     mpv \
     gvfs-mtp \

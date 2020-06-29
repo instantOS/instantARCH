@@ -27,6 +27,22 @@ wallstatus() {
     guimode && feh --bg-scale /usr/share/liveutils/$1.jpg &
 }
 
+artixinfo() {
+    if command -v systemctl; then
+        echo "regular arch/manjaro detected"
+        return
+    fi
+
+    echo "You appear to be installing the non-systemd version of instantOS.
+Support for non-systemd setups is experimental
+Any issues should be solvable with manual intervention
+Here's a list of things that do not work from the installer and how to work around them:
+disk editor: set up partitions beforehand or use automatic partitioning
+keyboard locale: set it manually after installation in the settings
+systemd-swap (obviously)" | imenu -M
+
+}
+
 # ask for keyboard layout
 asklayout() {
     cd /root/instantARCH/data/lang/keyboard

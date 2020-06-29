@@ -32,6 +32,9 @@ imenu -m "Welcome to the instantOS installer"
 # this loop wraps the rest of the installer
 while ! iroot confirm; do
 
+    # warning message for artix
+    artixinfo
+
     # ask for keyboard layout
     asklayout
     if head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY" | grep -q '[^ ][^ ]'; then

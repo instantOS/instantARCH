@@ -80,7 +80,9 @@ this will delete all existing data" | imenu -C; then
     fi
 
     # choice between multiple nvidia drivers
-    askdrivers
+    if ! grep -iq manjaro /etc/os-release; then
+        askdrivers
+    fi
 
     # create user and add to groups
     askuser

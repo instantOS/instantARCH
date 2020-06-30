@@ -44,7 +44,7 @@ while ! iroot confirm; do
 
     asklocale
 
-    # artix mirrors work differently
+    # artix and manjaro mirrors work differently
     if command -v pacstrap; then
         askmirrors
     fi

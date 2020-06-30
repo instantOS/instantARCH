@@ -11,7 +11,7 @@ else
 fi
 
 # set up instantwm as a default user session
-if grep-q '^user-session.*' /etc/lightdm/lightdm.conf; then
+if grep -q '^user-session.*' /etc/lightdm/lightdm.conf; then
     echo "adjusting user session"
     sed -i 's/^user-session=.*/user-session=instantwm/g' /etc/lightdm/lightdm.conf
 fi

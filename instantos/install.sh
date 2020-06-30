@@ -41,7 +41,7 @@ yes | pacman -S libxft-bgra
 cd ~/instantOS
 
 # disable plymouth on artix
-if ! command -v systemctl; then
+if ! command -v systemctl || iroot noplymouth; then
     touch /opt/instantos/noplymouth
 fi
 

@@ -19,4 +19,6 @@ groupadd -r autologin
 gpasswd -a "$NEWUSER" autologin
 
 # enable autologin
-sed -i "s/^\[Seat:\*\]/[Seat:*]\nautologin-user=$NEWUSER/g" /etc/lightdm/lightdm.conf
+if ! iroot noautologin; then
+    sed -i "s/^\[Seat:\*\]/[Seat:*]\nautologin-user=$NEWUSER/g" /etc/lightdm/lightdm.conf
+fi

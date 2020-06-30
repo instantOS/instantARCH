@@ -113,11 +113,12 @@ sudo pkill instantmenu
 sleep 2
 
 # ask to reboot, upload error data if install failed
-if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ] &&
-    command -v installapplet; then
-    notify-send "rebooting"
-    sleep 2
-    reboot
+if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
+    if command -v installapplet; then
+        notify-send "rebooting"
+        sleep 2
+        reboot
+    fi
 else
 
     echo "installaion failed"

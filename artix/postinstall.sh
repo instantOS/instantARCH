@@ -5,10 +5,10 @@
 
 if command -v systemctl; then
     echo "skipping artix hooks"
-    exit
+    exit 0
 fi
 
-echo "reverting pacaman fixes"
+echo "reverting pacman fixes"
 sed -i '/Optional TrustAll/d' /etc/pacman.conf
 sleep 1
 

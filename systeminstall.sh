@@ -35,7 +35,7 @@ if ! iroot onlyarch &&
     fi
 fi
 
-chrootscript "artix/postinstall" "reverting artix fixes"
+chrootscript "artix/postinstall" "checking for reverting artix fixes"
 
 # mark installation as susccessful
 touch /opt/installsuccess

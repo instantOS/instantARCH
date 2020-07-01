@@ -21,6 +21,7 @@ enableservice() {
         ln -s /etc/runit/sv/"$1" /etc/runit/runsvdir/current
     fi
 }
+
 /run/runit/service
 # enable services
 

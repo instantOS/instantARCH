@@ -35,6 +35,7 @@ while ! pacman -S --noconfirm --needed \
     firefox \
     nitrogen \
     lshw \
+    gxkb \
     udiskie \
     gedit \
     mpv \

@@ -14,4 +14,9 @@ mount "$(iroot partefi)" /efi
 
 sudo pacman -S efibootmgr grub --noconfirm
 
-grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
+if ! grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB; then
+    umount /efi
+    mkfs.fat -F32 "$(iroot partefi)"
+    mount "$(iroot partefi)" /efi
+    grub-install --efi-directory=/efi
+fi

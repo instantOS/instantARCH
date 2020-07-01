@@ -186,6 +186,13 @@ Please enter a new password" | imenu -M
 
 }
 
+askkernel() {
+    KERNEL=$(echo "linux
+linux-lts" | imenu -l "select kernel")
+
+    iroot kernel "$KERNEL"
+}
+
 # ask about which hypervisor is used
 askvm() {
     if imvirt | grep -iq 'physical'; then

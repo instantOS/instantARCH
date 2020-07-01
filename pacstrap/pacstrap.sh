@@ -9,19 +9,26 @@ fi
 
 pacman -Sy --noconfirm
 
+# kernel selection
+kernel="$(iroot kernel)"
+if ! [kernel -eq "linux" || kernel -eq "linux-lts"]; then
+    # fallbacks to lts kernel
+    kernel="linux-lts"
+fi
+
 # we're on arch
 if command -v pacstrap; then
-    while ! pacstrap /mnt base linux linux-headers linux-lts linux-lts-headers linux-firmware reflector; do
+    while ! pacstrap /mnt base ${kernel} ${kernel}-headers linux-firmware reflector; do
         dialog --msgbox "package installation failed \nplease reconnect to internet" 700 700
     done
 else
     # artix or manjaro
     if command -v systemctl; then
-        while ! basestrap /mnt base linux linux-headers linux-lts linux-lts-headers linux-firmware; do
+        while ! basestrap /mnt base ${kernel} ${kernel}-headers linux-firmware; do
             dialog --msgbox "manjaro package installation failed \nplease reconnect to internet" 700 700
         done
     else
-        while ! basestrap /mnt runit elogind-runit base base-devel linux linux-headers linux-lts linux-lts-headers linux-firmware; do
+        while ! basestrap /mnt runit elogind-runit base base-devel ${kernel} ${kernel}-headers linux-firmware; do
             sleep 2
             dialog --msgbox "artix package installation failed \nplease reconnect to internet" 700 700
         done

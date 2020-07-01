@@ -84,6 +84,9 @@ this will delete all existing data" | imenu -C; then
         askdrivers
     fi
 
+    # ask for kernel (testing)
+    askkernel
+
     # create user and add to groups
     askuser
 
@@ -102,6 +105,7 @@ this will delete all existing data" | imenu -C; then
     addsum "Nearest City" "city"
     addsum "Keyboard layout" "keyboard"
     addsum "Target install drive" "disk"
+    addsum "Kernel" "kernel"
     addsum "Hostname" "hostname"
 
     if efibootmgr; then
@@ -127,6 +131,7 @@ Should installation proceed with these parameters?"
         unset NEWPASS
         unset NEWHOSTNAME
         unset NEWUSER
+	unset KERNEL
     fi
 
 done

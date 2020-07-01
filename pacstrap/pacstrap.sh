@@ -11,7 +11,7 @@ pacman -Sy --noconfirm
 
 # kernel selection
 KERNEL="$(iroot kernel)"
-if ! [ kernel -eq "linux" || kernel -eq "linux-lts" ]; then
+if ! [ KERNEL || KERNEL -eq "linux" || KERNEL -eq "linux-lts" ]; then
     # fallbacks to lts kernel
     KERNEL="linux-lts"
 fi

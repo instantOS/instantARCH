@@ -22,9 +22,18 @@ editplymouth() {
     fi
 }
 
+choosekernel() {
+    KERNEL=$(echo "linux
+linux-lts
+default" | imenu -l "select kernel")
+
+    iroot kernel "$KERNEL"
+}
+
 while :; do
     CHOICE="$(echo 'autologin
 plymouth
+kernel
 OK' | imenu -l 'select option')"
     case "$CHOICE" in
     autolog*)
@@ -34,6 +43,10 @@ OK' | imenu -l 'select option')"
     plymouth)
         editplymouth
         ;;
+    kernel)
+	choosekernel
+	echo "selected $(iroot kernel) kernel"
+	;;
     OK)
         echo "advanced options done"
         exit

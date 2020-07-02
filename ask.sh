@@ -93,6 +93,10 @@ this will delete all existing data" | imenu -C; then
 
     iroot hostname "$NEWHOSTNAME"
 
+    if imenu -c "edit advanced settings? (use only if you know what you're doing)"; then
+        /root/instantARCH/askadvanced.sh
+    fi
+
     wallstatus install
     SUMMARY="Installation Summary:"
 

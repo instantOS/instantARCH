@@ -96,6 +96,11 @@ this will delete all existing data" | imenu -C; then
     if imenu -c "edit advanced settings? (use only if you know what you're doing)"; then
         /root/instantARCH/askadvanced.sh
     fi
+    
+    # normal installation as default 
+    if ! iroot installation; then
+	iroot installation "normal"
+    fi
 
     wallstatus install
     SUMMARY="Installation Summary:"

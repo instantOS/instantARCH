@@ -38,6 +38,7 @@ while ! pacman -S --noconfirm --needed \
     gxkb \
     udiskie \
     gedit \
+    ttf-liberation \
     mpv \
     gvfs-mtp \
     unzip \
@@ -52,6 +53,12 @@ while ! pacman -S --noconfirm --needed \
         pacman -Sy --noconfirm
 
 done
+
+# iso for postinstall guestadditions
+if iroot guestadditions; then
+    echo "installing virtualbox guest addidions"
+    pacman -S --noconfirm --needed virtualbox-guest-iso
+fi
 
 # not present on artix
 if command -v systemctl; then

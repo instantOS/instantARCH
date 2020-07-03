@@ -8,3 +8,4 @@ cd /root/instantARCH
 bash ./lang/xorg.sh
 sleep 0.5
 bash ./lang/locale.sh
+bash ./vm/guestadditions.sh

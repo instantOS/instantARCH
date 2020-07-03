@@ -232,6 +232,9 @@ until this is fixed" | imenu -M
         ;;
     virtualbox)
         iroot virtualbox 1
+        if imenu -c "would you like to install virtualbox guest additions?"; then
+            iroot guestadditions 1
+        fi
         ;;
     other)
         iroot othervm 1

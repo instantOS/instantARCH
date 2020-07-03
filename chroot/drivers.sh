@@ -34,6 +34,9 @@ else
                 fi
             elif grep -iq "nvidia" "$DRIVERFILE"; then
                 pacman -S --noconfirm nvidia nvidia-utils nvidia-lts
+                if ! uname -m | grep -q '^i' && command -v systemctl; then
+                    pacman -S --noconfirm lib32-nvidia-utils
+                fi
             elif grep -iq "open" "$DRIVERFILE"; then
                 pacman -S --noconfirm mesa xf86-video-nouveau
             fi

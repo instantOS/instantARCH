@@ -16,4 +16,3 @@ cd /media/virtualbox
 
 pkill imenu
 sleep 2
-reboot

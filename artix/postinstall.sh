@@ -10,6 +10,9 @@ fi
 
 echo "reverting pacman fixes"
 sed -i '/Optional TrustAll/d' /etc/pacman.conf
+
+sed -i '/^\['"instant"'\]/aSigLevel = Optional TrustAll' /etc/pacman.conf
+
 sleep 1
 
 enableservice() {

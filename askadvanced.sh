@@ -30,10 +30,19 @@ default" | imenu -l "select kernel")
     iroot kernel "$KERNEL"
 }
 
+chooselogs() {
+    if imenu -c "backup installation logs to ix.io ? (disabled by default)"; then
+        iroot logging 1
+    else
+        iroot r logging
+    fi
+}
+
 while :; do
     CHOICE="$(echo 'autologin
 plymouth
 kernel
+logging
 OK' | imenu -l 'select option')"
     case "$CHOICE" in
     autolog*)
@@ -44,9 +53,12 @@ OK' | imenu -l 'select option')"
         editplymouth
         ;;
     kernel)
-	choosekernel
-	echo "selected $(iroot kernel) kernel"
-	;;
+        choosekernel
+        echo "selected $(iroot kernel) kernel"
+        ;;
+    logging)
+        chooselogs
+        ;;
     OK)
         echo "advanced options done"
         exit

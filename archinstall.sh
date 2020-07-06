@@ -112,18 +112,8 @@ sudo pkill imenu
 sudo pkill instantmenu
 sleep 2
 
-# ask to reboot, upload error data if install failed
-if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
-    if command -v installapplet; then
-        notify-send "rebooting"
-        sleep 2
-        reboot
-    fi
-else
-
-    echo "installaion failed"
-    echo "uploading error data"
-
+uploadlogs() {
+    echo "uploading installation log"
     cat /opt/localinstall >/opt/install.log
 
     if [ -e /opt/systeminstall ]; then
@@ -137,6 +127,23 @@ else
 please go to https://instantos.github.io/instantos.github.io/support
 for assistance or error reporting" 1000 1000
 
+}
+
+# ask to reboot, upload error data if install failed
+if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
+    if command -v installapplet; then
+        notify-send "rebooting"
+        sleep 2
+        if iroot logging; then
+            uploadlogs
+            sleep 2
+        fi
+        reboot
+    fi
+else
+    echo "installaion failed"
+    echo "uploading error data"
+    uploadlogs
 fi
 
 if [ -e /tmp/removeimenu ]; then

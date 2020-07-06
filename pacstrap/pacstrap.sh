@@ -12,7 +12,7 @@ pacman -Sy --noconfirm
 # kernel selection
 if iroot kernel; then
     KERNEL="$(iroot kernel)"
-    if [ "$KERNEL" -eq "default" ]; then
+    if [ "$KERNEL" = "default" ]; then
         KERNEL="linux-lts"
     fi
 else

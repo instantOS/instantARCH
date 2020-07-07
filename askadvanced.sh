@@ -44,8 +44,10 @@ simplescreenrecorder" | imenu -b "select extra packages to install")
         for i in ${PACKAGELIST[@]}; do
 	    echo "    Package: $i"
         done
+
+	iroot packages "$PACKAGELIST"
     else 
-	echo "no extra packages to install"
+	echo "No extra packages to install"
     fi
 }
 

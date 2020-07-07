@@ -21,7 +21,6 @@ while ! pacman -S --noconfirm --needed \
     lightdm \
     bash \
     zsh \
-    vim \
     xterm \
     systemd-swap \
     neofetch \

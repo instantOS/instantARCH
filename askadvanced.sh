@@ -23,15 +23,15 @@ editplymouth() {
 }
 
 choosekernel() {
-    KERNEL=$(echo "linux
+    KERNEL="$(echo 'linux
 linux-lts
-default" | imenu -l "select kernel")
+default' | imenu -l 'select kernel')"
 
     iroot kernel "$KERNEL"
 }
 
 selectpackages() {
-    PACKAGELIST=$(echo "steam
+    PACKAGELIST="$(echo 'steam
 chromium
 thunar
 vim
@@ -46,7 +46,7 @@ inkscape
 libreoffice-fresh
 libreoffice-still
 audacity
-virtualbox" | imenu -b "select extra packages to install")
+virtualbox' | imenu -b 'select extra packages to install')"
    
     if [ -n "${PACKAGELIST[0]}" ]; then
         echo "Extra packages to install:"

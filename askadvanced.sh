@@ -38,11 +38,15 @@ vim
 neovim
 code
 simplescreenrecorder
+obs-studio
 atom
 krita
 gimp
+inkscape
 libreoffice-fresh
-libreoffice-still" | imenu -b "select extra packages to install")
+libreoffice-still
+audacity
+virtualbox" | imenu -b "select extra packages to install")
    
     if [ -n "${PACKAGELIST[0]}" ]; then
         echo "Extra packages to install:"

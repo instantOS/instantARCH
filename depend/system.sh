@@ -78,6 +78,10 @@ if iroot packages; then
 	    pacman -S --noconfirm --needed vim vim-runtime
 	    continue
 	    ;;
+	virtualbox)
+	    pacman -S --noconfirm --needed virtualbox-host-modules-arch virtualbox
+	    continue
+	    ;;
 
 	pacman -S --noconfirm --needed ${t}
     done

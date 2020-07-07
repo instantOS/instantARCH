@@ -13,6 +13,6 @@ sleep 2
 cd /media/virtualbox
 
 ./VBoxLinuxAdditions.run
-
+touch /opt/instantos/guestadditions
 pkill imenu
 sleep 2

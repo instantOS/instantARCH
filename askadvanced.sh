@@ -37,7 +37,12 @@ thunar
 vim
 neovim
 code
-simplescreenrecorder" | imenu -b "select extra packages to install")
+simplescreenrecorder
+atom
+krita
+gimp
+libreoffice-fresh
+libreoffice-still" | imenu -b "select extra packages to install")
    
     if [ -n "${PACKAGELIST[0]}" ]; then
         echo "Extra packages to install:"

@@ -30,6 +30,25 @@ default" | imenu -l "select kernel")
     iroot kernel "$KERNEL"
 }
 
+selectpackages() {
+    PACKAGELIST=$(echo "steam
+chromium
+thunar
+vim
+neovim
+code
+simplescreenrecorder" | imenu -b "select extra packages to install")
+   
+    if [ -n "${PACKAGELIST[0]}" ]; then
+        echo "Extra packages to install:"
+        for i in ${PACKAGELIST[@]}; do
+	    echo "    Package: $i"
+        done
+    else 
+	echo "no extra packages to install"
+    fi
+}
+
 chooselogs() {
     if imenu -c "backup installation logs to ix.io ? (disabled by default)"; then
         iroot logging 1
@@ -43,6 +62,7 @@ while :; do
 plymouth
 kernel
 logging
+packages
 OK' | imenu -l 'select option')"
     case "$CHOICE" in
     autolog*)
@@ -59,6 +79,9 @@ OK' | imenu -l 'select option')"
     logging)
         chooselogs
         ;;
+    packages)
+	selectpackages
+	;;
     OK)
         echo "advanced options done"
         exit

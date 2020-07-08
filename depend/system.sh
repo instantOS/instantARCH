@@ -62,12 +62,11 @@ fi
 # optional extra packages
 if iroot packages &>/dev/null; then
     echo "installing extra packages"
-    if command -v systemctl; then
-        iroot packages | pacman -S --noconfirm --needed -
-    else
-        # steam is not in the artix repos
-        iroot packages | grep -v 'steam' | pacman -S --noconfirm --needed -
-    fi
+    iroot packages | pacman -S --noconfirm --needed -
+fi
+
+if command -v systemctl; then
+    pacman -S --noconfirm --needed steam steam-native-runtime
 fi
 
 # artix packages

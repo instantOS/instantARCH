@@ -31,10 +31,8 @@ default' | imenu -l 'select kernel')"
 }
 
 selectpackages() {
-    PACKAGELIST="$(echo 'steam
-libreoffice-fresh
+    PACKAGELIST="$(echo 'libreoffice-fresh
 lutris
-steam
 chromium
 code
 pcmanfm
@@ -48,11 +46,6 @@ virtualbox' | imenu -b 'select extra packages to install')"
     if [ -z "${PACKAGELIST[0]}" ]; then
         echo "No extra packages to install"
         return
-    fi
-
-    if grep 'steam' <<<"$PACKAGELIST"; then
-        PACKAGELIST="$PACKAGELIST
-steam-native-runtime"
     fi
 
     if grep 'lutris' <<<"$PACKAGELIST"; then

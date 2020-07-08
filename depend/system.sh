@@ -21,7 +21,6 @@ while ! pacman -S --noconfirm --needed \
     lightdm \
     bash \
     zsh \
-    vim \
     xterm \
     systemd-swap \
     neofetch \
@@ -60,10 +59,35 @@ if iroot guestadditions; then
     pacman -S --noconfirm --needed virtualbox-guest-iso
 fi
 
-# not present on artix
-if command -v systemctl; then
-    pacman -S --noconfirm --needed steam steam-native-runtime
-elif command -v sv; then
+# optional extra packages
+if iroot packages; then
+    echo "installing extra packages"
+    PACKAGES="$(iroot packages)"
+    for t in ${PACKAGES[@]}; do
+	case "$t" in 
+	steam)
+	    if command -v systemctl; then
+		pacman -S --noconfirm --needed steam steam-native-runtime
+	    else
+		echo "steam is not available on artix"
+	    fi
+	    continue
+	    ;;
+	vim)
+	    pacman -S --noconfirm --needed vim vim-runtime
+	    continue
+	    ;;
+	virtualbox)
+	    pacman -S --noconfirm --needed virtualbox-host-modules-arch virtualbox
+	    continue
+	    ;;
+
+	pacman -S --noconfirm --needed ${t}
+    done
+fi
+
+# artix packages
+if command -v sv; then
     echo "installing additional runit packages"
     pacman -S --noconfirm --needed lightdm-runit networkmanager-runit
 fi

@@ -23,11 +23,41 @@ editplymouth() {
 }
 
 choosekernel() {
-    KERNEL=$(echo "linux
+    KERNEL="$(echo 'linux
 linux-lts
-default" | imenu -l "select kernel")
+default' | imenu -l 'select kernel')"
 
     iroot kernel "$KERNEL"
+}
+
+selectpackages() {
+    PACKAGELIST="$(echo 'steam
+chromium
+thunar
+vim
+neovim
+code
+simplescreenrecorder
+obs-studio
+atom
+krita
+gimp
+inkscape
+libreoffice-fresh
+libreoffice-still
+audacity
+virtualbox' | imenu -b 'select extra packages to install')"
+   
+    if [ -n "${PACKAGELIST[0]}" ]; then
+        echo "Extra packages to install:"
+        for i in ${PACKAGELIST[@]}; do
+	    echo "    Package: $i"
+        done
+
+	iroot packages "$PACKAGELIST"
+    else 
+	echo "No extra packages to install"
+    fi
 }
 
 chooselogs() {
@@ -43,6 +73,7 @@ while :; do
 plymouth
 kernel
 logging
+packages
 OK' | imenu -l 'select option')"
     case "$CHOICE" in
     autolog*)
@@ -59,6 +90,9 @@ OK' | imenu -l 'select option')"
     logging)
         chooselogs
         ;;
+    packages)
+	selectpackages
+	;;
     OK)
         echo "advanced options done"
         exit

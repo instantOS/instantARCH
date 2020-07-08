@@ -32,32 +32,43 @@ default' | imenu -l 'select kernel')"
 
 selectpackages() {
     PACKAGELIST="$(echo 'steam
+libreoffice-fresh
+lutris
+steam
 chromium
-thunar
-vim
-neovim
 code
-simplescreenrecorder
+pcmanfm
 obs-studio
-atom
 krita
 gimp
 inkscape
-libreoffice-fresh
-libreoffice-still
 audacity
 virtualbox' | imenu -b 'select extra packages to install')"
-   
-    if [ -n "${PACKAGELIST[0]}" ]; then
-        echo "Extra packages to install:"
-        for i in ${PACKAGELIST[@]}; do
-	    echo "    Package: $i"
-        done
 
-	iroot packages "$PACKAGELIST"
-    else 
-	echo "No extra packages to install"
+    if [ -z "${PACKAGELIST[0]}" ]; then
+        echo "No extra packages to install"
+        return
     fi
+
+    if grep 'steam' <<<"$PACKAGELIST"; then
+        PACKAGELIST="$PACKAGELIST
+steam-native-runtime"
+    fi
+
+    if grep 'lutris' <<<"$PACKAGELIST"; then
+        PACKAGELIST="$PACKAGELIST
+wine
+vulkan-tools"
+    fi
+
+    if grep 'virtualbox' <<<"$PACKAGELIST"; then
+        PACKAGELIST="$PACKAGELIST
+virtualbox-host-modules-arch"
+    fi
+
+    echo "adding extra packages to installation"
+    iroot packages "$PACKAGELIST"
+
 }
 
 chooselogs() {
@@ -73,7 +84,7 @@ while :; do
 plymouth
 kernel
 logging
-packages
+extra software
 OK' | imenu -l 'select option')"
     case "$CHOICE" in
     autolog*)
@@ -90,9 +101,9 @@ OK' | imenu -l 'select option')"
     logging)
         chooselogs
         ;;
-    packages)
-	selectpackages
-	;;
+    "extra software")
+        selectpackages
+        ;;
     OK)
         echo "advanced options done"
         exit

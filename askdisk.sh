@@ -150,7 +150,7 @@ chooseroot() {
 # choose wether to install grub and where to install it
 choosegrub() {
 
-    while [ -z $BOOTLOADERCONFIRM ]; do
+    while [ -z "$BOOTLOADERCONFIRM" ]; do
         if ! imenu -c "install bootloader (grub) ? (recommended)"; then
             if imenu -c "are you sure? This could make the system unbootable. "; then
                 iroot nobootloader 1

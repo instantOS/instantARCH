@@ -60,30 +60,14 @@ if iroot guestadditions; then
 fi
 
 # optional extra packages
-if iroot packages; then
+if iroot packages &>/dev/null; then
     echo "installing extra packages"
-    PACKAGES="$(iroot packages)"
-    for t in ${PACKAGES[@]}; do
-	case "$t" in 
-	steam)
-	    if command -v systemctl; then
-		pacman -S --noconfirm --needed steam steam-native-runtime
-	    else
-		echo "steam is not available on artix"
-	    fi
-	    continue
-	    ;;
-	vim)
-	    pacman -S --noconfirm --needed vim vim-runtime
-	    continue
-	    ;;
-	virtualbox)
-	    pacman -S --noconfirm --needed virtualbox-host-modules-arch virtualbox
-	    continue
-	    ;;
-
-	pacman -S --noconfirm --needed ${t}
-    done
+    if command -v systemctl; then
+        iroot packages | pacman -S --noconfirm --needed -
+    else
+        # steam is not in the artix repos
+        iroot packages | grep -v 'steam' | pacman -S --noconfirm --needed -
+    fi
 fi
 
 # artix packages

@@ -2,7 +2,7 @@
 
 # utility to manage installer variables
 
-IROOT="/root/instantARCH/config"
+IROOT="${IROOT:-/root/instantARCH/config}"
 
 if [ -z "$1" ]; then
     echo "usage: 

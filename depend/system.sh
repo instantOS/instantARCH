@@ -38,6 +38,7 @@ while ! pacman -S --noconfirm --needed \
     udiskie \
     gedit \
     ttf-liberation \
+    ttf-joypixels \
     mpv \
     gvfs-mtp \
     unzip \

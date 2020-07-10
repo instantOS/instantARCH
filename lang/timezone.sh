@@ -4,6 +4,11 @@
 
 cd /usr/share/zoneinfo
 
+if iroot noregion; then
+    echo "region is getting skipped"
+    exit
+fi
+
 REGION=$(iroot region)
 
 if iroot city; then

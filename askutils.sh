@@ -4,6 +4,12 @@
 # like topinstall.sh
 
 # check if the install session is GUI or cli
+
+if [ -z "$INSTANTARCH" ]; then
+    echo "defaulting instantarch location to /root/instantARCH"
+    INSTANTARCH="/root/instantARCH"
+fi
+
 guimode() {
     if [ -e /opt/noguimode ]; then
         return 1
@@ -45,7 +51,7 @@ systemd-swap (obviously)" | imenu -M
 
 # ask for keyboard layout
 asklayout() {
-    cd /root/instantARCH/data/lang/keyboard
+    cd "$INSTANTARCH"/data/lang/keyboard
     while [ -z "$NEWKEY" ]; do
         wallstatus worldmap
         NEWKEY="$(ls | imenu -l 'Select keyboard layout ')"
@@ -79,7 +85,7 @@ $OTHERKEY" >/root/instantARCH/data/lang/keyboard/other
 
 # ask for default locale
 asklocale() {
-    cd /root/instantARCH/data/lang/locale
+    cd "$INSTANTARCH"/data/lang/locale
     while [ -z "$NEWLOCALE" ]; do
         NEWLOCALE="$(ls | imenu -l 'Select language> ')"
     done

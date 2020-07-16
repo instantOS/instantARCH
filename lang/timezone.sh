@@ -9,6 +9,11 @@ if iroot noregion; then
     exit
 fi
 
+if ! iroot region; then
+    echo "setting region failed"
+    exit
+fi
+
 REGION=$(iroot region)
 
 if iroot city; then

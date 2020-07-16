@@ -14,7 +14,7 @@ sleep 0.3
 locale-gen
 
 if ! [ -e /usr/bin/liveutils ]; then
-    SETLOCALE="$(cat /root/instantARCH/data/lang/locale/$(iroot locale) |
+    SETLOCALE="$(cat $INSTANTARCH/data/lang/locale/$(iroot locale) |
         grep '.' | tail -1 | grep -o '^[^ ]*')"
     echo "setting localectl locale to $SETLOCALE"
     if command -v localectl; then

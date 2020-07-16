@@ -7,6 +7,9 @@ if [ -z "$INSTANTARCH" ]; then
     INSTANTARCH="/root/instantARCH"
 fi
 
+# clear previous locale settings
+
+sed -i 's/^[^#].*//g' /etc/locale.gen
 cat "$INSTANTARCH"/data/lang/locale/"$(iroot locale)" >>/etc/locale.gen
 
 echo "" >>/etc/locale.gen

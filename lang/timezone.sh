@@ -14,10 +14,10 @@ if ! iroot region; then
     exit
 fi
 
-REGION=$(iroot region)
+REGION="$(iroot region)"
 
 if iroot city; then
-    CITY=$(iroot city)
+    CITY="$(iroot city)"
 fi
 
 if [ -n "$CITY" ]; then

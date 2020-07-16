@@ -3,7 +3,11 @@
 # read out user selected locale
 # build it and set it using localectl
 
-cat /root/instantARCH/data/lang/locale/"$(iroot locale)" >>/etc/locale.gen
+if [ -z "$INSTANTARCH" ]; then
+    INSTANTARCH="/root/instantARCH"
+fi
+
+cat "$INSTANTARCH"/data/lang/locale/"$(iroot locale)" >>/etc/locale.gen
 
 echo "" >>/etc/locale.gen
 sleep 0.3

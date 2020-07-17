@@ -96,8 +96,12 @@ chmod +x */*.sh
 cd /root/instantARCH
 
 ./ask.sh || {
-    imenu -m "ask failed"
-    echo "ask failed" && exit
+    if ! [ -e /opt/instantos/installcanceled ]; then
+        imenu -m "ask failed"
+        echo "ask failed" && exit
+    else
+        exit
+    fi
 }
 
 chmod +x *.sh

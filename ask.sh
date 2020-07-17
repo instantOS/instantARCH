@@ -24,9 +24,17 @@ fi
 # switch imenu to fzf and dialog
 if ! guimode; then
     touch /tmp/climenu
+    imenu -m "Welcome to the instantOS installer"
+else
+    NEXTCHOICE="$(echo '>>h              Welcome to the instantOS installer
+:g Next
+:r ﰸCancel' | instantmenu -q 'select using the mouse, keywords arrow keys' -i -l 209 -h -1 -bw 8 -a 60 -w -1 -c)"
+    if grep -iq cancel <<<"$NEXTCHOICE"; then
+        mkdir /opt/instantos
+        touch /opt/instantos/installcanceled
+        exit 1
+    fi
 fi
-
-imenu -m "Welcome to the instantOS installer"
 
 # go back to the beginning if user isn't happy with settings
 # this loop wraps the rest of the installer

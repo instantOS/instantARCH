@@ -75,3 +75,15 @@ if command -v sv; then
     echo "installing additional runit packages"
     pacman -S --noconfirm --needed lightdm-runit networkmanager-runit
 fi
+
+# auto install processor microcode
+if uname -m | grep '^x'; then
+    echo "installing microcode"
+    if lscpu | grep -i 'name' | grep -i 'amd'; then
+        echo "installing AMD microcode"
+        pacman -S --noconfirm --needed amd-ucode
+    elif lscpu | grep -i 'name' | grep -i 'intel'; then
+        echo "installing Intel microcode"
+        pacman -S --noconfirm --needed intel-ucode
+    fi
+fi

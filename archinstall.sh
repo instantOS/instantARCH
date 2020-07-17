@@ -14,7 +14,7 @@ if ! whoami | grep -iq '^root'; then
 fi
 
 if [ -e /usr/share/liveutils ]; then
-    echo "preparing installation
+    pgrep instantmenu || echo "preparing installation
 OK" | instantmenu -c -bw 4 -l 2 &
 else
     # print logo
@@ -90,6 +90,8 @@ chmod +x */*.sh
 
 ./depend/depend.sh
 ./artix/preinstall.sh
+
+[ -e /usr/share/liveutils ] && pkill instantmenu
 
 cd /root/instantARCH
 

@@ -74,6 +74,11 @@ while ! pacman -S --noconfirm --needed \
 
 done
 
+# upgrade instantmenu
+if command -v instantmenu; then
+    pacman -S instantmenu --noconfirm
+fi
+
 if [ -e /usr/share/liveutils ]; then
     pkill instantmenu
 fi

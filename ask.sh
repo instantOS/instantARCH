@@ -28,10 +28,13 @@ if ! guimode; then
 else
     NEXTCHOICE="$(echo '>>h              Welcome to the instantOS installer
 :g Next
-:r ﰸCancel' | instantmenu -q 'select using the mouse, keywords arrow keys' -i -l 209 -h -1 -bw 8 -a 60 -w -1 -c)"
-    if grep -iq cancel <<<"$NEXTCHOICE"; then
+:r ﰸCancel' | instantmenu -q 'select using the mouse, keywords and arrow keys' -i -l 209 -h -1 -bw 8 -a 60 -w -1 -c)"
+
+    if grep -iq 'cancel' <<<"$NEXTCHOICE"; then
+        echo "canceling installation"
         mkdir /opt/instantos
         touch /opt/instantos/installcanceled
+        touch /opt/instantos/statuscanceled
         exit 1
     fi
 fi

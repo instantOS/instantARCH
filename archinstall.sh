@@ -100,6 +100,8 @@ cd /root/instantARCH
         imenu -m "ask failed"
         echo "ask failed" && exit
     else
+        rm /opt/instantos/installcanceled
+        pkill instantosinstall
         exit
     fi
 }

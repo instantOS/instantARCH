@@ -41,6 +41,7 @@ while ! pacman -S --noconfirm --needed \
     ttf-joypixels \
     mpv \
     gvfs-mtp \
+    exfat-utils \
     unzip \
     xdg-user-dirs-gtk \
     noto-fonts-emoji \

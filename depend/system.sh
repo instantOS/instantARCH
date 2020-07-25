@@ -36,6 +36,7 @@ while ! pacman -S --noconfirm --needed \
     lshw \
     gxkb \
     udiskie \
+    ntfs-3g \
     gedit \
     ttf-liberation \
     ttf-joypixels \

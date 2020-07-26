@@ -172,7 +172,7 @@ choosegrub() {
 
         while [ -z "$EFICONFIRM" ]; do
             choosepart 'select efi partition' | iroot i partefi
-            if imenu -c "this will erase all data on $(cat /root/instantARCH/config/partefi)"; then
+            if imenu -c "this will erase all data on $(iroot partefi)"; then
                 EFICONFIRM="true"
             else
                 rm /root/instantARCH/config/partefi

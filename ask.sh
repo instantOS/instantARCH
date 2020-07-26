@@ -15,7 +15,7 @@ pb dialog
 
 source /root/instantARCH/askutils.sh
 
-if [ -e /usr/share/liveutils ]; then
+if [ -e /usr/share/liveutils ] && ! [ -e /tmp/nogui ]; then
     echo "GUI Mode active"
     export GUIMODE="True"
     GUIMODE="True"

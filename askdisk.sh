@@ -129,11 +129,17 @@ use a swap partition' | imenu -l)" in
         ;;
     *partition)
         echo "using a swap partition"
-        choosepart "choose swap partition> " >/tmp/partswap
-        cat /tmp/partswap >/root/instantARCH/config/partswap
+        while [ -z "$SWAPCONFIRM" ]; do
+            PARTSWAP="$(choosepart 'choose swap partition> ')"
+            if imenu -c "This will erase all data on that partition. It should also be on a fast drive. Continue?"; then
+                SWAPCONFIRM="true"
+                echo "$PARTSWAP will be used as swap"
+                echo "$PARTSWAP" | iroot i partswap
+            fi
+        done
         ;;
-
     esac
+
 }
 
 # choose root partition for programs etc

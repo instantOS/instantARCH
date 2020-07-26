@@ -4,6 +4,8 @@
     <img width="300" height="300" src="https://media.githubusercontent.com/media/instantOS/instantLOGO/master/png/arch.png">
 </div>
 
+----------
+
 instantARCH is a super lightweight and quick & easy to use installer for instantOS.
 
 <p align="center">

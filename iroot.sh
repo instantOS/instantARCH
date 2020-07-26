@@ -4,6 +4,8 @@
 
 IROOT="${IROOT:-/root/instantARCH/config}"
 
+[ -e "$IROOT" ] || mkdir -p "$IROOT"
+
 if [ -z "$1" ]; then
     echo "usage: 
 set value:    iroot field value

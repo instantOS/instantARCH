@@ -129,7 +129,8 @@ use a swap partition' | imenu -l)" in
         ;;
     *partition)
         echo "using a swap partition"
-        choosepart "choose swap partition> " >/root/instantARCH/config/partswap
+        choosepart "choose swap partition> " >/tmp/partswap
+        cat /tmp/partswap >/root/instantARCH/config/partswap
         ;;
 
     esac

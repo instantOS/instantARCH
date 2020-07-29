@@ -41,6 +41,7 @@ while ! pacman -S --noconfirm --needed \
     ttf-liberation \
     ttf-joypixels \
     mpv \
+    bc \
     gvfs-mtp \
     exfat-utils \
     unzip \

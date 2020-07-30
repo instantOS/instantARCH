@@ -7,6 +7,9 @@
 
 # main script calling others
 
+# fix old mirror
+sed -i 's/instantos\.surge\.sh/repo.instantos.io/g' /etc/pacman.conf
+
 if ! whoami | grep -iq '^root'; then
     echo "not running as root, switching"
     curl -Lg git.io/instantarch | sudo bash

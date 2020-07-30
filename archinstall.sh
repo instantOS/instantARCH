@@ -9,6 +9,7 @@
 
 # fix old mirror
 sed -i 's/instantos\.surge\.sh/packages.instantos.io/g' /etc/pacman.conf
+sed -i 's/repo\.instantos\.sh/packages.instantos.io/g' /etc/pacman.conf
 
 if ! whoami | grep -iq '^root'; then
     echo "not running as root, switching"

@@ -168,7 +168,7 @@ sort all mirrors by speed' | imenu -l 'choose mirror settings' | grep -q 'speed'
 
 # ask for user details
 askuser() {
-    while [ -z $NEWUSER ]; do
+    while [ -z "$NEWUSER" ]; do
         wallstatus user
         NEWUSER="$(imenu -i 'set username')"
 

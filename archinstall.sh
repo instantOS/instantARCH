@@ -8,7 +8,7 @@
 # main script calling others
 
 # fix old mirror
-sed -i 's/instantos\.surge\.sh/repo.instantos.io/g' /etc/pacman.conf
+sed -i 's/instantos\.surge\.sh/packages.instantos.io/g' /etc/pacman.conf
 
 if ! whoami | grep -iq '^root'; then
     echo "not running as root, switching"
@@ -60,10 +60,10 @@ fi
 pacman -Sy --noconfirm
 pacman -S git --noconfirm --needed
 
-cd /root
+cd /root || exit 1
 [ -e instantARCH ] && rm -rf instantARCH
 git clone --depth=1 https://github.com/instantos/instantARCH.git
-cd instantARCH
+cd instantARCH || exit 1
 
 # use alternative versions of the installer
 if [ -n "$1" ]; then
@@ -131,7 +131,7 @@ uploadlogs() {
         cat /opt/systeminstall >>/opt/install.log
     fi
 
-    cd /opt
+    cd /opt || exit
     cp /root/instantARCH/data/netrc ~/.netrc
     curl -n -F 'f:1=@install.log' ix.io
     dialog --msgbox "installation failed

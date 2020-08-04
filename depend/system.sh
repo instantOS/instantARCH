@@ -45,6 +45,9 @@ while ! pacman -S --noconfirm --needed \
     gvfs-mtp \
     exfat-utils \
     unzip \
+    engrampa \
+    unrar \
+    p7zip \
     xdg-user-dirs-gtk \
     noto-fonts-emoji \
     accountsservice \

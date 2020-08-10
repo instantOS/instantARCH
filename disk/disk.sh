@@ -33,18 +33,18 @@ type=83, bootable" | sfdisk "${DISK}"
 
     fi
 else
-    # //weiter
+
     echo "doing manual partitioning"
-    if [ -e "$IROOT/parthome" ] && [ -e "$IROOT/erasehome" ]; then
-        echo "creating ext4 file system for home in $(cat $IROOT/parthome)"
+    if iroot parthome && iroot erasehome; then
+        echo "creating ext4 file system for home in $(iroot parthome)"
         mkfs.ext4 -F "$(cat $IROOT/parthome)"
     fi
 
-    if [ -e "$IROOT/partswap" ]; then
+    if iroot partswap; then
         echo "creating swap"
-        mkswap "$(cat $IROOT/partswap)"
+        mkswap "$(iroot partswap)"
     fi
 
-    mkfs.ext4 -F "$(cat $IROOT/partroot)"
+    mkfs.ext4 -F "$(iroot partroot)"
 
 fi

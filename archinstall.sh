@@ -57,9 +57,14 @@ if command -v python; then
     pkill python3
 fi
 
-# sort mirrors
-pacman -Sy --noconfirm
-pacman -S git --noconfirm --needed
+while [ -z "$CONTINUEINSTALLATION" ]; do
+    if ! pacman -Sy --noconfirm || ! pacman -S git --noconfirm --needed; then
+        yes | pacman -Scc
+        pacman -Sy --noconfirm
+    else
+        export CONTINUEINSTALLATION="true"
+    fi
+done
 
 cd /root || exit 1
 [ -e instantARCH ] && rm -rf instantARCH
@@ -89,15 +94,16 @@ if [ -n "$1" ]; then
     esac
 
 fi
-chmod +x *.sh
-chmod +x */*.sh
+
+chmod +x ./*.sh
+chmod +x ./*/*.sh
 
 ./depend/depend.sh
 ./artix/preinstall.sh
 
 [ -e /usr/share/liveutils ] && pkill instantmenu
 
-cd /root/instantARCH
+cd /root/instantARCH || exit
 
 ./ask.sh || {
     if ! [ -e /opt/instantos/installcanceled ]; then
@@ -110,8 +116,8 @@ cd /root/instantARCH
     fi
 }
 
-chmod +x *.sh
-chmod +x **/*.sh
+chmod +x ./*.sh
+chmod +x ./**/*.sh
 
 echo "local install"
 ./localinstall.sh 2>&1 | tee /opt/localinstall &&

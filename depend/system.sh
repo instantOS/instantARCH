@@ -51,6 +51,8 @@ while ! pacman -S --noconfirm --needed \
     xdg-user-dirs-gtk \
     noto-fonts-emoji \
     accountsservice \
+    cups \
+    system-config-printer \
     grub; do # install end
 
     sleep 10

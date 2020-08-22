@@ -4,9 +4,16 @@
 
 # mountpart partname mountpoint
 mountpart() {
-    if iroot part$1; then
-        TMPPART="$(iroot part$1)"
+    if iroot "part$1"; then
+        TMPPART="$(iroot "part$1")"
         echo "mounting $TMPPART to $2"
+
+        if ! [ -e "$2" ]
+        then
+            echo "creating mount point $2"
+            mkdir -p "$2"
+        fi
+
         mount "$TMPPART" "$2"
     else
         echo "using default partition for $2"

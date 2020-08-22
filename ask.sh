@@ -130,6 +130,9 @@ GRUB: BIOS"
     SUMMARY="$SUMMARY
 Should installation proceed with these parameters?"
 
+    echo "summary:
+$SUMMARY"
+
     if imenu -C <<<"$SUMMARY"; then
         iroot confirm 1
     else

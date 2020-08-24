@@ -5,12 +5,6 @@
 ## instantOS is migrating from calamares to this ##
 ###################################################
 
-# main script calling others
-
-# fix old mirror
-sed -i 's/instantos\.surge\.sh/instantos.surge.sh/g' /etc/pacman.conf
-sed -i 's/repo\.instantos\.sh/instantos.surge.sh/g' /etc/pacman.conf
-
 if ! whoami | grep -iq '^root'; then
     echo "not running as root, switching"
     curl -Lg git.io/instantarch | sudo bash
@@ -32,6 +26,10 @@ fi
 if ! command -v imenu; then
     touch /tmp/removeimenu
 fi
+
+# updated mirrorlist
+echo "updating mirrorlist"
+curl -s https://raw.githubusercontent.com/instantOS/instantOS/master/repo.sh | bash
 
 # download imenu
 curl -s https://raw.githubusercontent.com/instantOS/imenu/master/imenu.sh >/usr/bin/imenu

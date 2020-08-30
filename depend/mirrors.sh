@@ -39,3 +39,5 @@ else
     echo "ranking mirrors"
     reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 fi
+
+cat /etc/pacman.d/mirrorlist> /root/instantARCH/config/mirrorlistbackup

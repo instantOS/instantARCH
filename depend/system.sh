@@ -50,6 +50,8 @@ while ! pacman -S --noconfirm --needed \
     p7zip \
     xdg-user-dirs-gtk \
     noto-fonts-emoji \
+    xf86-input-evdev \
+    xf86-input-synaptics \
     accountsservice \
     cups \
     system-config-printer \

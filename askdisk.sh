@@ -180,7 +180,7 @@ choosegrub() {
         done
 
     else
-        GRUBDISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk for grub > " | grep -o '/dev/[^:]*')
+        GRUBDISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk for grub " | grep -o '/dev/[^:]*')
         echo "$GRUBDISK"
         iroot grubdisk "$GRUBDISK"
     fi

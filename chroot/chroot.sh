@@ -25,7 +25,10 @@ if ! [ -e /opt/topinstall ] && ! iroot partswap; then
         if ! grep -iq manjaro /etc/os-release; then
             # enable swap
             systemctl enable systemd-swap
-            sed -i 's/^swapfc_enabled=.*/swapfc_enabled=1/' /etc/systemd/swap.conf
+            {
+                echo "swapfc_enabled=1"
+                echo "swapfc_max_count=8"
+            } >> /etc/systemd/swap.conf
         fi
     fi
 fi

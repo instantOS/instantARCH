@@ -21,6 +21,7 @@ if iroot isvm; then
 else
     ## NVIDIA
     if lspci | grep -i vga | grep -i nvidia; then
+        pacman -S --noconfirm dkms
         # user chooses open source, proprietary or no driver
         if iroot graphics; then
             DRIVERFILE="/root/instantARCH/config/graphics"

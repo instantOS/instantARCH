@@ -44,13 +44,13 @@ The Bootloader requires
     if guimode; then
         if command -v st; then
             st -e bash -c "cfdisk $EDITDISK"
-        elif command -v urxvt; then
-            urxvt -e bash -c "cfdisk $EDITDISK"
+        elif command -v st; then
+            st -e bash -c "cfdisk $EDITDISK"
         else
             xterm -e bash -c "cfdisk $EDITDISK"
         fi
     else
-        cfdisk $EDITDISK
+        cfdisk "$EDITDISK"
     fi
 
     iroot disk "$EDITDISK"

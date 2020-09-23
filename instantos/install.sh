@@ -33,7 +33,7 @@ done
 # don't install arch pamac on Manjaro
 if ! grep -iq Manjaro /etc/os-release && ! command -v pamac; then
     echo "installing pamac"
-    sudo pacman -S pamac-aur --noconfirm
+    sudo pacman -S pamac-aur-git --noconfirm
 fi
 
 yes | pacman -S libxft-bgra

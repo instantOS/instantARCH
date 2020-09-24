@@ -174,7 +174,7 @@ askuser() {
 
         # validate input as a unix name
         if ! grep -Eq '^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$' <<<"$NEWUSER"; then
-            imenu -m "invalid username"
+            imenu -e "invalid username, usernames must not contain spaces or special symbols and start with a lowercase letter"
             unset NEWUSER
         fi
     done

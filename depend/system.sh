@@ -55,6 +55,7 @@ while ! pacman -S --noconfirm --needed \
     accountsservice \
     cups \
     system-config-printer \
+    gnome-font-viewer \
     grub; do # install end
 
     sleep 10

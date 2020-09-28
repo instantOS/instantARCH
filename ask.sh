@@ -49,9 +49,9 @@ while ! iroot confirm; do
     # ask for keyboard layout
     asklayout
     if head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY" | grep -q '[^ ][^ ]'; then
-        loadkeys $(head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")
+        loadkeys "$(head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")"
     fi
-    guimode && setxkbmap -layout $(tail -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")
+    guimode && setxkbmap -layout "$(tail -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")"
 
     asklocale
 
@@ -114,7 +114,7 @@ this will delete all existing data" | imenu -C; then
     addsum "Username" "user"
     addsum "Locale" "locale"
     addsum "Region" "region"
-    addsum "Nearest City" "city"
+    addsum "Subregion" "city"
     addsum "Keyboard layout" "keyboard"
     addsum "Target install drive" "disk"
     addsum "Hostname" "hostname"

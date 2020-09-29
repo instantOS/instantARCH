@@ -2,7 +2,6 @@
 
 ###################################################
 ## This is the official installer for instantOS  ##
-## instantOS is migrating from calamares to this ##
 ###################################################
 
 if ! whoami | grep -iq '^root'; then
@@ -67,6 +66,7 @@ done
 cd /root || exit 1
 [ -e instantARCH ] && rm -rf instantARCH
 git clone --depth=1 https://github.com/instantos/instantARCH.git
+
 cd instantARCH || exit 1
 
 # use alternative versions of the installer
@@ -75,6 +75,7 @@ if [ -n "$1" ]; then
     "test")
         echo "switching to testing branch"
         git checkout -b testing
+        export INSTANTARCHTESTING="true"
         ;;
     "manual")
         if ! [ -e /root/manualarch ]; then
@@ -85,6 +86,7 @@ if [ -n "$1" ]; then
         fi
         rm -rf ./*
         cp -r /root/manualarch/* .
+        export INSTANTARCHMANUAL="true"
         ;;
     *)
         echo "running normal installer version"
@@ -98,6 +100,12 @@ chmod +x ./*/*.sh
 
 ./depend/depend.sh
 ./artix/preinstall.sh
+
+if [ -n "$INSTANTARCHTESTING" ]
+then
+    echo "install config"
+    iroot installtest 1
+fi
 
 [ -e /usr/share/liveutils ] && pkill instantmenu
 

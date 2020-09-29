@@ -37,6 +37,10 @@ else
         touch /opt/instantos/statuscanceled
         exit 1
     fi
+    if iroot installtest
+    then
+        imenu -m "WARNING: you're running a test version of the installer"
+    fi
 fi
 
 # go back to the beginning if user isn't happy with settings

@@ -22,6 +22,18 @@ else
     echo ""
 fi
 
+# prevent multiple instances from being launched
+if [ -e /tmp/instantarchpid ]
+then
+    echo "pidfile found"
+    if kill -0 "$(cat /tmp/instantarchpid)"
+    then
+        notify-send "installer already running, please do not start multiple instances"
+    fi
+else
+    echo "$$" > /tmp/instantarchpid
+fi
+
 if ! command -v imenu; then
     touch /tmp/removeimenu
 fi

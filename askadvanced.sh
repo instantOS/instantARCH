@@ -25,7 +25,7 @@ editplymouth() {
 choosekernel() {
     KERNEL="$(echo 'linux
 linux-lts
-default' | imenu -l 'select kernel')"
+linux-zen' | imenu -l 'select kernel')"
 
     iroot kernel "$KERNEL"
 }

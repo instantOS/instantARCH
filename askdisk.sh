@@ -172,7 +172,9 @@ choosegrub() {
 
         while [ -z "$EFICONFIRM" ]; do
             choosepart 'select efi partition' | iroot i partefi
-            if imenu -c "this will erase all data on $(iroot partefi). Existing operating systems will be detected and added back into the bootloader"; then
+            if echo "This will format $(iroot partefi)
+In most cases it *only* contains the bootloader
+Operating systems that are already installed will remain bootable" | imenu -C; then
                 EFICONFIRM="true"
             else
                 rm /root/instantARCH/config/partefi

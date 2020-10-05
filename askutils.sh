@@ -35,7 +35,7 @@ wallstatus() {
 
 artixinfo() {
     if command -v systemctl; then
-        echo "regular arch/manjaro detected"
+        echo "regular arch based iso detected"
         return
     fi
 
@@ -51,41 +51,39 @@ systemd-swap (obviously)" | imenu -M
 
 # ask for keyboard layout
 asklayout() {
-    cd "$INSTANTARCH"/data/lang/keyboard
-    while [ -z "$NEWKEY" ]; do
-        wallstatus worldmap
-        NEWKEY="$(ls | imenu -l 'Select keyboard layout ')"
+    cd "$INSTANTARCH"/data/lang/keyboard || return 1
+    wallstatus worldmap
 
-        # allow directly typing in layout name
-        if [ "$NEWKEY" = "other" ]; then
-            if command -v localectl; then
-                OTHERKEY="$(localectl list-x11-keymap-layouts | imenu -l 'select keyboard layout ')"
+    LAYOUTLIST="$(ls)"
+    if command -v localectl; then
+        LAYOUTLIST="$LAYOUTLIST
+$(localectl list-x11-keymap-layouts | sed 's/^/> /g')"
+    fi
 
-                if [ -z "$OTHERKEY" ]; then
-                    unset NEWKEY
-                else
-                    # newline is intentional!!!
-                    echo "
-$OTHERKEY" >/root/instantARCH/data/lang/keyboard/other
-                fi
-            else
-                imenu -m "not supported yet without systemd"
-                unset NEWKEY
-            fi
-        fi
+    NEWKEY="$(echo "$LAYOUTLIST" | imenu -l 'Select keyboard layout ')"
 
-    done
+    if grep -q '^>' <<<"$NEWKEY"; then
+        iroot otherkey "$NEWKEY"
+        NEWKEY="$(echo "$NEWKEY" | sed 's/> //g')"
+        echo "
+$NEWKEY" >/root/instantARCH/data/lang/keyboard/other
+    fi
 
     # option to cancel the installer
     if [ "${NEWKEY}" = "forcequit" ]; then
         exit 1
     fi
-    iroot keyboard "$NEWKEY"
+
+    if iroot otherkey; then
+        iroot keyboard other
+    else
+        iroot keyboard "$NEWKEY"
+    fi
 }
 
 # ask for default locale
 asklocale() {
-    cd "$INSTANTARCH"/data/lang/locale
+    cd "$INSTANTARCH"/data/lang/locale || return 1
     while [ -z "$NEWLOCALE" ]; do
         NEWLOCALE="$(ls | imenu -l 'Select language> ')"
     done
@@ -95,13 +93,13 @@ asklocale() {
 
 # ask for region with region/city
 askregion() {
-    cd /usr/share/zoneinfo
+    cd /usr/share/zoneinfo || return 1
     while [ -z "$REGION" ]; do
         REGION=$(ls | imenu -l "select region ")
     done
 
     if [ -d "$REGION" ]; then
-        cd "$REGION"
+        cd "$REGION" || return 1
         while [ -z "$CITY" ]; do
             CITY=$(ls | imenu -l "select the City nearest to you ")
         done
@@ -155,7 +153,7 @@ askmirrors() {
         sed -e "1iauto detect mirrors (not recommended for speed)" |
         imenu -l "choose mirror location" >/tmp/mirrorselect
     if ! grep -q 'auto detect' </tmp/mirrorselect; then
-        cat /tmp/mirrors.html | grep ">$(cat /tmp/mirrorselect)<" | grep -o '".*"' | grep -o '[^"]*' | iroot i countrycode
+        grep ">$(cat /tmp/mirrorselect)<" /tmp/mirrors.html | grep -o '".*"' | grep -o '[^"]*' | iroot i countrycode
         if echo '> manually sorting mirrors may take a long time
 use arch ranking score (recommended)
 sort all mirrors by speed' | imenu -l 'choose mirror settings' | grep -q 'speed'; then

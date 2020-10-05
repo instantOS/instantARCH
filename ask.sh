@@ -119,8 +119,17 @@ this will delete all existing data" | imenu -C; then
     addsum "Locale" "locale"
     addsum "Region" "region"
     addsum "Subregion" "city"
-    addsum "Keyboard layout" "keyboard"
+
+    if iroot otherkey
+    then
+        addsum "Keyboard layout" "otherkey"
+    else
+        addsum "Keyboard layout" "keyboard"
+    fi
+    
+    # todo: custom summary for manual partitioning
     addsum "Target install drive" "disk"
+
     addsum "Hostname" "hostname"
 
     if efibootmgr; then

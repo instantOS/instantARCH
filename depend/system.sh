@@ -28,6 +28,7 @@ while ! pacman -S --noconfirm --needed \
     alsa-utils \
     usbutils \
     lightdm-gtk-greeter \
+    noto-fonts \
     inetutils \
     xdg-desktop-portal-gtk \
     xorg-xinit \

@@ -57,14 +57,14 @@ asklayout() {
     LAYOUTLIST="$(ls)"
     if command -v localectl; then
         LAYOUTLIST="$LAYOUTLIST
-$(localectl list-x11-keymap-layouts | sed 's/^/> /g')"
+$(localectl list-x11-keymap-layouts | sed 's/^/- /g')"
     fi
 
     NEWKEY="$(echo "$LAYOUTLIST" | imenu -l 'Select keyboard layout ')"
 
-    if grep -q '^>' <<<"$NEWKEY"; then
+    if grep -q '^-' <<<"$NEWKEY"; then
         iroot otherkey "$NEWKEY"
-        NEWKEY="$(echo "$NEWKEY" | sed 's/> //g')"
+        NEWKEY="$(echo "$NEWKEY" | sed 's/- //g')"
         echo "
 $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
     fi

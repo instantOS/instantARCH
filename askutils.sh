@@ -76,6 +76,7 @@ $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
 
     if iroot otherkey; then
         iroot keyboard other
+        NEWKEY="other"
     else
         iroot keyboard "$NEWKEY"
     fi

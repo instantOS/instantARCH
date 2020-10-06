@@ -87,7 +87,8 @@ if [ -n "$1" ]; then
     "test")
         echo "switching to testing branch"
         git checkout -b testing
-        git pull origin testing
+        git reset --hard
+        git pull origin testing || exit 1
         export INSTANTARCHTESTING="true"
         ;;
     "manual")

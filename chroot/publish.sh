@@ -4,15 +4,8 @@
 
 mkdir /etc/iroot
 
-
-publishsetting() {
-    if iroot "$1"
-    then
-        iroot "$1" > /etc/iroot/"$1"
-    fi
-}
-
-publishsetting countrycode
-publishsetting isvm
+cp /root/instantARCH/config/* /etc/iroot/
+chmod 755 /etc/iroot/*
+rm /etc/iroot/password
 
 echo "finished setting up config permissions"

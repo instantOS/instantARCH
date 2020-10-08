@@ -8,7 +8,8 @@ chrootscript "artix/preinstall" "applying artix fixes"
 chrootscript "depend/system" "installing dependencies"
 chrootscript "chroot/chroot" "configuring system"
 chrootscript "chroot/drivers" "installing drivers"
-chrootscript "lang/timezone" "settings time"
+chrootscript "lang/timezone" "setting time"
+chrootscript "chroot/publish" "setting config permissions"
 
 # grub: install package, install, generate config
 if efibootmgr; then

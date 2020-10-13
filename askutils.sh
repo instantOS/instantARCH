@@ -115,6 +115,7 @@ askregion() {
 askdrivers() {
     if lspci | grep -iq 'nvidia'; then
         echo "nvidia card detected"
+        iroot hasnvidia 1
         while [ -z "$DRIVERCHOICE" ]; do
             DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
 nvidia-dkms (try if proprietary does not work)

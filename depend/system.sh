@@ -36,7 +36,6 @@ while ! pacman -S --noconfirm --needed \
     nitrogen \
     lshw \
     gxkb \
-    udiskie \
     ntfs-3g \
     gedit \
     ttf-liberation \
@@ -55,6 +54,8 @@ while ! pacman -S --noconfirm --needed \
     xf86-input-synaptics \
     accountsservice \
     cups \
+    samba \
+    gvfs-smb \
     system-config-printer \
     gnome-font-viewer \
     grub; do # install end

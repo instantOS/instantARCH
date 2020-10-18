@@ -18,8 +18,8 @@ else
     chrootscript "bootloader/install" "installing bootloader"
 fi
 
-chrootscript "user/user" "setting up user" &&
-    chrootscript "network/network" "setting up networkmanager" &&
+chrootscript "network/network" "setting up networkmanager" &&
+    chrootscript "user/user" "setting up user" &&
     chrootscript "bootloader/config" "configuring bootloader"
 
 touch /opt/noerror

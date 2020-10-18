@@ -18,6 +18,8 @@ echo "$NEWUSER:$NEWPASS" | chpasswd
 groupadd -r autologin
 gpasswd -a "$NEWUSER" autologin
 
+echo -ne "$NEWPASS\n$NEWPASS\n" | smbpasswd -a -s "$NEWUSER"
+
 # enable autologin
 if ! iroot noautologin; then
     sed -i "s/^\[Seat:\*\]/[Seat:*]\nautologin-user=$NEWUSER/g" /etc/lightdm/lightdm.conf

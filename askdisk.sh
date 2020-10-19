@@ -103,11 +103,18 @@ choosehome() {
         return
     fi
 
+
     HOMEPART="$(choosepart 'choose home partition >')"
     case "$(echo 'keep current home data
 erase partition to start fresh' | imenu -l)" in
     keep*)
-        echo "keeping"
+        echo "keeping data"
+
+        if imenu -c "do not overwrite dotfiles? ( warning, this can impact functionality )"
+        then
+            iroot keepdotfiles 1
+        fi
+
         ;;
     erase*)
         echo "erasing"

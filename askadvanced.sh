@@ -22,6 +22,15 @@ editplymouth() {
     fi
 }
 
+chooseswapfile() {
+    SWAPMETHOD="$(echo 'systemd-swap
+swapfile
+none' | imenu -C 'choose swap method')"
+
+iroot swapmethod "$SWAPMETHOD"
+
+}
+
 choosekernel() {
     KERNEL="$(echo 'linux
 linux-lts
@@ -77,6 +86,7 @@ while :; do
 plymouth
 kernel
 logging
+swap
 extra software
 OK' | imenu -l 'select option')"
     case "$CHOICE" in
@@ -90,6 +100,9 @@ OK' | imenu -l 'select option')"
     kernel)
         choosekernel
         echo "selected $(iroot kernel) kernel"
+        ;;
+    swap)
+        chooseswapfile
         ;;
     logging)
         chooselogs

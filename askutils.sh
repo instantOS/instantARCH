@@ -10,6 +10,9 @@ if [ -z "$INSTANTARCH" ]; then
     INSTANTARCH="/root/instantARCH"
 fi
 
+shopt -s expand_aliases
+alias goback='backmenu && [ -n $GOINGBACK ] && return'
+
 guimode() {
     if [ -e /opt/noguimode ]; then
         return 1

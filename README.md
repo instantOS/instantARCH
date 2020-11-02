@@ -1,6 +1,6 @@
 <div align="center">
     <h1>instantARCH</h1>
-    <p>the new instantOS installer</p>
+    <p>the official instantOS installer</p>
     <img width="300" height="300" src="https://github.com/instantOS/instantLOGO/blob/master/png/arch.png">
 </div>
 

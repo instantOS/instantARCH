@@ -260,6 +260,55 @@ until this is fixed" | imenu -M
         echo "selecting other"
         ;;
     esac
-    BACKASK="vm"
+    export BACKASK="vm"
 
+}
+
+confirmask() {
+    SUMMARY="Installation Summary:"
+
+    addsum "Username" "user"
+    addsum "Locale" "locale"
+    addsum "Region" "region"
+    addsum "Subregion" "city"
+
+    if iroot otherkey; then
+        addsum "Keyboard layout" "otherkey"
+    else
+        addsum "Keyboard layout" "keyboard"
+    fi
+
+    # todo: custom summary for manual partitioning
+    addsum "Target install drive" "disk"
+
+    addsum "Hostname" "hostname"
+
+    if efibootmgr; then
+        SUMMARY="$SUMMARY
+GRUB: UEFI"
+    else
+        SUMMARY="$SUMMARY
+GRUB: BIOS"
+    fi
+
+    SUMMARY="$SUMMARY
+Should installation proceed with these parameters?"
+
+    echo "summary:
+$SUMMARY"
+
+    if imenu -C <<<"$SUMMARY"; then
+        iroot confirm 1
+        export ASKCONFIRM="true"
+    else
+        unset CITY
+        unset REGION
+        unset DISK
+        unset NEWKEY
+        unset NEWLOCALE
+        unset NEWPASS2
+        unset NEWPASS
+        unset NEWHOSTNAME
+        unset NEWUSER
+    fi
 }

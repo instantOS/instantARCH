@@ -37,8 +37,7 @@ else
         touch /opt/instantos/statuscanceled
         exit 1
     fi
-    if iroot installtest
-    then
+    if iroot installtest; then
         imenu -m "WARNING: you're running a test version of the installer"
     fi
 fi
@@ -113,6 +112,10 @@ this will delete all existing data" | imenu -C; then
     fi
 
     wallstatus install
+
+done
+
+confirmask() {
     SUMMARY="Installation Summary:"
 
     addsum "Username" "user"
@@ -120,13 +123,12 @@ this will delete all existing data" | imenu -C; then
     addsum "Region" "region"
     addsum "Subregion" "city"
 
-    if iroot otherkey
-    then
+    if iroot otherkey; then
         addsum "Keyboard layout" "otherkey"
     else
         addsum "Keyboard layout" "keyboard"
     fi
-    
+
     # todo: custom summary for manual partitioning
     addsum "Target install drive" "disk"
 
@@ -148,6 +150,7 @@ $SUMMARY"
 
     if imenu -C <<<"$SUMMARY"; then
         iroot confirm 1
+        export ASKCONFIRM="true"
     else
         unset CITY
         unset REGION
@@ -159,8 +162,7 @@ $SUMMARY"
         unset NEWHOSTNAME
         unset NEWUSER
     fi
-
-done
+}
 
 imenu -M <<<'The installation will now begin.
 This could take a while.

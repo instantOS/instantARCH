@@ -40,11 +40,9 @@ askquestion() {
     case "$ASKTASK" in
     layout)
         asklayout
-        BACKASK="layout"
         ;;
     user)
         askuser
-        BACKASK="user"
         ;;
     locale)
         asklocale
@@ -68,6 +66,11 @@ askquestion() {
 askloop() {
     while [ -z "$ASKCONFIRM" ]; do
         askquestion
+        if [ -z "$GOINGBACK" ]; then
+            echo "going back"
+            unset GOINGBACK
+            ASKTASK="$BACKASK"
+        fi
     done
     echo "confirmed selection"
 }

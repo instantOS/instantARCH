@@ -113,56 +113,10 @@ this will delete all existing data" | imenu -C; then
 
     wallstatus install
 
+    confirmask
+
 done
 
-confirmask() {
-    SUMMARY="Installation Summary:"
-
-    addsum "Username" "user"
-    addsum "Locale" "locale"
-    addsum "Region" "region"
-    addsum "Subregion" "city"
-
-    if iroot otherkey; then
-        addsum "Keyboard layout" "otherkey"
-    else
-        addsum "Keyboard layout" "keyboard"
-    fi
-
-    # todo: custom summary for manual partitioning
-    addsum "Target install drive" "disk"
-
-    addsum "Hostname" "hostname"
-
-    if efibootmgr; then
-        SUMMARY="$SUMMARY
-GRUB: UEFI"
-    else
-        SUMMARY="$SUMMARY
-GRUB: BIOS"
-    fi
-
-    SUMMARY="$SUMMARY
-Should installation proceed with these parameters?"
-
-    echo "summary:
-$SUMMARY"
-
-    if imenu -C <<<"$SUMMARY"; then
-        iroot confirm 1
-        export ASKCONFIRM="true"
-    else
-        unset CITY
-        unset REGION
-        unset DISK
-        unset NEWKEY
-        unset NEWLOCALE
-        unset NEWPASS2
-        unset NEWPASS
-        unset NEWHOSTNAME
-        unset NEWUSER
-    fi
-}
 
 imenu -M <<<'The installation will now begin.
 This could take a while.

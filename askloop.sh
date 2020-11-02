@@ -15,14 +15,13 @@ backmenu() {
 :b Back
 :r ﰸCancel installation' | instantmenu -q 'back menu' -i -l 209 -h -1 -bw 8 -a 20 -w -1 -c)"
 
-case $BACKCHOICE in
+    case $BACKCHOICE in
     *Back)
         export GOINGBACK="true"
         return 0
         ;;
     Cancel)
-        if imenu -c "are you sure you want to cancel the installation?"
-        then
+        if imenu -c "are you sure you want to cancel the installation?"; then
             iroot cancelinstall 1
             exit
         fi
@@ -31,8 +30,7 @@ case $BACKCHOICE in
         echo "continuing installation"
         return 0
         ;;
-esac
-
+    esac
 
 }
 
@@ -40,27 +38,36 @@ export ASKTASK=layout
 
 askquestion() {
     case "$ASKTASK" in
-        layout)
-            asklayout 
-            ;;
-        user)
-            askuser
-            ;;
-        locale)
-            asklocale
-            ;;
-        region)
-            askregion
-            ;;
-        drivers)
-            askdrivers
-            ;;
-        mirrors)
-            askmirrors
-            ;;
-        vm)
-            askvm
-            ;;
+    layout)
+        asklayout
+        BACKASK="layout"
+        ;;
+    user)
+        askuser
+        BACKASK="user"
+        ;;
+    locale)
+        asklocale
+        ;;
+    region)
+        askregion
+        ;;
+    drivers)
+        askdrivers
+        ;;
+    mirrors)
+        askmirrors
+        ;;
+    vm)
+        askvm
+        ;;
     esac
-    
+
+}
+
+askloop() {
+    while [ -z "$ASKCONFIRM" ]; do
+        askquestion
+    done
+    echo "confirmed selection"
 }

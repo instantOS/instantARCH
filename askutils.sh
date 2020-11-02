@@ -83,6 +83,7 @@ $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
     else
         iroot keyboard "$NEWKEY"
     fi
+    BACKASK="layout"
 }
 
 # ask for default locale
@@ -92,6 +93,7 @@ asklocale() {
         NEWLOCALE="$(ls | imenu -l 'Select language> ')"
     done
     iroot locale "$NEWLOCALE"
+    BACKASK="locale"
 
 }
 
@@ -111,6 +113,7 @@ askregion() {
 
     iroot region "$REGION"
     [ -n "$CITY" ] && iroot city "$CITY"
+    BACKASK="region"
 
 }
 
@@ -148,6 +151,8 @@ This could prevent the system from booting" | imenu -C; then
         echo "no nvidia card detected"
     fi
 
+    BACKASK="drivers"
+
 }
 
 # offer to choose mirror country
@@ -167,6 +172,7 @@ sort all mirrors by speed' | imenu -l 'choose mirror settings' | grep -q 'speed'
     else
         iroot automirrors 1
     fi
+    BACKASK="mirrors"
 }
 
 # ask for user details
@@ -194,6 +200,8 @@ Please enter a new password" | imenu -M
     iroot user "$NEWUSER"
     iroot password "$NEWPASS"
 
+    BACKASK="user"
+
 }
 
 # ask about which hypervisor is used
@@ -207,6 +215,7 @@ askvm() {
         if ! imenu -c "is this system a virtual machine?"; then
             if echo "Are you sure it's not?
 giving the wrong answer here might greatly decrease performance. " | imenu -C; then
+                BACKASK="vm"
                 return
             fi
         else
@@ -251,5 +260,6 @@ until this is fixed" | imenu -M
         echo "selecting other"
         ;;
     esac
+    BACKASK="vm"
 
 }

@@ -10,8 +10,10 @@ NEWPASS="$(iroot password)"
 groupadd video &>/dev/null
 groupadd wheel &>/dev/null
 groupadd docker &>/dev/null
+groupadd dav_group &>/dev/null
 
-useradd -m "$NEWUSER" -s /usr/bin/zsh -G wheel,docker,video
+
+useradd -m "$NEWUSER" -s /usr/bin/zsh -G wheel,docker,video,dav_group
 echo "root:$NEWPASS" | chpasswd
 echo "$NEWUSER:$NEWPASS" | chpasswd
 

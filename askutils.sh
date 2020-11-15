@@ -103,46 +103,6 @@ systemd-swap (obviously)" | imenu -M
 
 }
 
-# choose between disks and manual partitioning
-# var: installdisk
-askinstalldisk() {
-    wallstatus install
-    DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed -e "\$aother (experimental)" |
-        imenu -l "select disk> ")
-
-    if grep -q '^other' <<<"$DISK"; then
-        backpush "installdisk"
-        export ASKTASK="partitioning"
-        return
-    fi
-
-    # use auto partitioning
-    if ! echo "Install on $DISK ?
-this will delete all existing data" | imenu -C; then
-        unset DISK
-        return
-    fi
-
-    DISKNAME="$(grep -o '/dev/[^:]*' <<<"$DISK")"
-
-    # check if disk is valid
-    if ! [ -e "$DISKNAME" ]; then
-        imenu -m "$DISKNAME is an invalid disk name"
-        unset DISK
-        unset DISKNAME
-        return
-    fi
-
-    iroot disk "$DISKNAME"
-    # no efi partition needed, install on disk
-    if ! efibootmgr; then
-        echo "legacy bios detected, installing grub on $DISKNAME"
-        iroot grubdisk "$DISKNAME"
-    fi
-
-    backpush installdisk
-    export ASKTASK="drivers"
-}
 
 # ask for keyboard layout
 # var: layout
@@ -194,6 +154,66 @@ asklocale() {
     ASKTASK="mirrors"
 }
 
+# ask about which hypervisor is used
+# var: vm
+askvm() {
+    if imvirt | grep -iq 'physical'; then
+        echo "system does not appear to be a virtual machine"
+        export ASKTASK="region"
+        return
+    fi
+
+    if ! imenu -c "is this system a virtual machine?"; then
+        if echo "Are you sure it's not?
+giving the wrong answer here might greatly decrease performance. " | imenu -C; then
+            export ASKTASK="region"
+            return
+        fi
+    fi
+
+    iroot isvm 1
+
+    echo "virtualbox
+kvm/qemu
+other" | imenu -l "which hypervisor is being used?" >/tmp/vmtype
+
+    HYPERVISOR="$(cat /tmp/vmtype)"
+    case "$HYPERVISOR" in
+    kvm*)
+        if grep 'vendor' /proc/cpuinfo | grep -iq 'AMD'; then
+            echo "WARNING:
+        kvm/QEMU on AMD is not meant for desktop use and
+        is lacking some graphics features.
+        This installation will work, but some features will have to be disabled and
+        others might not perform well. 
+        It is highly recommended to use Virtualbox instead." | imenu -M
+            iroot kvm 1
+            if lshw -c video | grep -iq 'qxl'; then
+                echo "WARNING:
+QXL graphics detected
+These may trigger a severe Xorg memory leak on kvm/QEMU on AMD,
+leading to degraded video and input performance,
+please switch your video card to either virtio or passthrough
+until this is fixed" | imenu -M
+            fi
+        fi
+        ;;
+    virtualbox)
+        iroot virtualbox 1
+        if imenu -c "would you like to install virtualbox guest additions?"; then
+            iroot guestadditions 1
+        fi
+        ;;
+    other)
+        iroot othervm 1
+        echo "selecting other"
+        ;;
+    esac
+    backpush vm
+    export ASKTASK="region"
+
+}
+
 # ask for region with region/city
 # var: region
 askregion() {
@@ -216,50 +236,9 @@ askregion() {
     export ASKTASK="disk"
 }
 
-# choose between different nvidia drivers
-# var: drivers
-askdrivers() {
-
-    if lspci | grep -iq 'nvidia'; then
-        echo "nvidia card detected"
-    else
-        echo "no nvidia card, not asking for drivers"
-        export ASKTASK="user"
-        return
-    fi
-
-    iroot hasnvidia 1
-    while [ -z "$DRIVERCHOICE" ]; do
-        DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
-nvidia-dkms (try if proprietary does not work)
-nouveau open source
-install without graphics drivers (not recommended)' | imenu -l 'select graphics drivers')"
-
-        if grep -q "without" <<<"$DRIVERCHOICE"; then
-            if ! echo "are you sure you do not want to install graphics drivers?
-This could prevent the system from booting" | imenu -C; then
-                unset DRIVERCHOICE
-            fi
-        fi
-
-    done
-
-    if grep -qi "dkms" <<<"$DRIVERCHOICE"; then
-        iroot graphics "dkms"
-    elif grep -qi "nvidia" <<<"$DRIVERCHOICE"; then
-        iroot graphics "nvidia"
-    elif grep -qi "open" <<<"$DRIVERCHOICE"; then
-        iroot graphics "open"
-    elif [ -z "$DRIVERCHOICE" ]; then
-        iroot graphics "nodriver"
-    fi
-
-    backpush drivers
-    export ASKTASK="user"
-}
 
 # offer to choose mirror country
-# var: region
+# var: mirrors
 askmirrors() {
     if command -v pacstrap; then
         echo "pacstrap detected"
@@ -289,7 +268,53 @@ sort all mirrors by speed' | imenu -l 'choose mirror settings' | grep -q 'speed'
     export ASKTASK="vm"
 }
 
-# var: disk
+# choose between disks and manual partitioning
+# var: installdisk
+askinstalldisk() {
+    wallstatus install
+    DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed -e "\$aother (experimental)" |
+        imenu -l "select disk> ")
+
+    if grep -q '^other' <<<"$DISK"; then
+        backpush "installdisk"
+        export ASKTASK="partitioning"
+        return
+    fi
+
+    # use auto partitioning
+    if ! echo "Install on $DISK ?
+this will delete all existing data" | imenu -C; then
+        unset DISK
+        return
+    fi
+
+    DISKNAME="$(grep -o '/dev/[^:]*' <<<"$DISK")"
+
+    # check if disk is valid
+    if ! [ -e "$DISKNAME" ]; then
+        imenu -m "$DISKNAME is an invalid disk name"
+        unset DISK
+        unset DISKNAME
+        return
+    fi
+
+    iroot disk "$DISKNAME"
+    # no efi partition needed, install on disk
+    if ! efibootmgr; then
+        echo "legacy bios detected, installing grub on $DISKNAME"
+        iroot grubdisk "$DISKNAME"
+    fi
+
+    backpush installdisk
+    export ASKTASK="drivers"
+}
+
+
+##############################################
+## Beginning of partition related questions ##
+##############################################
+
+# var: partitioning
 askpartitioning() {
     STARTCHOICE="$(echo 'edit partitions
 choose partitions
@@ -311,6 +336,7 @@ use auto partitioning' | imenu -l)"
 }
 
 # choose root partition for programs etc
+# var: root
 askroot() {
     while [ -z "$ROOTCONFIRM" ]; do
         PARTROOT="$(choosepart 'choose root partition (required) ')"
@@ -326,6 +352,7 @@ askroot() {
 }
 
 # cfdisk wrapper to modify partition table during installation
+# var: editparts
 askeditparts() {
     echo 'instantOS requires the following paritions: 
  - a root partition, all data on it will be erased
@@ -451,6 +478,53 @@ Operating systems that are already installed will remain bootable" | imenu -C; t
     export ASKTASK="drivers"
 }
 
+
+########################################
+## End of partition related questions ##
+########################################
+
+# choose between different nvidia drivers
+# var: drivers
+askdrivers() {
+
+    if lspci | grep -iq 'nvidia'; then
+        echo "nvidia card detected"
+    else
+        echo "no nvidia card, not asking for drivers"
+        export ASKTASK="user"
+        return
+    fi
+
+    iroot hasnvidia 1
+    while [ -z "$DRIVERCHOICE" ]; do
+        DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
+nvidia-dkms (try if proprietary does not work)
+nouveau open source
+install without graphics drivers (not recommended)' | imenu -l 'select graphics drivers')"
+
+        if grep -q "without" <<<"$DRIVERCHOICE"; then
+            if ! echo "are you sure you do not want to install graphics drivers?
+This could prevent the system from booting" | imenu -C; then
+                unset DRIVERCHOICE
+            fi
+        fi
+
+    done
+
+    if grep -qi "dkms" <<<"$DRIVERCHOICE"; then
+        iroot graphics "dkms"
+    elif grep -qi "nvidia" <<<"$DRIVERCHOICE"; then
+        iroot graphics "nvidia"
+    elif grep -qi "open" <<<"$DRIVERCHOICE"; then
+        iroot graphics "open"
+    elif [ -z "$DRIVERCHOICE" ]; then
+        iroot graphics "nodriver"
+    fi
+
+    backpush drivers
+    export ASKTASK="user"
+}
+
 # ask for user details
 # var: user
 askuser() {
@@ -496,65 +570,129 @@ askhostname() {
     export ASKTASK="advanced"
 }
 
-# ask about which hypervisor is used
-# var: vm
-askvm() {
-    if imvirt | grep -iq 'physical'; then
-        echo "system does not appear to be a virtual machine"
-        export ASKTASK="region"
+
+############################################################################################
+## optional advanced options that allow more experienced users to customize their install ##
+############################################################################################
+
+askplymouth() {
+    if imenu -c "enable autologin ? "; then
+        iroot r noautologin
+    else
+        iroot noautologin 1
+        echo "disabling autologin"
+    fi
+    export ASKTASK="advanced"
+}
+
+askautologin() {
+    echo "editing autologin"
+    if imenu -c "enable plymouth ? "; then
+        iroot r noplymouth
+    else
+        iroot noplymouth 1
+        echo "disabling plymouth"
+    fi
+    export ASKTASK="advanced"
+}
+
+askswapfile() {
+    SWAPMETHOD="$(echo 'systemd-swap
+swapfile
+none' | imenu -C 'choose swap method')"
+
+    iroot swapmethod "$SWAPMETHOD"
+    export ASKTASK="advanced"
+
+}
+
+askkernel() {
+    KERNEL="$(echo 'linux
+linux-lts
+linux-zen' | imenu -l 'select kernel')"
+
+    iroot kernel "$KERNEL"
+    echo "selected $(iroot kernel) kernel"
+    export ASKTASK="advanced"
+}
+
+askpackages() {
+    PACKAGELIST="$(echo 'libreoffice-fresh
+lutris
+chromium
+code
+pcmanfm
+obs-studio
+krita
+gimp
+inkscape
+audacity
+virtualbox' | imenu -b 'select extra packages to install')"
+
+    if [ -z "${PACKAGELIST[0]}" ]; then
+        echo "No extra packages to install"
         return
     fi
 
-    if ! imenu -c "is this system a virtual machine?"; then
-        if echo "Are you sure it's not?
-giving the wrong answer here might greatly decrease performance. " | imenu -C; then
-            export ASKTASK="region"
-            return
-        fi
+    if grep 'lutris' <<<"$PACKAGELIST"; then
+        PACKAGELIST="$PACKAGELIST
+wine
+vulkan-tools"
     fi
 
-    iroot isvm 1
+    if grep 'virtualbox' <<<"$PACKAGELIST"; then
+        PACKAGELIST="$PACKAGELIST
+virtualbox-host-modules-arch"
+    fi
 
-    echo "virtualbox
-kvm/qemu
-other" | imenu -l "which hypervisor is being used?" >/tmp/vmtype
+    echo "adding extra packages to installation"
+    iroot packages "$PACKAGELIST"
 
-    HYPERVISOR="$(cat /tmp/vmtype)"
-    case "$HYPERVISOR" in
-    kvm*)
-        if grep 'vendor' /proc/cpuinfo | grep -iq 'AMD'; then
-            echo "WARNING:
-        kvm/QEMU on AMD is not meant for desktop use and
-        is lacking some graphics features.
-        This installation will work, but some features will have to be disabled and
-        others might not perform well. 
-        It is highly recommended to use Virtualbox instead." | imenu -M
-            iroot kvm 1
-            if lshw -c video | grep -iq 'qxl'; then
-                echo "WARNING:
-QXL graphics detected
-These may trigger a severe Xorg memory leak on kvm/QEMU on AMD,
-leading to degraded video and input performance,
-please switch your video card to either virtio or passthrough
-until this is fixed" | imenu -M
-            fi
-        fi
-        ;;
-    virtualbox)
-        iroot virtualbox 1
-        if imenu -c "would you like to install virtualbox guest additions?"; then
-            iroot guestadditions 1
-        fi
-        ;;
-    other)
-        iroot othervm 1
-        echo "selecting other"
-        ;;
-    esac
-    backpush vm
-    export ASKTASK="region"
+    export ASKTASK="advanced"
+}
+
+asklogs() {
+    if imenu -c "backup installation logs to ix.io ? (disabled by default)"; then
+        iroot logging 1
+    else
+        iroot r logging
+    fi
+    export ASKTASK="advanced"
+}
+
+askadvanced() {
+    if ! iroot advancedsettings && ! imenu -c -i "edit advanced settings? (use only if you know what you're doing)"; then
+        backpush advanced
+        export ASKTASK="confirm"
+        return
+    fi
+
+    iroot advancedsettings 1
+
+    CHOICE="$(echo 'autologin
+plymouth
+kernel
+logs
+swap
+packages
+OK' | imenu -l 'select option')"
+
+    [ -z "$CHOICE" ] && return
+    if [ "$CHOICE" = "OK" ]; then
+        echo "confirming advanced settings"
+        backpush advanced
+        export ASKTASK="confirm"
+        return
+    fi
+
+    export ASKTASK="$CHOICE"
 
 }
+
+
+###############################
+## end of question functions ##
+###############################
 
 # confirm installation questions
 confirmask() {

@@ -4,42 +4,48 @@
 ## optional advanced options that allow more experienced users to customize their install ##
 ############################################################################################
 
-editautologin() {
+askplymouth() {
     if imenu -c "enable autologin ? "; then
         iroot r noautologin
     else
         iroot noautologin 1
         echo "disabling autologin"
     fi
+    export ASKTASK="advanced"
 }
 
-editplymouth() {
+askautologin() {
+    echo "editing autologin"
     if imenu -c "enable plymouth ? "; then
         iroot r noplymouth
     else
         iroot noplymouth 1
         echo "disabling plymouth"
     fi
+    export ASKTASK="advanced"
 }
 
-chooseswapfile() {
+askswapfile() {
     SWAPMETHOD="$(echo 'systemd-swap
 swapfile
 none' | imenu -C 'choose swap method')"
 
-iroot swapmethod "$SWAPMETHOD"
+    iroot swapmethod "$SWAPMETHOD"
+    export ASKTASK="advanced"
 
 }
 
-choosekernel() {
+askkernel() {
     KERNEL="$(echo 'linux
 linux-lts
 linux-zen' | imenu -l 'select kernel')"
 
     iroot kernel "$KERNEL"
+    echo "selected $(iroot kernel) kernel"
+    export ASKTASK="advanced"
 }
 
-selectpackages() {
+askpackages() {
     PACKAGELIST="$(echo 'libreoffice-fresh
 lutris
 chromium
@@ -71,48 +77,43 @@ virtualbox-host-modules-arch"
     echo "adding extra packages to installation"
     iroot packages "$PACKAGELIST"
 
+    export ASKTASK="advanced"
 }
 
-chooselogs() {
+asklogs() {
     if imenu -c "backup installation logs to ix.io ? (disabled by default)"; then
         iroot logging 1
     else
         iroot r logging
     fi
+    export ASKTASK="advanced"
 }
 
-while :; do
+askadvanced() {
+    if ! iroot advancedsettings && ! imenu -c -i "edit advanced settings? (use only if you know what you're doing)"; then
+        backpush advanced
+        export ASKTASK="confirm"
+        return
+    fi
+
+    iroot advancedsettings 1
+
     CHOICE="$(echo 'autologin
 plymouth
 kernel
-logging
+logs
 swap
-extra software
+packages
 OK' | imenu -l 'select option')"
-    case "$CHOICE" in
-    autolog*)
-        echo "editing autologin"
-        editautologin
-        ;;
-    plymouth)
-        editplymouth
-        ;;
-    kernel)
-        choosekernel
-        echo "selected $(iroot kernel) kernel"
-        ;;
-    swap)
-        chooseswapfile
-        ;;
-    logging)
-        chooselogs
-        ;;
-    "extra software")
-        selectpackages
-        ;;
-    OK)
-        echo "advanced options done"
-        exit
-        ;;
-    esac
-done
+
+    [ -z "$CHOICE" ] && return
+    if [ "$CHOICE" = "OK" ]; then
+        echo "confirming advanced settings"
+        backpush advanced
+        export ASKTASK="confirm"
+        return
+    fi
+
+    export ASKTASK="$CHOICE"
+
+}

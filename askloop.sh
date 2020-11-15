@@ -17,6 +17,7 @@ backmenu() {
 
     case $BACKCHOICE in
     *Back)
+        backpop
         export GOINGBACK="true"
         return 0
         ;;
@@ -52,9 +53,6 @@ askquestion() {
     mirrors)
         askmirrors
         ;;
-    user)
-        askuser
-        ;;
     region)
         askregion
         ;;
@@ -64,15 +62,6 @@ askquestion() {
     vm)
         askvm
         ;;
-    root)
-        askroot
-        ;;
-    grub)
-        askgrub
-        ;;
-    swap)
-        askswap
-        ;;
     installdisk)
         askinstalldisk
         ;;
@@ -81,6 +70,24 @@ askquestion() {
         ;;
     editparts)
         askeditparts
+        ;;
+    root)
+        askroot
+        ;;
+    home)
+        askhome
+        ;;
+    grub)
+        askgrub
+        ;;
+    swap)
+        askswap
+        ;;
+    user)
+        askuser
+        ;;
+    hostname)
+        askhostname
         ;;
     esac
 

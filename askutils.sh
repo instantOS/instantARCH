@@ -35,7 +35,8 @@ $1"
 
 # pop element from back stack
 backpop() {
-    tail -1 <<<"$BACKSTACK"
+    ASKTASK="$(tail -1 <<<"$BACKSTACK")"
+    echo "going back to $ASKTASK"
     BACKSTACK="$(sed '$d' <<<"$BACKSTACK")"
 }
 
@@ -110,7 +111,8 @@ askinstalldisk() {
         imenu -l "select disk> ")
 
     if grep -q '^other' <<<"$DISK"; then
-        export ASKTASK="startpartchoice"
+        backpush "installdisk"
+        export ASKTASK="partitioning"
         return
     fi
 
@@ -137,6 +139,7 @@ this will delete all existing data" | imenu -C; then
         echo "legacy bios detected, installing grub on $DISKNAME"
         iroot grubdisk "$DISKNAME"
     fi
+
     backpush installdisk
     export ASKTASK="drivers"
 }
@@ -216,41 +219,43 @@ askregion() {
 # choose between different nvidia drivers
 # var: drivers
 askdrivers() {
+
     if lspci | grep -iq 'nvidia'; then
         echo "nvidia card detected"
-        iroot hasnvidia 1
-        while [ -z "$DRIVERCHOICE" ]; do
-            DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
+    else
+        echo "no nvidia card, not asking for drivers"
+        export ASKTASK="user"
+        return
+    fi
+
+    iroot hasnvidia 1
+    while [ -z "$DRIVERCHOICE" ]; do
+        DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
 nvidia-dkms (try if proprietary does not work)
 nouveau open source
 install without graphics drivers (not recommended)' | imenu -l 'select graphics drivers')"
 
-            if grep -q "without" <<<"$DRIVERCHOICE"; then
-                if ! echo "are you sure you do not want to install graphics drivers?
+        if grep -q "without" <<<"$DRIVERCHOICE"; then
+            if ! echo "are you sure you do not want to install graphics drivers?
 This could prevent the system from booting" | imenu -C; then
-                    unset DRIVERCHOICE
-                fi
+                unset DRIVERCHOICE
             fi
-
-        done
-
-        if grep -qi "dkms" <<<"$DRIVERCHOICE"; then
-            iroot graphics "dkms"
-        elif grep -qi "nvidia" <<<"$DRIVERCHOICE"; then
-            iroot graphics "nvidia"
-        elif grep -qi "open" <<<"$DRIVERCHOICE"; then
-            iroot graphics "open"
-        elif [ -z "$DRIVERCHOICE" ]; then
-            iroot graphics "nodriver"
         fi
 
-    else
-        echo "no nvidia card detected"
+    done
+
+    if grep -qi "dkms" <<<"$DRIVERCHOICE"; then
+        iroot graphics "dkms"
+    elif grep -qi "nvidia" <<<"$DRIVERCHOICE"; then
+        iroot graphics "nvidia"
+    elif grep -qi "open" <<<"$DRIVERCHOICE"; then
+        iroot graphics "open"
+    elif [ -z "$DRIVERCHOICE" ]; then
+        iroot graphics "nodriver"
     fi
 
     backpush drivers
     export ASKTASK="user"
-
 }
 
 # offer to choose mirror country
@@ -279,6 +284,7 @@ sort all mirrors by speed' | imenu -l 'choose mirror settings' | grep -q 'speed'
     else
         iroot automirrors 1
     fi
+
     backpush mirrors
     export ASKTASK="vm"
 }
@@ -297,10 +303,11 @@ use auto partitioning' | imenu -l)"
         export ASKTASK="root"
         ;;
     *partitioning)
-        export ASKTASK=
+        export ASKTASK="installdisk"
         ;;
     esac
-    backpush startpartchoice
+
+    backpush partitioning
 }
 
 # choose root partition for programs etc
@@ -313,6 +320,7 @@ askroot() {
         fi
         echo "$PARTROOT" | iroot i partroot
     done
+
     backpush root
     ASKTASK="home"
 }
@@ -322,10 +330,11 @@ askeditparts() {
     echo 'instantOS requires the following paritions: 
  - a root partition, all data on it will be erased
  - an optional home partition.
-    If not specified, the same partition as root will be used. 
-    Gives you the option to keep existing data on the partition
+       If not specified, the same partition as root will be used. 
+       Gives you the option to keep existing data on the partition
  - an optional swap partition. 
-    If not specified a swap file will be used. 
+       If not specified a swap file will be used. 
+
 The Bootloader requires
 
  - an EFI partition on uefi systems
@@ -334,11 +343,12 @@ The Bootloader requires
 
     EDITDISK="$(fdisk -l | grep -i '^Disk /.*:' | imenu -l 'choose disk to edit> ' | grep -o '/dev/[^:]*')"
     echo "editing disk $EDITDISK"
+
     if guimode; then
-        if command -v st; then
+        if command -v st &>/dev/null; then
             st -e bash -c "cfdisk $EDITDISK"
-        elif command -v st; then
-            st -e bash -c "cfdisk $EDITDISK"
+        elif command -v urxvt &>/dev/null; then
+            urxvt -e bash -c "cfdisk $EDITDISK"
         else
             xterm -e bash -c "cfdisk $EDITDISK"
         fi
@@ -351,7 +361,7 @@ The Bootloader requires
 }
 
 # choose home partition, allow using existing content or reformatting
-choosehome() {
+askhome() {
     if ! imenu -c "do you want to use a seperate home partition?"; then
         return
     fi
@@ -372,11 +382,11 @@ erase partition to start fresh' | imenu -l)" in
         iroot erasehome 1
         ;;
     esac
+
     iroot parthome "$HOMEPART"
-    echo "$HOMEPART" >/root/instantARCH/config/parthome
+
     backpush home
     export ASKTASK="swap"
-
 }
 
 # choose swap partition or swap file
@@ -395,12 +405,14 @@ use a swap partition' | imenu -l)" in
             if imenu -c "This will erase all data on that partition. It should also be on a fast drive. Continue?"; then
                 SWAPCONFIRM="true"
                 echo "$PARTSWAP will be used as swap"
-                echo "$PARTSWAP" | iroot i partswap
+                iroot partswap "$PARTSWAP"
             fi
         done
         ;;
     esac
+
     backpush swap
+    export ASKTASK="grub"
 }
 
 # choose wether to install grub and where to install it
@@ -419,7 +431,6 @@ askgrub() {
     done
 
     if efibootmgr; then
-
         while [ -z "$EFICONFIRM" ]; do
             choosepart 'select efi partition' | iroot i partefi
             if echo "This will format $(iroot partefi)
@@ -430,12 +441,14 @@ Operating systems that are already installed will remain bootable" | imenu -C; t
                 rm /root/instantARCH/config/partefi
             fi
         done
-
     else
         GRUBDISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk for grub " | grep -o '/dev/[^:]*')
-        echo "$GRUBDISK"
+        echo "grub disk $GRUBDISK"
         iroot grubdisk "$GRUBDISK"
     fi
+
+    backpush grub
+    export ASKTASK="drivers"
 }
 
 # ask for user details
@@ -465,7 +478,7 @@ Please enter a new password" | imenu -M
     iroot password "$NEWPASS"
 
     backpush user
-
+    export ASKTASK="hostname"
 }
 
 # var: hostname
@@ -478,9 +491,9 @@ askhostname() {
     fi
 
     iroot hostname "$NEWHOSTNAME"
+
     backpush hostname
     export ASKTASK="advanced"
-
 }
 
 # ask about which hypervisor is used

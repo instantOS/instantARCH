@@ -11,7 +11,7 @@ if [ -z "$INSTANTARCH" ]; then
 fi
 
 shopt -s expand_aliases
-alias goback='backmenu && [ -n $GOINGBACK ] && return'
+alias goback='backmenu && return'
 
 guimode() {
     if [ -e /opt/noguimode ]; then
@@ -56,8 +56,12 @@ wallstatus() {
 choosepart() {
     unset RETURNPART
     while [ -z "$RETURNPART" ]; do
-        fdisk -l | grep '^/dev' | sed 's/\*/ b /g' | imenu -l "$1" | grep -o '^[^ ]*' >/tmp/diskchoice
-        RETURNPART="$(cat /tmp/diskchoice)"
+        RETURNPART="$(fdisk -l | grep '^/dev' | sed 's/\*/ b /g' | imenu -l "$1" | grep -o '^[^ ]*')"
+
+        if [ -z "$RETURNPART" ]; then
+            return
+        fi
+
         if ! [ -e "$RETURNPART" ]; then
             imenu -m "$RETURNPART does not exist" &>/dev/null
             unset RETURNPART
@@ -84,7 +88,7 @@ cancel partition selection' | imenu -l ' ')"
     echo "$RETURNPART"
 }
 
-# var: artix
+# var: artix!
 artixinfo() {
     if command -v systemctl; then
         echo "regular arch based iso detected"
@@ -103,7 +107,6 @@ systemd-swap (obviously)" | imenu -M
 
 }
 
-
 # ask for keyboard layout
 # var: layout
 asklayout() {
@@ -117,17 +120,13 @@ $(localectl list-x11-keymap-layouts | sed 's/^/- /g')"
     fi
 
     NEWKEY="$(echo "$LAYOUTLIST" | imenu -l 'Select keyboard layout ')"
+    [ -z "$NEWKEY" ] && goback
 
     if grep -q '^-' <<<"$NEWKEY"; then
         iroot otherkey "$NEWKEY"
         NEWKEY="$(sed 's/- //g' <<<"$NEWKEY")"
         echo "
 $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
-    fi
-
-    # option to cancel the installer
-    if [ "${NEWKEY}" = "forcequit" ]; then
-        exit 1
     fi
 
     if iroot otherkey; then
@@ -145,9 +144,8 @@ $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
 # var: locale
 asklocale() {
     cd "$INSTANTARCH"/data/lang/locale || return 1
-    while [ -z "$NEWLOCALE" ]; do
-        NEWLOCALE="$(ls | imenu -l 'Select language> ')"
-    done
+    NEWLOCALE="$(ls | imenu -l 'Select language> ')"
+    [ -z "$NEWLOCALE" ] && goback
     iroot locale "$NEWLOCALE"
 
     backpush locale
@@ -173,11 +171,12 @@ giving the wrong answer here might greatly decrease performance. " | imenu -C; t
 
     iroot isvm 1
 
-    echo "virtualbox
+    HYPERVISOR="$(echo "virtualbox
 kvm/qemu
-other" | imenu -l "which hypervisor is being used?" >/tmp/vmtype
+other" | imenu -l "which hypervisor is being used?")"
 
-    HYPERVISOR="$(cat /tmp/vmtype)"
+    [ -z "$HYPERVISOR" ] && goback
+
     case "$HYPERVISOR" in
     kvm*)
         if grep 'vendor' /proc/cpuinfo | grep -iq 'AMD'; then
@@ -218,15 +217,14 @@ until this is fixed" | imenu -M
 # var: region
 askregion() {
     cd /usr/share/zoneinfo || return 1
-    while [ -z "$REGION" ]; do
-        REGION=$(ls | imenu -l "select region ")
-    done
+    REGION=$(ls | imenu -l "select region ")
+
+    [ -z "$REGION" ] && goback
 
     if [ -d "$REGION" ]; then
         cd "$REGION" || return 1
-        while [ -z "$CITY" ]; do
-            CITY="$(ls | imenu -l "select the City nearest to you ")"
-        done
+        CITY="$(ls | imenu -l "select the City nearest to you ")"
+        [ -z "$CITY" ] && unset REGION && goback
     fi
 
     iroot region "$REGION"
@@ -236,28 +234,38 @@ askregion() {
     export ASKTASK="disk"
 }
 
-
 # offer to choose mirror country
 # var: mirrors
 askmirrors() {
     if command -v pacstrap; then
         echo "pacstrap detected"
+        iroot askmirrors 1
     else
         echo "non-arch base, not doing mirrors"
         export ASKTASK="vm"
         return
     fi
 
-    iroot askmirrors 1
     curl -s 'https://www.archlinux.org/mirrorlist/' | grep -i '<option value' >/tmp/mirrors.html
-    grep -v '>All<' /tmp/mirrors.html | sed 's/.*<option value=".*">\(.*\)<\/option>.*/\1/g' |
-        sed -e "1iauto detect mirrors (not recommended for speed)" |
-        imenu -l "choose mirror location" >/tmp/mirrorselect
-    if ! grep -q 'auto detect' </tmp/mirrorselect; then
-        grep ">$(cat /tmp/mirrorselect)<" /tmp/mirrors.html | grep -o '".*"' | grep -o '[^"]*' | iroot i countrycode
-        if echo '> manually sorting mirrors may take a long time
+
+    MIRRORLIST="$(grep -v '>All<' /tmp/mirrors.html |
+        sed 's/.*<option value=".*">\(.*\)<\/option>.*/\1/g' |
+        sed -e "1iauto detect mirrors (not recommended for speed)")"
+
+    SELECTEDMIRROR="$(imenu -l "choose mirror location" <<<"$MIRRORLIST")"
+
+    [ -z "$SELECTEDMIRROR" ] && goback
+
+    if ! grep -q 'auto detect' <<<"$SELECTEDMIRROR"; then
+        grep ">$SELECTEDMIRROR<" /tmp/mirrors.html | grep -o '".*"' |
+            grep -o '[^"]*' | iroot i countrycode
+        MIRRORMODE="$(echo '> manually sorting mirrors may take a long time
 use arch ranking score (recommended)
-sort all mirrors by speed' | imenu -l 'choose mirror settings' | grep -q 'speed'; then
+sort all mirrors by speed' | imenu -l 'choose mirror settings')"
+
+        [ -z "$MIRRORMODE" ] && unset SELECTEDMIRROR && goback
+
+        if grep -q 'speed' <<<"$MIRRORMODE"; then
             iroot sortmirrors 1
         fi
     else
@@ -274,6 +282,8 @@ askinstalldisk() {
     wallstatus install
     DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed -e "\$aother (experimental)" |
         imenu -l "select disk> ")
+
+    [ -z "$DISK" ] && goback
 
     if grep -q '^other' <<<"$DISK"; then
         backpush "installdisk"
@@ -309,7 +319,6 @@ this will delete all existing data" | imenu -C; then
     export ASKTASK="drivers"
 }
 
-
 ##############################################
 ## Beginning of partition related questions ##
 ##############################################
@@ -319,6 +328,8 @@ askpartitioning() {
     STARTCHOICE="$(echo 'edit partitions
 choose partitions
 use auto partitioning' | imenu -l)"
+
+    [ -z "$STARTCHOICE" ] && goback
 
     case "$STARTCHOICE" in
     edit*)
@@ -338,14 +349,15 @@ use auto partitioning' | imenu -l)"
 # choose root partition for programs etc
 # var: root
 askroot() {
-    while [ -z "$ROOTCONFIRM" ]; do
-        PARTROOT="$(choosepart 'choose root partition (required) ')"
-        if imenu -c "This will erase all data on that partition. Continue?"; then
-            ROOTCONFIRM="true"
-            echo "instantOS will be installed on $PARTROOT"
-        fi
-        echo "$PARTROOT" | iroot i partroot
-    done
+    PARTROOT="$(choosepart 'choose root partition (required) ')"
+
+    [ -z "$PARTROOT" ] && goback
+
+    if ! imenu -c "This will erase all data on that partition. Continue?"; then
+        return
+    fi
+
+    iroot partroot "$PARTROOT"
 
     backpush root
     ASKTASK="home"
@@ -390,16 +402,21 @@ The Bootloader requires
 # choose home partition, allow using existing content or reformatting
 askhome() {
     if ! imenu -c "do you want to use a seperate home partition?"; then
+        backpush home
+        export ASKTASK="swap"
         return
     fi
 
     HOMEPART="$(choosepart 'choose home partition >')"
+
+    [ -z "$HOMEPART" ] && goback
+
     case "$(echo 'keep current home data
 erase partition to start fresh' | imenu -l)" in
     keep*)
         echo "keeping data"
 
-        if imenu -c "do not overwrite dotfiles? ( warning, this can impact functionality )"; then
+        if ! imenu -c "overwrite dotfiles? ( warning, disabling this can impact functionality )"; then
             iroot keepdotfiles 1
         fi
 
@@ -427,14 +444,14 @@ use a swap partition' | imenu -l)" in
         ;;
     *partition)
         echo "using a swap partition"
-        while [ -z "$SWAPCONFIRM" ]; do
-            PARTSWAP="$(choosepart 'choose swap partition> ')"
-            if imenu -c "This will erase all data on that partition. It should also be on a fast drive. Continue?"; then
-                SWAPCONFIRM="true"
-                echo "$PARTSWAP will be used as swap"
-                iroot partswap "$PARTSWAP"
-            fi
-        done
+        PARTSWAP="$(choosepart 'choose swap partition> ')"
+        [ -z "$PARTSWAP" ] && goback
+        if ! imenu -c "This will erase all data on that partition. It should also be on a fast drive. Continue?"; then
+            return
+        fi
+
+        echo "$PARTSWAP will be used as swap"
+        iroot partswap "$PARTSWAP"
         ;;
     esac
 
@@ -458,18 +475,18 @@ askgrub() {
     done
 
     if efibootmgr; then
-        while [ -z "$EFICONFIRM" ]; do
-            choosepart 'select efi partition' | iroot i partefi
-            if echo "This will format $(iroot partefi)
+        EFIPART="$(choosepart 'select efi partition')"
+        [ -z "$EFIPART" ] && goback
+
+        if ! echo "This will format $(iroot partefi)
 In most cases it *only* contains the bootloader
 Operating systems that are already installed will remain bootable" | imenu -C; then
-                EFICONFIRM="true"
-            else
-                rm /root/instantARCH/config/partefi
-            fi
-        done
+            return
+        fi
+
     else
         GRUBDISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk for grub " | grep -o '/dev/[^:]*')
+        [ -z "$GRUBDISK" ] && goback
         echo "grub disk $GRUBDISK"
         iroot grubdisk "$GRUBDISK"
     fi
@@ -477,7 +494,6 @@ Operating systems that are already installed will remain bootable" | imenu -C; t
     backpush grub
     export ASKTASK="drivers"
 }
-
 
 ########################################
 ## End of partition related questions ##
@@ -496,20 +512,19 @@ askdrivers() {
     fi
 
     iroot hasnvidia 1
-    while [ -z "$DRIVERCHOICE" ]; do
-        DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
+
+    DRIVERCHOICE="$(echo 'nvidia proprietary (recommended)
 nvidia-dkms (try if proprietary does not work)
 nouveau open source
 install without graphics drivers (not recommended)' | imenu -l 'select graphics drivers')"
+    [ -z "$DRIVERCHOICE" ] && goback
 
-        if grep -q "without" <<<"$DRIVERCHOICE"; then
-            if ! echo "are you sure you do not want to install graphics drivers?
+    if grep -q "without" <<<"$DRIVERCHOICE"; then
+        if ! echo "are you sure you do not want to install graphics drivers?
 This could prevent the system from booting" | imenu -C; then
-                unset DRIVERCHOICE
-            fi
+            unset DRIVERCHOICE
         fi
-
-    done
+    fi
 
     if grep -qi "dkms" <<<"$DRIVERCHOICE"; then
         iroot graphics "dkms"
@@ -528,25 +543,26 @@ This could prevent the system from booting" | imenu -C; then
 # ask for user details
 # var: user
 askuser() {
-    while [ -z "$NEWUSER" ]; do
-        wallstatus user
-        NEWUSER="$(imenu -i 'set username')"
+    wallstatus user
+    NEWUSER="$(imenu -i 'set username')"
 
-        # validate input as a unix name
-        if ! grep -Eq '^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$' <<<"$NEWUSER"; then
-            imenu -e "invalid username, usernames must not contain spaces or special symbols and start with a lowercase letter"
-            unset NEWUSER
-        fi
-    done
+    # validate input as a unix name
+    if ! grep -Eq '^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$' <<<"$NEWUSER"; then
+        imenu -e "invalid username, usernames must not contain spaces or special symbols and start with a lowercase letter"
+        return
+    fi
 
-    while ! [ "$NEWPASS" = "$NEWPASS2" ] || [ -z "$NEWPASS" ]; do
-        NEWPASS="$(imenu -P 'set password')"
-        NEWPASS2="$(imenu -P 'confirm password')"
-        if ! [ "$NEWPASS" = "$NEWPASS2" ]; then
-            echo "the confirmation password doesn't match.
+    NEWPASS="$(imenu -P 'set password')"
+    [ -z "$NEWPASS" ] && goback
+    NEWPASS2="$(imenu -P 'confirm password')"
+    [ -z "$NEWPASS2" ] && goback
+    if ! [ "$NEWPASS" = "$NEWPASS2" ]; then
+        echo "the confirmation password doesn't match.
 Please enter a new password" | imenu -M
-        fi
-    done
+        unset NEWPASS2
+        unset NEWPASS
+        return
+    fi
 
     iroot user "$NEWUSER"
     iroot password "$NEWPASS"
@@ -570,11 +586,11 @@ askhostname() {
     export ASKTASK="advanced"
 }
 
-
 ############################################################################################
 ## optional advanced options that allow more experienced users to customize their install ##
 ############################################################################################
 
+# var: plymouth
 askplymouth() {
     if imenu -c "enable autologin ? "; then
         iroot r noautologin
@@ -602,17 +618,21 @@ swapfile
 none' | imenu -C 'choose swap method')"
 
     iroot swapmethod "$SWAPMETHOD"
-    export ASKTASK="advanced"
 
+    export ASKTASK="advanced"
 }
 
 askkernel() {
-    KERNEL="$(echo 'linux
+    unset CUSTOMKERNEL
+    while [ -z "$CUSTOMKERNEL" ]; do
+        CUSTOMKERNEL="$(echo 'linux
 linux-lts
 linux-zen' | imenu -l 'select kernel')"
+    done
 
-    iroot kernel "$KERNEL"
-    echo "selected $(iroot kernel) kernel"
+    iroot kernel "$CUSTOMKERNEL"
+    echo "selected $CUSTOMKERNEL kernel"
+
     export ASKTASK="advanced"
 }
 
@@ -677,7 +697,8 @@ swap
 packages
 OK' | imenu -l 'select option')"
 
-    [ -z "$CHOICE" ] && return
+    [ -z "$CHOICE" ] && goback
+
     if [ "$CHOICE" = "OK" ]; then
         echo "confirming advanced settings"
         backpush advanced
@@ -686,9 +707,7 @@ OK' | imenu -l 'select option')"
     fi
 
     export ASKTASK="$CHOICE"
-
 }
-
 
 ###############################
 ## end of question functions ##

@@ -10,6 +10,11 @@ pb dialog
 
 source /root/instantARCH/askutils.sh
 
+# enable choosing nothing to go back
+export IMENUACCEPTEMPTY="true"
+
+# very WIP back menu
+# TODO make questions activate this when canceled
 backmenu() {
     BACKCHOICE="$(echo ':g Continue installation
 :b Back
@@ -18,7 +23,6 @@ backmenu() {
     case $BACKCHOICE in
     *Back)
         backpop
-        export GOINGBACK="true"
         return 0
         ;;
     Cancel)
@@ -35,15 +39,16 @@ backmenu() {
 
 }
 
-
-
+# starting point
 export ASKTASK=artix
 
+# ask the "next" question based on the ASKTASK value
 askquestion() {
     case "$ASKTASK" in
     artix)
         artixinfo
         ;;
+        # localisation questions
     layout)
         asklayout
         ;;
@@ -62,6 +67,7 @@ askquestion() {
     vm)
         askvm
         ;;
+        ## disk questions
     installdisk)
         askinstalldisk
         ;;
@@ -83,11 +89,34 @@ askquestion() {
     swap)
         askswap
         ;;
+        ## naming/account questions
     user)
         askuser
         ;;
     hostname)
         askhostname
+        ;;
+        ## Advanced options
+    advanced)
+        askadvanced
+        ;;
+    plymouth)
+        askplymouth
+        ;;
+    autologin)
+        askautologin
+        ;;
+    swapfile)
+        askswapfile
+        ;;
+    kernel)
+        askkernel
+        ;;
+    packages)
+        askpackages
+        ;;
+    logs)
+        asklogs
         ;;
     esac
 
@@ -96,11 +125,6 @@ askquestion() {
 askloop() {
     while [ -z "$ASKCONFIRM" ]; do
         askquestion
-        if [ -z "$GOINGBACK" ]; then
-            echo "going back"
-            unset GOINGBACK
-            ASKTASK="$BACKASK"
-        fi
     done
     echo "confirmed selection"
 }

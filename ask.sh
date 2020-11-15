@@ -94,6 +94,7 @@ done
 
 imenu -M <<<'The installation will now begin.
 This could take a while.
-You can check install progress by clicking on "2" in the top right
-Keep the machine powered and connected to the internet. 
-After the installation, the machine will automatically reboot'
+You can check install progress and logs
+by clicking on "2" in the top right.
+Keep the machine powered and connected to the internet.
+When installation is finished the machine will automatically reboot'

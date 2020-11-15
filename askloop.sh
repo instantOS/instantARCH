@@ -34,30 +34,32 @@ backmenu() {
 
 }
 
+
+
 export ASKTASK=artix
 
 askquestion() {
     case "$ASKTASK" in
-    layout)
-        asklayout
-        ;;
     artix)
         artixinfo
         ;;
-    user)
-        askuser
+    layout)
+        asklayout
         ;;
     locale)
         asklocale
+        ;;
+    mirrors)
+        askmirrors
+        ;;
+    user)
+        askuser
         ;;
     region)
         askregion
         ;;
     drivers)
         askdrivers
-        ;;
-    mirrors)
-        askmirrors
         ;;
     vm)
         askvm

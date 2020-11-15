@@ -25,15 +25,23 @@ guimode() {
     fi
 }
 
+BACKSTACK="artix"
+
+# add element to back stack
+backpush() {
+    BACKSTACK="$BACKSTACK
+$1"
+}
+
 # add installation info to summary
 addsum() {
     SUMMARY="$SUMMARY
-        $1: $(iroot $2)"
+        $1: $(iroot "$2")"
 }
 
 # set status wallpaper
 wallstatus() {
-    guimode && feh --bg-scale /usr/share/liveutils/$1.jpg &
+    guimode && feh --bg-scale /usr/share/liveutils/"$1".jpg &
 }
 
 # menu that allows choosing a partition and put it in stdout
@@ -83,7 +91,7 @@ Here's a list of things that do not work from the installer and how to work arou
 disk editor: set up partitions beforehand or use automatic partitioning
 keyboard locale: set it manually after installation in the settings
 systemd-swap (obviously)" | imenu -M
-    export BACKASK="artix"
+    backpush artix
     export ASKTASK="layout"
 
 }
@@ -95,7 +103,6 @@ chooseinstalldisk() {
     DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed -e "\$aother (experimental)" |
         imenu -l "select disk> ")
 
-    export BACKASK="installdisk"
 
     if grep -q '^other' <<<"$DISK"; then
         export ASKTASK="startpartchoice"
@@ -125,6 +132,7 @@ this will delete all existing data" | imenu -C; then
         echo "legacy bios detected, installing grub on $DISKNAME"
         iroot grubdisk "$DISKNAME"
     fi
+    backpush installdisk
     export ASKTASK="user"
 }
 
@@ -144,7 +152,7 @@ $(localectl list-x11-keymap-layouts | sed 's/^/- /g')"
 
     if grep -q '^-' <<<"$NEWKEY"; then
         iroot otherkey "$NEWKEY"
-        NEWKEY="$(echo "$NEWKEY" | sed 's/- //g')"
+        NEWKEY="$(sed 's/- //g' <<< "$NEWKEY")"
         echo "
 $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
     fi
@@ -160,7 +168,7 @@ $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
     else
         iroot keyboard "$NEWKEY"
     fi
-    BACKASK="layout"
+    backpush layout
     export ASKTASK="locale"
 }
 
@@ -172,7 +180,7 @@ asklocale() {
         NEWLOCALE="$(ls | imenu -l 'Select language> ')"
     done
     iroot locale "$NEWLOCALE"
-    BACKASK="locale"
+    backpush locale
     ASKTASK="mirrors"
 
 }
@@ -188,13 +196,13 @@ askregion() {
     if [ -d "$REGION" ]; then
         cd "$REGION" || return 1
         while [ -z "$CITY" ]; do
-            CITY=$(ls | imenu -l "select the City nearest to you ")
+            CITY="$(ls | imenu -l "select the City nearest to you ")"
         done
     fi
 
     iroot region "$REGION"
     [ -n "$CITY" ] && iroot city "$CITY"
-    export BACKASK="region"
+    backpush region
     export ASKTASK="disk"
 
 }
@@ -234,7 +242,7 @@ This could prevent the system from booting" | imenu -C; then
         echo "no nvidia card detected"
     fi
 
-    BACKASK="drivers"
+    backpush drivers
 
 }
 
@@ -264,7 +272,7 @@ sort all mirrors by speed' | imenu -l 'choose mirror settings' | grep -q 'speed'
     else
         iroot automirrors 1
     fi
-    export BACKASK="mirrors"
+    backpush mirrors
     export ASKTASK="vm"
 }
 
@@ -284,7 +292,7 @@ use auto partitioning' | imenu -l)"
         export ASKTASK=
         ;;
     esac
-    export BACKASK="startpartchoice"
+    backpush startpartchoice
 }
 
 # choose root partition for programs etc
@@ -297,7 +305,7 @@ chooseroot() {
         fi
         echo "$PARTROOT" | iroot i partroot
     done
-    BACKASK="root"
+    backpush root
     ASKTASK="home"
 }
 
@@ -358,7 +366,7 @@ erase partition to start fresh' | imenu -l)" in
     esac
     iroot parthome "$HOMEPART"
     echo "$HOMEPART" >/root/instantARCH/config/parthome
-    export BACKASK="home"
+    backpush home
     export ASKTASK="swap"
 
 }
@@ -384,7 +392,7 @@ use a swap partition' | imenu -l)" in
         done
         ;;
     esac
-    export BACKASK="swap"
+    backpush swap
 }
 
 # choose wether to install grub and where to install it
@@ -448,28 +456,27 @@ Please enter a new password" | imenu -M
     iroot user "$NEWUSER"
     iroot password "$NEWPASS"
 
-    BACKASK="user"
+    backpush user
 
 }
 
 # ask about which hypervisor is used
+# var: vm
 askvm() {
     if imvirt | grep -iq 'physical'; then
         echo "system does not appear to be a virtual machine"
+        export ASKTASK="region"
         return
     fi
 
-    while [ -z "$VIRTCONFIRM" ]; do
-        if ! imenu -c "is this system a virtual machine?"; then
-            if echo "Are you sure it's not?
+    if ! imenu -c "is this system a virtual machine?"; then
+        if echo "Are you sure it's not?
 giving the wrong answer here might greatly decrease performance. " | imenu -C; then
-                BACKASK="vm"
-                return
-            fi
-        else
-            VIRTCONFIRM="true"
+            export ASKTASK="region"
+            return
         fi
-    done
+    fi
+
     iroot isvm 1
 
     echo "virtualbox
@@ -508,7 +515,7 @@ until this is fixed" | imenu -M
         echo "selecting other"
         ;;
     esac
-    export BACKASK="vm"
+    backpush vm
     export ASKTASK="region"
 
 }

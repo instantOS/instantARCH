@@ -83,7 +83,49 @@ Here's a list of things that do not work from the installer and how to work arou
 disk editor: set up partitions beforehand or use automatic partitioning
 keyboard locale: set it manually after installation in the settings
 systemd-swap (obviously)" | imenu -M
+    export BACKASK="artix"
+    export ASKTASK="layout"
 
+}
+
+# choose between disks and manual partitioning
+# var: installdisk
+chooseinstalldisk() {
+    wallstatus install
+    DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed -e "\$aother (experimental)" |
+        imenu -l "select disk> ")
+
+    export BACKASK="installdisk"
+
+    if grep -q '^other' <<<"$DISK"; then
+        export ASKTASK="startpartchoice"
+        return
+    fi
+
+    # use auto partitioning
+    if ! echo "Install on $DISK ?
+this will delete all existing data" | imenu -C; then
+        unset DISK
+        return
+    fi
+
+    DISKNAME="$(grep -o '/dev/[^:]*' <<<"$DISK")"
+
+    # check if disk is valid
+    if ! [ -e "$DISKNAME" ]; then
+        imenu -m "$DISKNAME is an invalid disk name"
+        unset DISK
+        unset DISKNAME
+        return
+    fi
+
+    iroot disk "$DISKNAME"
+    # no efi partition needed, install on disk
+    if ! efibootmgr; then
+        echo "legacy bios detected, installing grub on $DISKNAME"
+        iroot grubdisk "$DISKNAME"
+    fi
+    export ASKTASK="user"
 }
 
 # ask for keyboard layout
@@ -119,6 +161,7 @@ $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
         iroot keyboard "$NEWKEY"
     fi
     BACKASK="layout"
+    export ASKTASK="locale"
 }
 
 # ask for default locale
@@ -130,9 +173,9 @@ asklocale() {
     done
     iroot locale "$NEWLOCALE"
     BACKASK="locale"
+    ASKTASK="mirrors"
 
 }
-
 
 # ask for region with region/city
 # var: region
@@ -151,7 +194,8 @@ askregion() {
 
     iroot region "$REGION"
     [ -n "$CITY" ] && iroot city "$CITY"
-    BACKASK="region"
+    export BACKASK="region"
+    export ASKTASK="disk"
 
 }
 
@@ -197,6 +241,14 @@ This could prevent the system from booting" | imenu -C; then
 # offer to choose mirror country
 # var: region
 askmirrors() {
+    if command -v pacstrap; then
+        echo "pacstrap detected"
+    else
+        echo "non-arch base, not doing mirrors"
+        export ASKTASK="vm"
+        return
+    fi
+
     iroot askmirrors 1
     curl -s 'https://www.archlinux.org/mirrorlist/' | grep -i '<option value' >/tmp/mirrors.html
     grep -v '>All<' /tmp/mirrors.html | sed 's/.*<option value=".*">\(.*\)<\/option>.*/\1/g' |
@@ -212,12 +264,14 @@ sort all mirrors by speed' | imenu -l 'choose mirror settings' | grep -q 'speed'
     else
         iroot automirrors 1
     fi
-    BACKASK="mirrors"
+    export BACKASK="mirrors"
+    export ASKTASK="vm"
 }
 
 startpartchoice() {
     STARTCHOICE="$(echo 'edit partitions
-choose partitions' | imenu -l)"
+choose partitions
+use auto partitioning' | imenu -l)"
 
     case "$STARTCHOICE" in
     edit*)
@@ -225,6 +279,9 @@ choose partitions' | imenu -l)"
         ;;
     choose*)
         export ASKTASK="root"
+        ;;
+    *partitioning)
+        export ASKTASK=
         ;;
     esac
     export BACKASK="startpartchoice"
@@ -283,15 +340,13 @@ choosehome() {
         return
     fi
 
-
     HOMEPART="$(choosepart 'choose home partition >')"
     case "$(echo 'keep current home data
 erase partition to start fresh' | imenu -l)" in
     keep*)
         echo "keeping data"
 
-        if imenu -c "do not overwrite dotfiles? ( warning, this can impact functionality )"
-        then
+        if imenu -c "do not overwrite dotfiles? ( warning, this can impact functionality )"; then
             iroot keepdotfiles 1
         fi
 
@@ -330,7 +385,6 @@ use a swap partition' | imenu -l)" in
         ;;
     esac
     export BACKASK="swap"
-
 }
 
 # choose wether to install grub and where to install it
@@ -455,6 +509,7 @@ until this is fixed" | imenu -M
         ;;
     esac
     export BACKASK="vm"
+    export ASKTASK="region"
 
 }
 

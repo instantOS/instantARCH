@@ -34,12 +34,15 @@ backmenu() {
 
 }
 
-export ASKTASK=layout
+export ASKTASK=artix
 
 askquestion() {
     case "$ASKTASK" in
     layout)
         asklayout
+        ;;
+    artix)
+        artixinfo
         ;;
     user)
         askuser
@@ -70,9 +73,6 @@ askquestion() {
         ;;
     disk)
         startpartchoice
-        ;;
-    artix)
-        artixinfo
         ;;
     esac
 

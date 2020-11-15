@@ -66,32 +66,6 @@ while ! iroot confirm; do
     askvm
     askregion
 
-    while [ -z "$DISK" ]; do
-        wallstatus install
-        DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed -e "\$aother (experimental)" | imenu -l "select disk> ")
-        if ! grep -q '^other' <<<"$DISK"; then
-            if ! echo "Install on $DISK ?
-this will delete all existing data" | imenu -C; then
-                unset DISK
-            fi
-        else
-            chmod +x /root/instantARCH/askdisk.sh
-            /root/instantARCH/askdisk.sh
-            if [ -e /tmp/loopaskdisk ]; then
-                unset DISK
-                rm /tmp/loopaskdisk
-            fi
-        fi
-    done
-
-    if ! grep -q '^other' <<<"$DISK"; then
-
-        echo "$DISK" | grep -o '/dev/[^:]*' | iroot i disk
-
-        if ! efibootmgr; then
-            echo "$DISK" | grep -o '/dev/[^:]*' | iroot i grubdisk
-        fi
-    fi
 
     # choice between multiple nvidia drivers
     if ! grep -iq manjaro /etc/os-release; then

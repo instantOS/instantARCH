@@ -65,16 +65,22 @@ askquestion() {
         askvm
         ;;
     root)
-        chooseroot
+        askroot
         ;;
     grub)
-        choosegrub
+        askgrub
         ;;
     swap)
-        chooseswap
+        askswap
         ;;
-    disk)
-        startpartchoice
+    installdisk)
+        askinstalldisk
+        ;;
+    partitioning)
+        partitioning
+        ;;
+    editparts)
+        askeditparts
         ;;
     esac
 

@@ -33,6 +33,12 @@ backpush() {
 $1"
 }
 
+# pop element from back stack
+backpop() {
+    tail -1 <<<"$BACKSTACK"
+    BACKSTACK="$(sed '$d' <<<"$BACKSTACK")"
+}
+
 # add installation info to summary
 addsum() {
     SUMMARY="$SUMMARY
@@ -98,11 +104,10 @@ systemd-swap (obviously)" | imenu -M
 
 # choose between disks and manual partitioning
 # var: installdisk
-chooseinstalldisk() {
+askinstalldisk() {
     wallstatus install
     DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed -e "\$aother (experimental)" |
         imenu -l "select disk> ")
-
 
     if grep -q '^other' <<<"$DISK"; then
         export ASKTASK="startpartchoice"
@@ -133,7 +138,7 @@ this will delete all existing data" | imenu -C; then
         iroot grubdisk "$DISKNAME"
     fi
     backpush installdisk
-    export ASKTASK="user"
+    export ASKTASK="drivers"
 }
 
 # ask for keyboard layout
@@ -152,7 +157,7 @@ $(localectl list-x11-keymap-layouts | sed 's/^/- /g')"
 
     if grep -q '^-' <<<"$NEWKEY"; then
         iroot otherkey "$NEWKEY"
-        NEWKEY="$(sed 's/- //g' <<< "$NEWKEY")"
+        NEWKEY="$(sed 's/- //g' <<<"$NEWKEY")"
         echo "
 $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
     fi
@@ -168,6 +173,7 @@ $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
     else
         iroot keyboard "$NEWKEY"
     fi
+
     backpush layout
     export ASKTASK="locale"
 }
@@ -180,9 +186,9 @@ asklocale() {
         NEWLOCALE="$(ls | imenu -l 'Select language> ')"
     done
     iroot locale "$NEWLOCALE"
+
     backpush locale
     ASKTASK="mirrors"
-
 }
 
 # ask for region with region/city
@@ -202,9 +208,9 @@ askregion() {
 
     iroot region "$REGION"
     [ -n "$CITY" ] && iroot city "$CITY"
+
     backpush region
     export ASKTASK="disk"
-
 }
 
 # choose between different nvidia drivers
@@ -243,6 +249,7 @@ This could prevent the system from booting" | imenu -C; then
     fi
 
     backpush drivers
+    export ASKTASK="user"
 
 }
 
@@ -276,7 +283,8 @@ sort all mirrors by speed' | imenu -l 'choose mirror settings' | grep -q 'speed'
     export ASKTASK="vm"
 }
 
-startpartchoice() {
+# var: disk
+askpartitioning() {
     STARTCHOICE="$(echo 'edit partitions
 choose partitions
 use auto partitioning' | imenu -l)"
@@ -296,7 +304,7 @@ use auto partitioning' | imenu -l)"
 }
 
 # choose root partition for programs etc
-chooseroot() {
+askroot() {
     while [ -z "$ROOTCONFIRM" ]; do
         PARTROOT="$(choosepart 'choose root partition (required) ')"
         if imenu -c "This will erase all data on that partition. Continue?"; then
@@ -310,7 +318,7 @@ chooseroot() {
 }
 
 # cfdisk wrapper to modify partition table during installation
-editparts() {
+askeditparts() {
     echo 'instantOS requires the following paritions: 
  - a root partition, all data on it will be erased
  - an optional home partition.
@@ -373,7 +381,7 @@ erase partition to start fresh' | imenu -l)" in
 
 # choose swap partition or swap file
 # var: swap
-chooseswap() {
+askswap() {
     case "$(echo 'use a swap file
 use a swap partition' | imenu -l)" in
 
@@ -397,7 +405,7 @@ use a swap partition' | imenu -l)" in
 
 # choose wether to install grub and where to install it
 # var: grub
-choosegrub() {
+askgrub() {
 
     while [ -z "$BOOTLOADERCONFIRM" ]; do
         if ! imenu -c "install bootloader (grub) ? (recommended)"; then
@@ -457,6 +465,21 @@ Please enter a new password" | imenu -M
     iroot password "$NEWPASS"
 
     backpush user
+
+}
+
+# var: hostname
+askhostname() {
+
+    NEWHOSTNAME="$(imenu -i "enter the name of this computer")"
+    if ! grep -q -E '^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$' <<<"$NEWHOSTNAME"; then
+        imenu -m "$NEWHOSTNAME is not a valid hostname"
+        return
+    fi
+
+    iroot hostname "$NEWHOSTNAME"
+    backpush hostname
+    export ASKTASK="advanced"
 
 }
 
@@ -535,8 +558,21 @@ confirmask() {
         addsum "Keyboard layout" "keyboard"
     fi
 
-    # todo: custom summary for manual partitioning
-    addsum "Target install drive" "disk"
+    if iroot manualpartitioning; then
+        SUMMARY="$SUMMARY
+manual partitioning: "
+        disksum() {
+            if iroot "part${1}"; then
+                addsum "$1 partition" "$1"
+            fi
+        }
+        disksum "root"
+        disksum "home"
+        disksum "swap"
+        disksum "grub"
+    else
+        addsum "Target install drive" "disk"
+    fi
 
     addsum "Hostname" "hostname"
 

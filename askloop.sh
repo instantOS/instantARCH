@@ -59,6 +59,21 @@ askquestion() {
     vm)
         askvm
         ;;
+    root)
+        chooseroot
+        ;;
+    grub)
+        choosegrub
+        ;;
+    swap)
+        chooseswap
+        ;;
+    disk)
+        startpartchoice
+        ;;
+    artix)
+        artixinfo
+        ;;
     esac
 
 }

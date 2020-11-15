@@ -36,6 +36,40 @@ wallstatus() {
     guimode && feh --bg-scale /usr/share/liveutils/$1.jpg &
 }
 
+# menu that allows choosing a partition and put it in stdout
+# no var
+choosepart() {
+    unset RETURNPART
+    while [ -z "$RETURNPART" ]; do
+        fdisk -l | grep '^/dev' | sed 's/\*/ b /g' | imenu -l "$1" | grep -o '^[^ ]*' >/tmp/diskchoice
+        RETURNPART="$(cat /tmp/diskchoice)"
+        if ! [ -e "$RETURNPART" ]; then
+            imenu -m "$RETURNPART does not exist" &>/dev/null
+            unset RETURNPART
+        fi
+
+        for i in /root/instantARCH/config/part*; do
+            if grep "^$RETURNPART$" "$i"; then
+                echo "partition $RETURNPART already taken"
+                imenu -m "partition $RETURNPART is already selected for $i"
+                CANCELOPTION="$(echo '> alternative options
+select another partition
+cancel partition selection' | imenu -l ' ')"
+                if grep -q 'cancel' <<<"$CANCELOPTION"; then
+                    touch /tmp/loopaskdisk
+                    rm /tmp/homecancel
+                    iroot r manualpartitioning
+                    exit 1
+                fi
+                unset RETURNPART
+            fi
+        done
+
+    done
+    echo "$RETURNPART"
+}
+
+# var: artix
 artixinfo() {
     if command -v systemctl; then
         echo "regular arch based iso detected"
@@ -53,6 +87,7 @@ systemd-swap (obviously)" | imenu -M
 }
 
 # ask for keyboard layout
+# var: layout
 asklayout() {
     cd "$INSTANTARCH"/data/lang/keyboard || return 1
     wallstatus worldmap
@@ -87,6 +122,7 @@ $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
 }
 
 # ask for default locale
+# var: locale
 asklocale() {
     cd "$INSTANTARCH"/data/lang/locale || return 1
     while [ -z "$NEWLOCALE" ]; do
@@ -97,39 +133,9 @@ asklocale() {
 
 }
 
-# menu that allows choosing a partition and put it in stdout
-choosepart() {
-    unset RETURNPART
-    while [ -z "$RETURNPART" ]; do
-        fdisk -l | grep '^/dev' | sed 's/\*/ b /g' | imenu -l "$1" | grep -o '^[^ ]*' >/tmp/diskchoice
-        RETURNPART="$(cat /tmp/diskchoice)"
-        if ! [ -e "$RETURNPART" ]; then
-            imenu -m "$RETURNPART does not exist" &>/dev/null
-            unset RETURNPART
-        fi
-
-        for i in /root/instantARCH/config/part*; do
-            if grep "^$RETURNPART$" "$i"; then
-                echo "partition $RETURNPART already taken"
-                imenu -m "partition $RETURNPART is already selected for $i"
-                CANCELOPTION="$(echo '> alternative options
-select another partition
-cancel partition selection' | imenu -l ' ')"
-                if grep -q 'cancel' <<<"$CANCELOPTION"; then
-                    touch /tmp/loopaskdisk
-                    rm /tmp/homecancel
-                    iroot r manualpartitioning
-                    exit 1
-                fi
-                unset RETURNPART
-            fi
-        done
-
-    done
-    echo "$RETURNPART"
-}
 
 # ask for region with region/city
+# var: region
 askregion() {
     cd /usr/share/zoneinfo || return 1
     while [ -z "$REGION" ]; do
@@ -150,6 +156,7 @@ askregion() {
 }
 
 # choose between different nvidia drivers
+# var: drivers
 askdrivers() {
     if lspci | grep -iq 'nvidia'; then
         echo "nvidia card detected"
@@ -188,6 +195,7 @@ This could prevent the system from booting" | imenu -C; then
 }
 
 # offer to choose mirror country
+# var: region
 askmirrors() {
     iroot askmirrors 1
     curl -s 'https://www.archlinux.org/mirrorlist/' | grep -i '<option value' >/tmp/mirrors.html
@@ -300,7 +308,68 @@ erase partition to start fresh' | imenu -l)" in
 
 }
 
+# choose swap partition or swap file
+# var: swap
+chooseswap() {
+    case "$(echo 'use a swap file
+use a swap partition' | imenu -l)" in
+
+    *file)
+        echo "using a swap file"
+        ;;
+    *partition)
+        echo "using a swap partition"
+        while [ -z "$SWAPCONFIRM" ]; do
+            PARTSWAP="$(choosepart 'choose swap partition> ')"
+            if imenu -c "This will erase all data on that partition. It should also be on a fast drive. Continue?"; then
+                SWAPCONFIRM="true"
+                echo "$PARTSWAP will be used as swap"
+                echo "$PARTSWAP" | iroot i partswap
+            fi
+        done
+        ;;
+    esac
+    export BACKASK="swap"
+
+}
+
+# choose wether to install grub and where to install it
+# var: grub
+choosegrub() {
+
+    while [ -z "$BOOTLOADERCONFIRM" ]; do
+        if ! imenu -c "install bootloader (grub) ? (recommended)"; then
+            if imenu -c "are you sure? This could make the system unbootable. "; then
+                iroot nobootloader 1
+                return
+            fi
+        else
+            BOOTLOADERCONFIRM="true"
+        fi
+    done
+
+    if efibootmgr; then
+
+        while [ -z "$EFICONFIRM" ]; do
+            choosepart 'select efi partition' | iroot i partefi
+            if echo "This will format $(iroot partefi)
+In most cases it *only* contains the bootloader
+Operating systems that are already installed will remain bootable" | imenu -C; then
+                EFICONFIRM="true"
+            else
+                rm /root/instantARCH/config/partefi
+            fi
+        done
+
+    else
+        GRUBDISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk for grub " | grep -o '/dev/[^:]*')
+        echo "$GRUBDISK"
+        iroot grubdisk "$GRUBDISK"
+    fi
+}
+
 # ask for user details
+# var: user
 askuser() {
     while [ -z "$NEWUSER" ]; do
         wallstatus user
@@ -389,6 +458,7 @@ until this is fixed" | imenu -M
 
 }
 
+# confirm installation questions
 confirmask() {
     SUMMARY="Installation Summary:"
 

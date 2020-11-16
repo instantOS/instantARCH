@@ -45,6 +45,10 @@ else
     fstabgen -U /mnt >>/mnt/etc/fstab
 fi
 
-cd /root
+cd /root || exit 1
+
 cp -r ./instantARCH /mnt/root/instantARCH
-cat /etc/pacman.d/mirrorlist >/mnt/etc/pacman.d/mirrorlist
+{
+    cat /etc/pacman.d/mirrorlist
+    echo '# modified by instantARCH'
+} >/mnt/etc/pacman.d/mirrorlist

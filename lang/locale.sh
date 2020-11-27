@@ -12,7 +12,8 @@ fi
 sed -i 's/^[^#].*//g' /etc/locale.gen
 cat "$INSTANTARCH"/data/lang/locale/"$(iroot locale)" >>/etc/locale.gen
 
-echo "# modified by instantARCH
+echo "
+# modified by instantARCH
 
 " >>/etc/locale.gen
 sleep 0.3

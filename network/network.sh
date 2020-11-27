@@ -17,7 +17,8 @@ echo "127.0.0.1 localhost" >/etc/hosts
 {
     echo "::1 localhost"
     echo "127.0.1.1 $NEWHOSTNAME.localdomain $NEWHOSTNAME"
-    echo '# modified by instantARCH'
+    echo '
+# modified by instantARCH'
 } >>/etc/hosts
 
 pacman -S --noconfirm --needed networkmanager

@@ -19,7 +19,8 @@ fi
 # fix gui not showing up
 sed -i 's/^#logind-check-graphical=.*/logind-check-graphical=true/' /etc/lightdm/lightdm.conf
 
-echo '# modified by instantARCH' >>/etc/lightdm/lightdm.conf
+echo '
+# modified by instantARCH' >>/etc/lightdm/lightdm.conf
 
 # needed to get internet to work
 if ! [ -e /opt/topinstall ] && ! iroot partswap; then

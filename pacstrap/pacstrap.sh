@@ -50,5 +50,6 @@ cd /root || exit 1
 cp -r ./instantARCH /mnt/root/instantARCH
 {
     cat /etc/pacman.d/mirrorlist
+    echo ''
     echo '# modified by instantARCH'
 } >/mnt/etc/pacman.d/mirrorlist

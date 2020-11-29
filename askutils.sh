@@ -77,11 +77,12 @@ choosepart() {
                 CANCELOPTION="$(echo '> alternative options
 select another partition
 cancel partition selection' | imenu -l ' ')"
+                [ -z "$CANCELOPTION" ] && return 1
                 if grep -q 'cancel' <<<"$CANCELOPTION"; then
                     touch /tmp/loopaskdisk
                     rm /tmp/homecancel
                     iroot r manualpartitioning
-                    exit 1
+                    return 1
                 fi
                 unset RETURNPART
             fi
@@ -138,6 +139,14 @@ $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
         NEWKEY="other"
     else
         iroot keyboard "$NEWKEY"
+    fi
+
+    if guimode; then
+        setxkbmap -layout "$(tail -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")"
+    else
+        if head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY" | grep -q '[^ ][^ ]'; then
+            loadkeys "$(head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")"
+        fi
     fi
 
     backpush layout
@@ -524,11 +533,12 @@ Operating systems that are already installed will remain bootable" | imenu -C
 # var: drivers
 askdrivers() {
 
+    export ASKTASK="user"
+    grep -iq manjaro /etc/os-release && return
     if lspci | grep -iq 'nvidia'; then
         echo "nvidia card detected"
     else
         echo "no nvidia card, not asking for drivers"
-        export ASKTASK="user"
         return
     fi
 
@@ -560,7 +570,6 @@ This could prevent the system from booting" | imenu -C
     fi
 
     backpush drivers
-    export ASKTASK="user"
 }
 
 # ask for user details

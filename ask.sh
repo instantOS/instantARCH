@@ -51,10 +51,6 @@ while ! iroot confirm; do
 
     # ask for keyboard layout
     asklayout
-    if head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY" | grep -q '[^ ][^ ]'; then
-        loadkeys "$(head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")"
-    fi
-    guimode && setxkbmap -layout "$(tail -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")"
 
     asklocale
 
@@ -66,11 +62,7 @@ while ! iroot confirm; do
     askvm
     askregion
 
-
-    # choice between multiple nvidia drivers
-    if ! grep -iq manjaro /etc/os-release; then
-        askdrivers
-    fi
+    askdrivers
 
     # create user and add to groups
     askuser
@@ -90,7 +82,6 @@ while ! iroot confirm; do
     confirmask
 
 done
-
 
 imenu -M <<<'The installation will now begin.
 This could take a while.

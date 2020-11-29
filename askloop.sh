@@ -26,10 +26,12 @@ backmenu() {
         return 0
         ;;
     Cancel)
+        unset IMENUACCEPTEMPTY
         if imenu -c "are you sure you want to cancel the installation?"; then
             iroot cancelinstall 1
             exit
         fi
+        export IMENUACCEPTEMPTY="true"
         ;;
     *)
         echo "continuing installation"

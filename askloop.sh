@@ -45,10 +45,11 @@ export ASKTASK=artix
 # ask the "next" question based on the ASKTASK value
 askquestion() {
     case "$ASKTASK" in
+        ## artix warning
     artix)
         artixinfo
         ;;
-        # localisation questions
+        ## localisation questions
     layout)
         asklayout
         ;;

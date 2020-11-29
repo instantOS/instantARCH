@@ -42,8 +42,13 @@ backmenu() {
 # starting point
 export ASKTASK=artix
 
+installerror() {
+    imenu -m "there has been an error in the installer"
+}
+
 # ask the "next" question based on the ASKTASK value
 askquestion() {
+    echo "asking question $ASKTASK"
     case "$ASKTASK" in
         ## artix warning
     artix)
@@ -51,10 +56,10 @@ askquestion() {
         ;;
         ## localisation questions
     layout)
-        asklayout
+        asklayout || installerror
         ;;
     locale)
-        asklocale
+        asklocale || installerror
         ;;
     mirrors)
         askmirrors

@@ -90,6 +90,9 @@ cancel partition selection' | imenu -l ' ')"
 
 # var: artix!
 artixinfo() {
+    backpush artix
+    export ASKTASK="layout"
+
     if command -v systemctl; then
         echo "regular arch based iso detected"
         return
@@ -102,8 +105,6 @@ Here's a list of things that do not work from the installer and how to work arou
 disk editor: set up partitions beforehand or use automatic partitioning
 keyboard locale: set it manually after installation in the settings
 systemd-swap (obviously)" | imenu -M
-    backpush artix
-    export ASKTASK="layout"
 
 }
 
@@ -155,16 +156,15 @@ asklocale() {
 # ask about which hypervisor is used
 # var: vm
 askvm() {
+    export ASKTASK="region"
     if imvirt | grep -iq 'physical'; then
         echo "system does not appear to be a virtual machine"
-        export ASKTASK="region"
         return
     fi
 
     if ! imenu -c "is this system a virtual machine?"; then
         if echo "Are you sure it's not?
 giving the wrong answer here might greatly decrease performance. " | imenu -C; then
-            export ASKTASK="region"
             return
         fi
     fi
@@ -209,7 +209,6 @@ until this is fixed" | imenu -M
         ;;
     esac
     backpush vm
-    export ASKTASK="region"
 
 }
 
@@ -237,12 +236,12 @@ askregion() {
 # offer to choose mirror country
 # var: mirrors
 askmirrors() {
+    export ASKTASK="vm"
     if command -v pacstrap; then
         echo "pacstrap detected"
         iroot askmirrors 1
     else
         echo "non-arch base, not doing mirrors"
-        export ASKTASK="vm"
         return
     fi
 
@@ -273,7 +272,6 @@ sort all mirrors by speed' | imenu -l 'choose mirror settings')"
     fi
 
     backpush mirrors
-    export ASKTASK="vm"
 }
 
 # choose between disks and manual partitioning

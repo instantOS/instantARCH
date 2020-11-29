@@ -126,6 +126,9 @@ askquestion() {
     logs)
         asklogs
         ;;
+    confirm)
+        confirmask
+        ;;
     esac
 
 }

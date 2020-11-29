@@ -1,0 +1,11 @@
+layout:Keyboard Layout
+locale:Application Language
+vm:VM settings
+region:Region
+mirrors:Mirror Location
+askpartitioning:Disk settings
+drivers:Graphics Drivers
+home:Choose home Partition
+user:User account
+hostname:Hostname
+advanced:Advanced settings

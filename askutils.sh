@@ -718,6 +718,7 @@ asklogs() {
     export ASKTASK="advanced"
 }
 
+# var: advanced
 askadvanced() {
     if ! iroot advancedsettings && ! imenu -c -i "edit advanced settings? (use only if you know what you're doing)"; then
         backpush advanced
@@ -752,6 +753,7 @@ OK' | imenu -l 'select option')"
 ###############################
 
 # confirm installation questions
+# var: confirm
 confirmask() {
     SUMMARY="Installation Summary:"
 

@@ -12,6 +12,9 @@ fi
 
 shopt -s expand_aliases
 alias goback='backmenu && return'
+alias checkback='IMENUEXIT="$?" && [ "$IMENUEXIT" = 2 ] && backmenu && return'
+
+IMENUEXIT=0
 
 guimode() {
     if [ -e /opt/noguimode ]; then
@@ -162,9 +165,13 @@ askvm() {
         return
     fi
 
-    if ! imenu -c "is this system a virtual machine?"; then
-        if echo "Are you sure it's not?
-giving the wrong answer here might greatly decrease performance. " | imenu -C; then
+    imenu -c "is this system a virtual machine?"
+    checkback
+    if ! [ "$IMENUEXIT" = 0 ]; then
+        echo "Are you sure it's not?
+giving the wrong answer here might greatly decrease performance. " | imenu -C
+        checkback
+        if [ "$IMENUEXIT" = 0 ]; then
             return
         fi
     fi
@@ -199,7 +206,9 @@ until this is fixed" | imenu -M
         ;;
     virtualbox)
         iroot virtualbox 1
-        if imenu -c "would you like to install virtualbox guest additions?"; then
+        imenu -c "would you like to install virtualbox guest additions?"
+        checkback
+        if [ "$IMENUEXIT" = 0 ]; then
             iroot guestadditions 1
         fi
         ;;
@@ -290,8 +299,10 @@ askinstalldisk() {
     fi
 
     # use auto partitioning
-    if ! echo "Install on $DISK ?
-this will delete all existing data" | imenu -C; then
+    echo "Install on $DISK ?
+this will delete all existing data" | imenu -C
+    checkback
+    if ! [ "$IMENUEXIT" = 0 ]; then
         unset DISK
         return
     fi
@@ -350,8 +361,9 @@ askroot() {
     PARTROOT="$(choosepart 'choose root partition (required) ')"
 
     [ -z "$PARTROOT" ] && goback
-
-    if ! imenu -c "This will erase all data on that partition. Continue?"; then
+    imenu -c "This will erase all data on that partition. Continue?"
+    checkback
+    if ! [ "$IMENUEXIT" = 0 ]; then
         return
     fi
 
@@ -399,7 +411,9 @@ The Bootloader requires
 
 # choose home partition, allow using existing content or reformatting
 askhome() {
-    if ! imenu -c "do you want to use a seperate home partition?"; then
+    imenu -c "do you want to use a seperate home partition?"
+    checkback
+    if ! [ "$IMENUEXIT" = 0 ]; then
         backpush home
         export ASKTASK="swap"
         return
@@ -413,8 +427,9 @@ askhome() {
 erase partition to start fresh' | imenu -l)" in
     keep*)
         echo "keeping data"
-
-        if ! imenu -c "overwrite dotfiles? ( warning, disabling this can impact functionality )"; then
+        imenu -c "overwrite dotfiles? ( warning, disabling this can impact functionality )"
+        checkback
+        if ! [ "$IMENUEXIT" = 0 ]; then
             iroot keepdotfiles 1
         fi
 
@@ -444,7 +459,9 @@ use a swap partition' | imenu -l)" in
         echo "using a swap partition"
         PARTSWAP="$(choosepart 'choose swap partition> ')"
         [ -z "$PARTSWAP" ] && goback
-        if ! imenu -c "This will erase all data on that partition. It should also be on a fast drive. Continue?"; then
+        imenu -c "This will erase all data on that partition. It should also be on a fast drive. Continue?"
+        checkback
+        if ! [ "$IMENUEXIT" = 0 ]; then
             return
         fi
 
@@ -462,8 +479,12 @@ use a swap partition' | imenu -l)" in
 askgrub() {
 
     while [ -z "$BOOTLOADERCONFIRM" ]; do
-        if ! imenu -c "install bootloader (grub) ? (recommended)"; then
-            if imenu -c "are you sure? This could make the system unbootable. "; then
+        imenu -c "install bootloader (grub) ? (recommended)"
+        checkback
+        if ! [ "$IMENUEXIT" = 0 ]; then
+            checkback
+            imenu -c "are you sure? This could make the system unbootable. "
+            if [ "$IMENUEXIT" = 0 ]; then
                 iroot nobootloader 1
                 return
             fi
@@ -476,9 +497,11 @@ askgrub() {
         EFIPART="$(choosepart 'select efi partition')"
         [ -z "$EFIPART" ] && goback
 
-        if ! echo "This will format $(iroot partefi)
+        echo "This will format $(iroot partefi)
 In most cases it *only* contains the bootloader
-Operating systems that are already installed will remain bootable" | imenu -C; then
+Operating systems that are already installed will remain bootable" | imenu -C
+        checkback
+        if ! [ "$IMENUEXIT" = 0 ]; then
             return
         fi
 
@@ -518,8 +541,10 @@ install without graphics drivers (not recommended)' | imenu -l 'select graphics 
     [ -z "$DRIVERCHOICE" ] && goback
 
     if grep -q "without" <<<"$DRIVERCHOICE"; then
-        if ! echo "are you sure you do not want to install graphics drivers?
-This could prevent the system from booting" | imenu -C; then
+        echo "are you sure you do not want to install graphics drivers?
+This could prevent the system from booting" | imenu -C
+        checkback
+        if ! [ "$IMENUEXIT" = 0 ]; then
             unset DRIVERCHOICE
         fi
     fi
@@ -590,7 +615,9 @@ askhostname() {
 
 # var: plymouth
 askplymouth() {
-    if imenu -c "enable autologin ? "; then
+    imenu -c "enable autologin ? "
+    checkback
+    if [ "$IMENUEXIT" = 0 ]; then
         iroot r noautologin
     else
         iroot noautologin 1
@@ -601,7 +628,9 @@ askplymouth() {
 
 askautologin() {
     echo "editing autologin"
-    if imenu -c "enable plymouth ? "; then
+    imenu -c "enable plymouth ? "
+    checkback
+    if [ "$IMENUEXIT" = 0 ]; then
         iroot r noplymouth
     else
         iroot noplymouth 1
@@ -613,7 +642,7 @@ askautologin() {
 askswapfile() {
     SWAPMETHOD="$(echo 'systemd-swap
 swapfile
-none' | imenu -C 'choose swap method')"
+none' | imenu -l 'choose swap method')"
 
     iroot swapmethod "$SWAPMETHOD"
 
@@ -670,7 +699,9 @@ virtualbox-host-modules-arch"
 }
 
 asklogs() {
-    if imenu -c "backup installation logs to ix.io ? (disabled by default)"; then
+    imenu -c "backup installation logs to ix.io ? (disabled by default)"
+    checkback
+    if [ "$IMENUEXIT" = 0 ]; then
         iroot logging 1
     else
         iroot r logging
@@ -758,7 +789,9 @@ Should installation proceed with these parameters?"
     echo "summary:
 $SUMMARY"
 
-    if imenu -C <<<"$SUMMARY"; then
+    imenu -C <<<"$SUMMARY"
+    checkback
+    if [ "$IMENUEXIT" = 0 ]; then
         iroot confirm 1
         export ASKCONFIRM="true"
     else

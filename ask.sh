@@ -13,8 +13,6 @@ mkdir config
 source <(curl -Ls git.io/paperbash)
 pb dialog
 
-source /root/instantARCH/askutils.sh
-
 if [ -e /usr/share/liveutils ] && ! [ -e /tmp/nogui ]; then
     echo "GUI Mode active"
     export GUIMODE="True"
@@ -42,46 +40,7 @@ else
     fi
 fi
 
-# go back to the beginning if user isn't happy with settings
-# this loop wraps the rest of the installer
-while ! iroot confirm; do
-
-    # warning message for artix
-    artixinfo
-
-    # ask for keyboard layout
-    asklayout
-
-    asklocale
-
-    # artix and manjaro mirrors work differently
-    if command -v pacstrap; then
-        askmirrors
-    fi
-
-    askvm
-    askregion
-
-    askdrivers
-
-    # create user and add to groups
-    askuser
-
-    while [ -z "$NEWHOSTNAME" ]; do
-        NEWHOSTNAME=$(imenu -i "enter name of this computer")
-    done
-
-    iroot hostname "$NEWHOSTNAME"
-
-    if imenu -c -i "edit advanced settings? (use only if you know what you're doing)"; then
-        /root/instantARCH/askadvanced.sh
-    fi
-
-    wallstatus install
-
-    confirmask
-
-done
+/root/instantARCH/askloop.sh
 
 imenu -M <<<'The installation will now begin.
 This could take a while.

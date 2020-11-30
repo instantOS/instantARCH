@@ -797,7 +797,7 @@ GRUB: BIOS"
     SUMMARY="$SUMMARY
 Should installation proceed with these parameters?"
 
-    echo "summary:
+    echo "installation summary:
 $SUMMARY"
 
     imenu -C <<<"$SUMMARY"

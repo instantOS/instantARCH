@@ -468,6 +468,7 @@ use a swap partition' | imenu -l)"
     case "$CHOICE" in
     *file)
         echo "using a swap file"
+        imenu -m "This has yet to be implemented. Sorry :("
         iroot swapfile 1
         iroot -r partswap
         # TODO
@@ -476,23 +477,28 @@ use a swap partition' | imenu -l)"
         echo "using systemd-swap"
         ;;
     *partition)
-
+        askpartswap
+        export ASKTASK="advanced"
         echo "using a swap partition"
-        PARTSWAP="$(choosepart 'choose swap partition> ')"
-        [ -z "$PARTSWAP" ] && goback
-        imenu -c "This will erase all data on that partition. It should also be on a fast drive. Continue?"
-        checkback
-        if ! [ "$IMENUEXIT" = 0 ]; then
-            return
-        fi
-
-        echo "$PARTSWAP will be used as swap"
-        iroot partswap "$PARTSWAP"
-        backpush swap
-        export ASKTASK="grub"
         ;;
     esac
 
+}
+
+
+askpartswap() {
+    PARTSWAP="$(choosepart 'choose swap partition> ')"
+    [ -z "$PARTSWAP" ] && goback
+    imenu -c "This will erase all data on that partition. It should also be on a fast drive. Continue?"
+    checkback
+    if ! [ "$IMENUEXIT" = 0 ]; then
+        return
+    fi
+
+    echo "$PARTSWAP will be used as swap"
+    iroot partswap "$PARTSWAP"
+    backpush swap
+    export ASKTASK="grub"
 }
 
 # choose wether to install grub and where to install it

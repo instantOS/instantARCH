@@ -52,7 +52,7 @@ installerror() {
 askquestion() {
     echo "asking question $ASKTASK"
     case "$ASKTASK" in
-        ## artix warning
+    ## artix warning
     artix)
         artixinfo
         ;;
@@ -128,6 +128,10 @@ askquestion() {
         ;;
     confirm)
         confirmask
+        ;;
+    *)
+        echo "error: unknown question"
+        exit 1
         ;;
     esac
 

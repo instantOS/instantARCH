@@ -51,7 +51,7 @@ addsum() {
 
 # set status wallpaper
 wallstatus() {
-    guimode && feh --bg-scale /usr/share/liveutils/"$1".jpg &
+    [ -e /usr/share/liveutils/"$1".jpg ] && guimode && feh --bg-scale /usr/share/liveutils/"$1".jpg &
 }
 
 # menu that allows choosing a partition and put it in stdout
@@ -248,7 +248,7 @@ askregion() {
     [ -n "$CITY" ] && iroot city "$CITY"
 
     backpush region
-    export ASKTASK="disk"
+    export ASKTASK="installdisk"
 }
 
 # offer to choose mirror country

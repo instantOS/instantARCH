@@ -40,7 +40,10 @@ else
     fi
 fi
 
-/root/instantARCH/askloop.sh
+/root/instantARCH/askloop.sh || {
+    imenu -m "installation was canceled"
+    exit 0
+}
 
 imenu -M <<<'The installation will now begin.
 This could take a while.

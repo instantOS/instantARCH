@@ -25,7 +25,7 @@ backmenu() {
         backpop
         return 0
         ;;
-    Cancel)
+    *installation)
         unset IMENUACCEPTEMPTY
         if imenu -c "are you sure you want to cancel the installation?"; then
             iroot cancelinstall 1
@@ -80,7 +80,7 @@ askquestion() {
         askinstalldisk
         ;;
     partitioning)
-        partitioning
+        askpartitioning
         ;;
     editparts)
         askeditparts
@@ -135,6 +135,27 @@ askquestion() {
         ;;
     esac
 
+}
+
+questionmenu() {
+
+    while :; do
+        CHOICE="$(
+            {
+                echo '> Edit options'
+                cat /root/instantARCH/questions.txt
+                echo OK
+            } | grep -o '[^:]*$' | imenu -l
+        )"
+        if [ -z "$CHOICE" ]; then
+            continue
+        elif [ "$CHOICE" = "OK" ]; then
+            return
+        fi
+
+        askquestion "$(grep "$CHOICE" /root/instantARCH/questions.txt | grep -o '^[^:]*')"
+
+    done
 }
 
 askloop() {

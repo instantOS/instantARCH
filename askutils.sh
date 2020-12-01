@@ -595,7 +595,7 @@ This could prevent the system from booting" | imenu -C
 askuser() {
     wallstatus user
     NEWUSER="$(imenu -i 'set username')"
-
+    [ -z "$NEWUSER" ] && goback
     # validate input as a unix name
     if ! grep -Eq '^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$' <<<"$NEWUSER"; then
         imenu -e "invalid username, usernames must not contain spaces or special symbols and start with a lowercase letter"

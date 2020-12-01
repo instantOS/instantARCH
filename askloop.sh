@@ -139,6 +139,7 @@ askquestion() {
 
 askloop() {
     while [ -z "$ASKCONFIRM" ]; do
+        [ -z "$ASKTASK" ] && ASKTASK='artix'
         askquestion
     done
     echo "confirmed selection"

@@ -458,13 +458,25 @@ erase partition to start fresh' | imenu -l)" in
 # choose swap partition or swap file
 # var: swap
 askswap() {
-    case "$(echo 'use a swap file
-use a swap partition' | imenu -l)" in
+    CHOICE="$(echo 'auto allocate swap (default)
+use a swap file
+use a swap partition' | imenu -l)"
 
+    [ -z "$CHOICE" ] && goback
+    export ASKTASK="advanced"
+
+    case "$CHOICE" in
     *file)
         echo "using a swap file"
+        iroot swapfile 1
+        iroot -r partswap
+        # TODO
+        ;;
+    *"(default)")
+        echo "using systemd-swap"
         ;;
     *partition)
+
         echo "using a swap partition"
         PARTSWAP="$(choosepart 'choose swap partition> ')"
         [ -z "$PARTSWAP" ] && goback
@@ -476,11 +488,11 @@ use a swap partition' | imenu -l)" in
 
         echo "$PARTSWAP will be used as swap"
         iroot partswap "$PARTSWAP"
+        backpush swap
+        export ASKTASK="grub"
         ;;
     esac
 
-    backpush swap
-    export ASKTASK="grub"
 }
 
 # choose wether to install grub and where to install it
@@ -607,6 +619,7 @@ Please enter a new password" | imenu -M
 askhostname() {
 
     NEWHOSTNAME="$(imenu -i "enter the name of this computer")"
+    [ -z "$NEWHOSTNAME" ] && goback
     if ! grep -q -E '^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$' <<<"$NEWHOSTNAME"; then
         imenu -m "$NEWHOSTNAME is not a valid hostname"
         return
@@ -623,7 +636,7 @@ askhostname() {
 ############################################################################################
 
 # var: plymouth
-askplymouth() {
+askautologin() {
     imenu -c "enable autologin ? "
     checkback
     if [ "$IMENUEXIT" = 0 ]; then
@@ -635,7 +648,7 @@ askplymouth() {
     export ASKTASK="advanced"
 }
 
-askautologin() {
+askplymouth() {
     echo "editing autologin"
     imenu -c "enable plymouth ? "
     checkback

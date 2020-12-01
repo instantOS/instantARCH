@@ -58,37 +58,41 @@ wallstatus() {
 # no var
 choosepart() {
     unset RETURNPART
-    while [ -z "$RETURNPART" ]; do
+
+    while :; do
+
         RETURNPART="$(fdisk -l | grep '^/dev' | sed 's/\*/ b /g' | imenu -l "$1" | grep -o '^[^ ]*')"
 
         if [ -z "$RETURNPART" ]; then
-            return
+            return 1
         fi
 
         if ! [ -e "$RETURNPART" ]; then
             imenu -m "$RETURNPART does not exist" &>/dev/null
-            unset RETURNPART
         fi
 
+        # check if partition is already used as root/home/swap etc
         for i in /root/instantARCH/config/part*; do
             if grep "^$RETURNPART$" "$i"; then
                 echo "partition $RETURNPART already taken"
-                imenu -m "partition $RETURNPART is already selected for $i"
-                CANCELOPTION="$(echo '> alternative options
+                imenu -m "partition $RETURNPART is already selected as $i"
+
+                while [ -z "$CANCELOPTION" ]; do
+                    CANCELOPTION="$(echo '> alternative options
 select another partition
 cancel partition selection' | imenu -l ' ')"
-                [ -z "$CANCELOPTION" ] && return 1
+                done
+
                 if grep -q 'cancel' <<<"$CANCELOPTION"; then
-                    touch /tmp/loopaskdisk
-                    rm /tmp/homecancel
                     iroot r manualpartitioning
+                    export CANCELPARTITIONING="true"
                     return 1
                 fi
-                unset RETURNPART
             fi
         done
 
     done
+
     echo "$RETURNPART"
 }
 
@@ -368,6 +372,11 @@ use auto partitioning' | imenu -l)"
 # var: root
 askroot() {
     PARTROOT="$(choosepart 'choose root partition (required) ')"
+    if [ -n "$CANCELPARTITIONING" ]; then
+        export ASKTASK="installdisk"
+        return
+    fi
+    [ -z "$PARTROOT" ] && goback
 
     [ -z "$PARTROOT" ] && goback
     imenu -c "This will erase all data on that partition. Continue?"
@@ -416,6 +425,7 @@ The Bootloader requires
 
     iroot disk "$EDITDISK"
     startchoice
+    export ASKTASK="root"
 }
 
 # choose home partition, allow using existing content or reformatting
@@ -429,7 +439,10 @@ askhome() {
     fi
 
     HOMEPART="$(choosepart 'choose home partition >')"
-
+    if [ -n "$CANCELPARTITIONING" ]; then
+        export ASKTASK="installdisk"
+        return
+    fi
     [ -z "$HOMEPART" ] && goback
 
     case "$(echo 'keep current home data
@@ -485,10 +498,14 @@ use a swap partition' | imenu -l)"
 
 }
 
-
 askpartswap() {
     PARTSWAP="$(choosepart 'choose swap partition> ')"
+    if [ -n "$CANCELPARTITIONING" ]; then
+        export ASKTASK="installdisk"
+        return
+    fi
     [ -z "$PARTSWAP" ] && goback
+
     imenu -c "This will erase all data on that partition. It should also be on a fast drive. Continue?"
     checkback
     if ! [ "$IMENUEXIT" = 0 ]; then
@@ -522,6 +539,11 @@ askgrub() {
 
     if efibootmgr; then
         EFIPART="$(choosepart 'select efi partition')"
+        if [ -n "$CANCELPARTITIONING" ]; then
+            export ASKTASK="installdisk"
+            return
+        fi
+
         [ -z "$EFIPART" ] && goback
 
         echo "This will format $(iroot partefi)

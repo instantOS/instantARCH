@@ -78,7 +78,9 @@ cd /root || exit 1
 
 if [ "$1" = "test" ]; then
     echo "switching to testing branch"
-    git clone --single-branch --branch testing --depth=1 https://github.com/instantos/instantARCH.git
+    export TESTBRANCH="${2:-testing}"
+    echo "using installer branch $TESTBRANCH"
+    git clone --single-branch --branch "$TESTBRANCH" --depth=1 https://github.com/instantos/instantARCH.git
     export INSTANTARCHTESTING="true"
 else
     git clone --depth=1 https://github.com/instantos/instantARCH.git

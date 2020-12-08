@@ -8,7 +8,7 @@ mkdir config
 source <(curl -Ls git.io/paperbash)
 pb dialog
 
-source /root/instantARCH/askutils.sh
+command -v guimode || source /root/instantARCH/askutils.sh
 
 # enable choosing nothing to go back
 export IMENUACCEPTEMPTY="true"

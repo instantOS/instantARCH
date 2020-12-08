@@ -13,6 +13,8 @@ mkdir config
 source <(curl -Ls git.io/paperbash)
 pb dialog
 
+source /root/instantARCH/askutils.sh
+
 if [ -e /usr/share/liveutils ] && ! [ -e /tmp/nogui ]; then
     echo "GUI Mode active"
     export GUIMODE="True"
@@ -44,6 +46,12 @@ fi
     imenu -m "installation was canceled"
     exit 0
 }
+
+if ! iroot confirm; then
+    imenu -m 'there was an error, installation will not continue'
+    exit 1
+    # TODO offer uploading logs
+fi
 
 imenu -M <<<'The installation will now begin.
 This could take a while.

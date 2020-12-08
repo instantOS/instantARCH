@@ -137,6 +137,12 @@ cd /root/instantARCH || exit
     fi
 }
 
+if ! iroot confirm
+then
+    echo "no confirmation found, installation cancelled"
+    exit
+fi
+
 chmod +x ./*.sh
 chmod +x ./**/*.sh
 

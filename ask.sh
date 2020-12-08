@@ -44,6 +44,7 @@ fi
 
 /root/instantARCH/askloop.sh || {
     imenu -m "installation was canceled"
+    iroot cancelinstall 1
     exit 0
 }
 

@@ -129,6 +129,9 @@ askquestion() {
     confirm)
         confirmask
         ;;
+    question)
+        questionmenu
+        ;;
     *)
         echo "error: unknown question"
         exit 1
@@ -137,6 +140,7 @@ askquestion() {
 
 }
 
+# questionmenu
 questionmenu() {
 
     while :; do

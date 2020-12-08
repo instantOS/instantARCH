@@ -841,12 +841,7 @@ Should installation proceed with these parameters?"
     echo "installation summary:
 $SUMMARY"
 
-    imenu -C <<<"$SUMMARY"
-    checkback
-    if [ "$IMENUEXIT" = 0 ]; then
-        iroot confirm 1
-        export ASKCONFIRM="true"
-    else
+    clearsummary() {
         unset CITY
         unset REGION
         unset DISK
@@ -856,5 +851,48 @@ $SUMMARY"
         unset NEWPASS
         unset NEWHOSTNAME
         unset NEWUSER
+    }
+
+    SUMMARY="$(sed 's/^/> /g' <<<"$SUMMARY")
+> 
+continue
+edit options
+restart installation
+cancel installation"
+
+    CHOICE="$(
+        imenu -l "$SUMMARY"
+    )"
+
+    if [ "$CHOICE" = "continue" ]; then
+        clearsummary
     fi
+
+    case "$CHOICE" in
+    *continue)
+        iroot confirm 1
+        export ASKCONFIRM="true"
+        ;;
+    *options)
+        export ASKTASK="questionmenu"
+        return
+        ;;
+    "restart installation")
+        unset IMENUACCEPTEMPTY
+        if imenu -c "are you sure you want to restart the installation from the beginning?"; then
+            export ASKTASK="artix"
+        fi
+        export IMENUACCEPTEMPTY="true"
+        return
+        ;;
+    "cancel installation")
+        unset IMENUACCEPTEMPTY
+        if imenu -c "are you sure you want to cancel the installation?"; then
+            iroot cancelinstall 1
+            exit
+        fi
+        export IMENUACCEPTEMPTY="true"
+        ;;
+    esac
+
 }

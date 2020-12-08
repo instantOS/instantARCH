@@ -125,11 +125,13 @@ fi
 cd /root/instantARCH || exit
 
 ./ask.sh || {
-    if ! [ -e /opt/instantos/installcanceled ]; then
+    if ! [ -e /opt/instantos/installcanceled ] && ! iroot cancelinstall; then
         imenu -m "ask failed"
         echo "ask failed" && exit
     else
         rm /opt/instantos/installcanceled
+        # clear up installation data
+        rm -rf /root/instantARCH
         pkill instantosinstall
         exit
     fi

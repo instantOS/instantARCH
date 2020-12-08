@@ -7,8 +7,8 @@
 # and read out during installation
 # results also get copied to the target root partition
 
-mkdir /root/instantARCH/config &> /dev/null
-mkdir config &> /dev/null
+mkdir /root/instantARCH/config &>/dev/null
+mkdir config &>/dev/null
 
 source <(curl -Ls git.io/paperbash)
 pb dialog
@@ -48,9 +48,11 @@ fi
 }
 
 if ! iroot confirm; then
-    imenu -m 'there was an error, installation will not continue'
+    if ! iroot cancelinstall; then
+        imenu -m 'there was an error, installation will not continue'
+        # TODO offer uploading logs
+    fi
     exit 1
-    # TODO offer uploading logs
 fi
 
 imenu -M <<<'The installation will now begin.

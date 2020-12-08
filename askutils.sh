@@ -796,6 +796,19 @@ OK' | imenu -l 'select option')"
 # confirm installation questions
 # var: confirm
 confirmask() {
+
+    clearsummary() {
+        unset CITY
+        unset REGION
+        unset DISK
+        unset NEWKEY
+        unset NEWLOCALE
+        unset NEWPASS2
+        unset NEWPASS
+        unset NEWHOSTNAME
+        unset NEWUSER
+    }
+
     SUMMARY="Installation Summary:"
 
     addsum "Username" "user"
@@ -841,18 +854,6 @@ Should installation proceed with these parameters?"
     echo "installation summary:
 $SUMMARY"
 
-    clearsummary() {
-        unset CITY
-        unset REGION
-        unset DISK
-        unset NEWKEY
-        unset NEWLOCALE
-        unset NEWPASS2
-        unset NEWPASS
-        unset NEWHOSTNAME
-        unset NEWUSER
-    }
-
     SUMMARY="$(sed 's/^/> /g' <<<"$SUMMARY")
 > 
 continue
@@ -861,7 +862,7 @@ restart installation
 cancel installation"
 
     CHOICE="$(
-        imenu -l "$SUMMARY"
+        imenu -l "installation summary" <<<"$SUMMARY"
     )"
 
     if [ "$CHOICE" = "continue" ]; then

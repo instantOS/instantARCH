@@ -2,9 +2,6 @@
 
 # new insteractive loop for ask.sh
 
-mkdir /root/instantARCH/config
-mkdir config
-
 source <(curl -Ls git.io/paperbash)
 pb dialog
 
@@ -169,3 +166,5 @@ askloop() {
     done
     echo "confirmed selection"
 }
+
+askloop

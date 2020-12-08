@@ -7,8 +7,8 @@
 # and read out during installation
 # results also get copied to the target root partition
 
-mkdir /root/instantARCH/config
-mkdir config
+mkdir /root/instantARCH/config &> /dev/null
+mkdir config &> /dev/null
 
 source <(curl -Ls git.io/paperbash)
 pb dialog

@@ -55,7 +55,7 @@ else
         pacman -S --noconfirm mesa xf86-video-intel
     else
         echo "other graphics detected"
-        pacman -S mesa --noconfirm
+        pacman -S mesa xorg-drivers --noconfirm
     fi
 fi
 

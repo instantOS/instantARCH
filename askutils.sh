@@ -482,7 +482,7 @@ use a swap partition' | imenu -l)"
     case "$CHOICE" in
     *file)
         echo "using a swap file"
-        imenu -m "This has yet to be implemented. Sorry :("
+        iroot swapmethod "swapfile"
         iroot swapfile 1
         iroot -r partswap
         # TODO

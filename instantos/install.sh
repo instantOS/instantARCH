@@ -35,6 +35,8 @@ done
 if ! grep -iq Manjaro /etc/os-release && ! command -v pamac; then
     echo "installing pamac"
     sudo pacman -S pamac-aur-git --noconfirm
+    sed -i 's/#EnableAUR/EnableAUR/g' /etc/pamac.conf
+    sed -i 's/#CheckAURUpdates/CheckAURUpdates/g' /etc/pamac.conf
 fi
 
 yes | pacman -S libxft-bgra

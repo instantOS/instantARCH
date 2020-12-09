@@ -126,9 +126,6 @@ askquestion() {
     confirm)
         confirmask
         ;;
-    question)
-        questionmenu
-        ;;
     *)
         echo "error: unknown question"
         exit 1
@@ -137,27 +134,6 @@ askquestion() {
 
 }
 
-# questionmenu
-questionmenu() {
-
-    while :; do
-        CHOICE="$(
-            {
-                echo '> Edit options'
-                cat /root/instantARCH/questions.txt
-                echo OK
-            } | grep -o '[^:]*$' | imenu -l
-        )"
-        if [ -z "$CHOICE" ]; then
-            continue
-        elif [ "$CHOICE" = "OK" ]; then
-            return
-        fi
-
-        askquestion "$(grep "$CHOICE" /root/instantARCH/questions.txt | grep -o '^[^:]*')"
-
-    done
-}
 
 askloop() {
     while [ -z "$ASKCONFIRM" ]; do

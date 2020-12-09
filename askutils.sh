@@ -793,6 +793,27 @@ OK' | imenu -l 'select option')"
 ## end of question functions ##
 ###############################
 
+questionmenu() {
+
+    while :; do
+        CHOICE="$(
+            {
+                echo '> Edit options'
+                grep -o '[^:]*$' /root/instantARCH/questions.txt
+                echo OK
+            } | imenu -l
+        )"
+        if [ -z "$CHOICE" ]; then
+            continue
+        elif [ "$CHOICE" = "OK" ]; then
+            return
+        fi
+
+        askquestion "$(grep "$CHOICE" /root/instantARCH/questions.txt | grep -o '^[^:]*')"
+
+    done
+}
+
 # confirm installation questions
 # var: confirm
 confirmask() {
@@ -875,8 +896,8 @@ cancel installation"
         export ASKCONFIRM="true"
         ;;
     *options)
-        export ASKTASK="questionmenu"
-        return
+        echo "editing options"
+        questionmenu
         ;;
     "restart installation")
         unset IMENUACCEPTEMPTY

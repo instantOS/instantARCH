@@ -25,6 +25,7 @@ while ! pacman -S --noconfirm --needed \
     systemd-swap \
     neofetch \
     pulseaudio \
+    granite \
     alsa-utils \
     usbutils \
     lightdm-gtk-greeter \

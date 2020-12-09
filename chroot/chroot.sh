@@ -19,6 +19,9 @@ fi
 # fix gui not showing up
 sed -i 's/^#logind-check-graphical=.*/logind-check-graphical=true/' /etc/lightdm/lightdm.conf
 
+echo '
+# modified by instantARCH' >>/etc/lightdm/lightdm.conf
+
 # needed to get internet to work
 if ! [ -e /opt/topinstall ] && ! iroot partswap; then
     if command -v systemctl; then
@@ -28,13 +31,13 @@ if ! [ -e /opt/topinstall ] && ! iroot partswap; then
             {
                 echo "swapfc_enabled=1"
                 echo "swapfc_max_count=8"
-            } >> /etc/systemd/swap.conf
+            } >>/etc/systemd/swap.conf
         fi
     fi
 fi
 
 sed -i 's/# %wheel/%wheel/g' /etc/sudoers
-echo 'Defaults env_reset,pwfeedback' >> /etc/sudoers
+echo 'Defaults env_reset,pwfeedback' >>/etc/sudoers
 
 if command -v systemctl; then
     systemctl enable lightdm

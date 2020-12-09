@@ -3,7 +3,7 @@
 # install all instantOS software
 # and apply instantOS specific changes and workarounds
 
-cd
+cd || exit 1
 
 [ -e instantOS ] && rm -rf instantOS
 
@@ -11,7 +11,8 @@ while ! git clone --depth 1 https://github.com/instantOS/instantOS; do
     imenu -m "pull failed, please connect to the internet"
 done
 
-cd instantOS
+cd instantOS || exit 1
+
 bash repo.sh
 pacman -Sy --noconfirm
 
@@ -38,7 +39,7 @@ fi
 
 yes | pacman -S libxft-bgra
 
-cd ~/instantOS
+cd ~/instantOS || exit 1
 
 # disable plymouth on artix
 if ! command -v systemctl || iroot noplymouth; then

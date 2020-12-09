@@ -4,8 +4,8 @@
 
 KEYLANG=$(iroot keyboard)
 
-NEWXORG=$(tail -1 /root/instantARCH/data/lang/keyboard/$KEYLANG)
-NEWKEYMAP=$(head -1 /root/instantARCH/data/lang/keyboard/$KEYLANG)
+NEWXORG="$(tail -1 /root/instantARCH/data/lang/keyboard/"$KEYLANG")"
+NEWKEYMAP="$(head -1 /root/instantARCH/data/lang/keyboard/"$KEYLANG")"
 
 echo "setting keymap to $NEWXORG"
 

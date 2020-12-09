@@ -175,6 +175,7 @@ askvm() {
     export ASKTASK="region"
     if imvirt | grep -iq 'physical'; then
         echo "system does not appear to be a virtual machine"
+        [ -n "$MANUALSETTINGS" ] && imenu -m "no virtual machine detected"
         return
     fi
 
@@ -579,6 +580,7 @@ askdrivers() {
         echo "nvidia card detected"
     else
         echo "no nvidia card, not asking for drivers"
+        [ -n "$MANUALSETTINGS" ] && imenu -m "there are no third party drivers needed for your graphics card"
         return
     fi
 
@@ -798,10 +800,9 @@ questionmenu() {
     while :; do
         CHOICE="$(
             {
-                echo '> Edit options'
                 grep -o '[^:]*$' /root/instantARCH/questions.txt
                 echo OK
-            } | imenu -l
+            } | imenu -l 'edit options'
         )"
         if [ -z "$CHOICE" ]; then
             continue
@@ -809,7 +810,10 @@ questionmenu() {
             return
         fi
 
-        askquestion "$(grep "$CHOICE" /root/instantARCH/questions.txt | grep -o '^[^:]*')"
+        export ASKTASK="$(grep "$CHOICE" /root/instantARCH/questions.txt | grep -o '^[^:]*')"
+        export MANUALSETTINGS=true
+        [ -n "$ASKTASK" ] && askquestion
+        unset MANUALSETTINGS
 
     done
 }

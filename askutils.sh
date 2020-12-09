@@ -547,14 +547,6 @@ askgrub() {
 
         [ -z "$EFIPART" ] && goback
 
-        echo "This will format $(iroot partefi)
-In most cases it *only* contains the bootloader
-Operating systems that are already installed will remain bootable" | imenu -C
-        checkback
-        if ! [ "$IMENUEXIT" = 0 ]; then
-            return
-        fi
-
     else
         GRUBDISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk for grub " | grep -o '/dev/[^:]*')
         [ -z "$GRUBDISK" ] && goback

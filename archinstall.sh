@@ -143,6 +143,8 @@ then
     exit
 fi
 
+unset IMENUACCEPTEMPTY
+
 chmod +x ./*.sh
 chmod +x ./**/*.sh
 

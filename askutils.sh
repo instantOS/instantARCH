@@ -301,12 +301,12 @@ sort all mirrors by speed' | imenu -l 'choose mirror settings')"
 # var: installdisk
 askinstalldisk() {
     wallstatus install
-    DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed -e "\$aother (experimental)" |
+    DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed -e "\$amanual partitioning" |
         imenu -l "select disk> ")
 
     [ -z "$DISK" ] && goback
 
-    if grep -q '^other' <<<"$DISK"; then
+    if grep -q '^manual partitioning' <<<"$DISK"; then
         backpush "installdisk"
         export ASKTASK="partitioning"
         return

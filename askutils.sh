@@ -268,30 +268,24 @@ askmirrors() {
         return
     fi
 
-    curl -s 'https://www.archlinux.org/mirrorlist/' | grep -i '<option value' >/tmp/mirrors.html
+    MIRRORCODE="$({
+        echo 'auto detect mirrors (not recommended for speed)'
+        curl -s 'https://archlinux.org/mirrorlist/all/' | grep '##' | grep -iEv '(linux|arch|generated|filter)' |
+            grep -o '[^# ]*' | grep '.....'
+    } | imenu -l 'select mirror location')"
+    [ -z "$MIRRORCODE" ] && goback
 
-    MIRRORLIST="$(grep -v '>All<' /tmp/mirrors.html |
-        sed 's/.*<option value=".*">\(.*\)<\/option>.*/\1/g' |
-        sed -e "1iauto detect mirrors (not recommended for speed)")"
-
-    SELECTEDMIRROR="$(imenu -l "choose mirror location" <<<"$MIRRORLIST")"
-
-    [ -z "$SELECTEDMIRROR" ] && goback
-
-    if ! grep -q 'auto detect' <<<"$SELECTEDMIRROR"; then
-        grep ">$SELECTEDMIRROR<" /tmp/mirrors.html | grep -o '".*"' |
-            grep -o '[^"]*' | iroot i countrycode
+    if grep -q 'auto detect' <<<"$MIRRORCODE"; then
+        iroot automirrors 1
         MIRRORMODE="$(echo '> manually sorting mirrors may take a long time
 use arch ranking score (recommended)
 sort all mirrors by speed' | imenu -l 'choose mirror settings')"
-
         [ -z "$MIRRORMODE" ] && unset SELECTEDMIRROR && goback
-
         if grep -q 'speed' <<<"$MIRRORMODE"; then
             iroot sortmirrors 1
         fi
     else
-        iroot automirrors 1
+        iroot countrycode "$MIRRORCODE"
     fi
 
     backpush mirrors

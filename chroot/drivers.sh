@@ -15,6 +15,10 @@ if iroot isvm; then
         echo "installing QEMU drivers"
         pacman -S --noconfirm --needed xorg-drivers
     else
+        if iroot vmware || lspci | grep -i vmware; then
+            sudo pacman -S open-vm-tools
+            command -v systemctl && sudo systemctl enable vmtoolsd.service
+        fi
         pacman -S mesa --noconfirm
         pacman -S xf86-video-vmware --noconfirm
     fi

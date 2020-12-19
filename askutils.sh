@@ -194,6 +194,7 @@ giving the wrong answer here might greatly decrease performance. " | imenu -C
 
     HYPERVISOR="$(echo "virtualbox
 kvm/qemu
+vmware
 other" | imenu -l "which hypervisor is being used?")"
 
     [ -z "$HYPERVISOR" ] && goback
@@ -217,6 +218,9 @@ please switch your video card to either virtio or passthrough
 until this is fixed" | imenu -M
             fi
         fi
+        ;;
+    vmware)
+        iroot vmware 1
         ;;
     virtualbox)
         iroot virtualbox 1

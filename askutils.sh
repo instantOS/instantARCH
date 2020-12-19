@@ -150,7 +150,7 @@ This could prevent the system from booting" | imenu -C; then
 # offer to choose mirror country
 askmirrors() {
     iroot askmirrors 1
-    curl -s 'https://www.archlinux.org/mirrorlist/' | grep -i '<option value' >/tmp/mirrors.html
+    curl -s 'https://www.archlinux.org/mirrorlist/all/' | grep -i '<option value' >/tmp/mirrors.html
     grep -v '>All<' /tmp/mirrors.html | sed 's/.*<option value=".*">\(.*\)<\/option>.*/\1/g' |
         sed -e "1iauto detect mirrors (not recommended for speed)" |
         imenu -l "choose mirror location" >/tmp/mirrorselect

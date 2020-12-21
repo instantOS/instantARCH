@@ -36,10 +36,12 @@ if ! iroot automirrors; then
     cat /tmp/mirrorlist >>/etc/pacman.d/mirrorlist
     cat /tmp/oldmirrorlist >>/etc/pacman.d/mirrorlist
     mkdir /root/instantARCH/backup
-    cat /etc/pacman.d/mirrorlist > /root/instantARCH/backup/mirrorlist
+    cat /etc/pacman.d/mirrorlist >/root/instantARCH/backup/mirrorlist
 else
     echo "ranking mirrors"
     reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 fi
 
-cat /etc/pacman.d/mirrorlist> /root/instantARCH/config/mirrorlistbackup
+cat /etc/pacman.d/mirrorlist >/root/instantARCH/config/mirrorlistbackup
+grep '^[#S]' /root/instantARCH/config/mirrorlistbackup >/etc/pacman.d/mirrorlist
+cat /etc/pacman.d/mirrorlist >/root/instantARCH/config/mirrorlistbackup

@@ -15,7 +15,7 @@ if ! iroot automirrors; then
     COUNTRYCODE="$(iroot countrycode)"
     echo "fetching mirrors for $COUNTRYCODE"
 
-    curl -s "https://www.archlinux.org/mirrorlist/?country=$COUNTRYCODE&protocol=http&protocol=https&ip_version=4&use_mirror_status=on" |
+    curl -s "https://archlinux.org/mirrorlist/?country=$COUNTRYCODE&protocol=http&protocol=https&ip_version=4&use_mirror_status=on" |
         grep -iE '(Server|generated)' |
         sed 's/^#Server /Server /g' >/tmp/mirrorlist
 

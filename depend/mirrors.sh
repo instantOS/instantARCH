@@ -42,4 +42,6 @@ else
     reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 fi
 
-cat /etc/pacman.d/mirrorlist> /root/instantARCH/config/mirrorlistbackup
+cat /etc/pacman.d/mirrorlist >/root/instantARCH/config/mirrorlistbackup
+grep '^[#S]' /root/instantARCH/config/mirrorlistbackup >/etc/pacman.d/mirrorlist
+cat /etc/pacman.d/mirrorlist >/root/instantARCH/config/mirrorlistbackup

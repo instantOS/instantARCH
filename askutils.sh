@@ -138,6 +138,8 @@ $(localectl list-x11-keymap-layouts | sed 's/^/- /g')"
 $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
     fi
 
+    iroot r keyvariant
+
     if iroot otherkey; then
         iroot keyboard other
         NEWKEY="other"
@@ -692,16 +694,24 @@ none' | imenu -l 'choose swap method')"
 
 askkernel() {
     unset CUSTOMKERNEL
-    while [ -z "$CUSTOMKERNEL" ]; do
-        CUSTOMKERNEL="$(echo 'linux
+    export ASKTASK="advanced"
+    CUSTOMKERNEL="$(echo 'linux
 linux-lts
 linux-zen' | imenu -l 'select kernel')"
-    done
+    [ -z "$CUSTOMKERNEL" ] && return
 
     iroot kernel "$CUSTOMKERNEL"
     echo "selected $CUSTOMKERNEL kernel"
 
+}
+
+# var: keyboardvariant
+askkeyboardvariant() {
+    unset KEYVARIANT
     export ASKTASK="advanced"
+    KEYVARIANT="$(localectl list-x11-keymap-variants "$(iroot keyboard)" | imenu -l 'select keyboard variant')"
+    [ -z "$KEYVARIANT" ] && return
+    iroot keyvariant "$KEYVARIANT"
 }
 
 askpackages() {
@@ -766,6 +776,7 @@ kernel
 logs
 swap
 packages
+keyboardvariant
 OK' | imenu -l 'select option')"
 
     [ -z "$CHOICE" ] && goback

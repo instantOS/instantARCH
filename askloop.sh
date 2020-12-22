@@ -123,6 +123,9 @@ askquestion() {
     logs)
         asklogs
         ;;
+    keyboardvariant)
+        askkeyboardvariant
+        ;;
     confirm)
         confirmask
         ;;

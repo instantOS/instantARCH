@@ -150,11 +150,12 @@ This could prevent the system from booting" | imenu -C; then
 # offer to choose mirror country
 askmirrors() {
     iroot askmirrors 1
+
     MIRRORCODE="$({
         echo 'auto detect mirrors (not recommended for speed)'
-        curl -s 'https://archlinux.org/mirrorlist/all/' | grep '##' | grep -iEv '(linux|arch|generated|filter)' |
-            grep -o '[^# ]*' | grep '.....'
-    } | imenu -l 'select mirror location')"
+        curl -s https://archlinux.org/mirrorlist/ | grep 'option value=".."' | sed 's/.*"\(..\)">\(.*\)<.*/\2 - \1/g'
+    } | imenu -l 'select mirror location' | grep -o '^auto.*\|[A-Z][A-Z]$')"
+    [ -z "$MIRRORCODE" ] && goback
 
     if grep -q 'auto detect' <<<"$MIRRORCODE"; then
         iroot automirrors 1

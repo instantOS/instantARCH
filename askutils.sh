@@ -163,6 +163,7 @@ $NEWKEY" >"$INSTANTARCH"/data/lang/keyboard/other
 # var: locale
 asklocale() {
     cd "$INSTANTARCH"/data/lang/locale || return 1
+    # TODO: preselect based on language choice
     NEWLOCALE="$(ls | imenu -l 'Select language> ')"
     [ -z "$NEWLOCALE" ] && goback
     iroot locale "$NEWLOCALE"

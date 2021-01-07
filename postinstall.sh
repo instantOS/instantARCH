@@ -11,6 +11,6 @@ bash ./lang/locale.sh
 bash ./vm/guestadditions.sh
 
 # restore selected mirrorlist
-if [ -e /root/instantARCH/config/mirrorlistbackup ] && grep -i "server" /root/instantARCH/config/mirrorlistbackup; then
-    cat /root/instantARCH/config/mirrorlistbackup >/etc/pacman.d/mirrorlist
+if [ -e "$IROOT"/mirrorlistbackup ] && grep -i "server" "$IROOT"/mirrorlistbackup; then
+    cat "$IROOT"/mirrorlistbackup >/etc/pacman.d/mirrorlist
 fi

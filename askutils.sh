@@ -72,7 +72,7 @@ choosepart() {
         fi
 
         # check if partition is already used as root/home/swap etc
-        for i in /root/instantARCH/config/part*; do
+        for i in "$IROOT"/part*; do
             if grep "^$RETURNPART$" "$i"; then
                 echo "partition $RETURNPART already taken"
                 imenu -m "partition $RETURNPART is already selected as $i"
@@ -135,7 +135,7 @@ $(localectl list-x11-keymap-layouts | sed 's/^/- /g')"
         iroot otherkey "$NEWKEY"
         NEWKEY="$(sed 's/- //g' <<<"$NEWKEY")"
         echo "
-$NEWKEY" >/root/instantARCH/data/lang/keyboard/other
+$NEWKEY" >"$INSTANTARCH"/data/lang/keyboard/other
     fi
 
     iroot r keyvariant
@@ -148,10 +148,10 @@ $NEWKEY" >/root/instantARCH/data/lang/keyboard/other
     fi
 
     if guimode; then
-        setxkbmap -layout "$(tail -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")"
+        setxkbmap -layout "$(tail -1 "$INSTANTARCH"/data/lang/keyboard/"$NEWKEY")"
     else
-        if head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY" | grep -q '[^ ][^ ]'; then
-            loadkeys "$(head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")"
+        if head -1 "$INSTANTARCH"/data/lang/keyboard/"$NEWKEY" | grep -q '[^ ][^ ]'; then
+            loadkeys "$(head -1 "$INSTANTARCH"/data/lang/keyboard/"$NEWKEY")"
         fi
     fi
 

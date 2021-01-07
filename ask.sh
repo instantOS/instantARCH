@@ -3,11 +3,11 @@
 # This is the interactive part of the installer
 # Everything requiring user input is asked first,
 # NO INSTALLATION IS DONE IN THIS SCRIPT
-# Results get saved in /root/instantARCH/config
+# Results get saved in $INSTANTARCH/config
 # and read out during installation
 # results also get copied to the target root partition
 
-mkdir /root/instantARCH/config &>/dev/null
+mkdir -p "$INSTANTARCH"/config &>/dev/null
 mkdir config &>/dev/null
 
 source <(curl -Ls git.io/paperbash)

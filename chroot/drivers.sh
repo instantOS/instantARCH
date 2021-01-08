@@ -45,6 +45,12 @@ else
             elif grep -iq "open" "$DRIVERFILE"; then
                 pacman -S --noconfirm mesa xf86-video-nouveau
             fi
+
+            if iroot graphics | grep -iEq '(|dkms)'
+            then
+                echo "installing nvidia-settings"
+                pacman -S --noconfirm nvidia-settings
+            fi
         else
             echo "defaulting to open source driver"
             pacman -S --noconfirm mesa xf86-video-nouveau

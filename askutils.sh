@@ -61,7 +61,18 @@ choosepart() {
 
     while :; do
 
-        RETURNPART="$(fdisk -l | grep '^/dev' | sed 's/\*/ b /g' | imenu -l "$1" | grep -o '^[^ ]*')"
+        RETURNPART="$({
+            fdisk -l | grep '^/dev' | sed 's/\*/ b /g'
+            echo "I already mounted ${2:-the partition}"
+        } | imenu -l "$1" | grep -o '^[^ ]*')"
+
+        if grep -q 'already' <<<"$RETURNPART"; then
+            RETURNMOUNT="$(imenu -i 'enter mountpoint')"
+            if ! [ -e "$RETURNMOUNT" ]; then
+                imenu -m "$RETURNMOUNT does not exist"
+                return 1
+            fi
+        fi
 
         if [ -z "$RETURNPART" ]; then
             return 1

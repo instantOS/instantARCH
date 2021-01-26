@@ -28,7 +28,7 @@ else
         pacman -S --noconfirm dkms
         # user chooses open source, proprietary or no driver
         if iroot graphics; then
-            DRIVERFILE="/root/instantARCH/config/graphics"
+            DRIVERFILE="$IROOT/graphics"
             if grep -iq "nodriver" "$DRIVERFILE"; then
                 exit
             elif grep -iq "dkms" "$DRIVERFILE"; then
@@ -44,6 +44,12 @@ else
                 fi
             elif grep -iq "open" "$DRIVERFILE"; then
                 pacman -S --noconfirm mesa xf86-video-nouveau
+            fi
+
+            if iroot graphics | grep -iEq '(|dkms)'
+            then
+                echo "installing nvidia-settings"
+                pacman -S --noconfirm nvidia-settings
             fi
         else
             echo "defaulting to open source driver"

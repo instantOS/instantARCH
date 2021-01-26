@@ -20,6 +20,7 @@ fi
 
 chrootscript "network/network" "setting up networkmanager" &&
     chrootscript "user/user" "setting up user" &&
+    chrootscript "user/shell" "setting up instantshell zsh configuration" &&
     chrootscript "bootloader/config" "configuring bootloader"
 
 touch /opt/noerror

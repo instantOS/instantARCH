@@ -78,6 +78,8 @@ else
     ./user/user.sh
 fi
 
+./user/shell.sh
+
 ./lang/timezone.sh
 ./lang/locale.sh
 ./lang/xorg.sh

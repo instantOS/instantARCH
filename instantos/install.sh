@@ -16,7 +16,13 @@ cd instantOS || exit 1
 bash repo.sh
 pacman -Sy --noconfirm
 
-while ! pacman -S instantos instantdepend --noconfirm; do
+if command -v systemctl; then
+    DEPENDPACKAGE="instantdepend"
+else
+    DEPENDPACKAGE="instantdepend-nosystemd"
+fi
+
+while ! pacman -S instantos "$DEPENDPACKAGE" --noconfirm; do
     if [ -e /usr/share/liveutils ] && ! grep -iq manjaro /etc/os-release; then
         imenu -m "package installation failed.
 Please ensure you are connected to the internet"

@@ -40,9 +40,10 @@ done
 # don't install arch pamac on Manjaro
 if ! grep -iq Manjaro /etc/os-release && ! command -v pamac; then
     echo "installing pamac"
-    sudo pacman -S pamac-aur-git --noconfirm
+    sudo pacman -S pamac-all --noconfirm
     sed -i 's/#EnableAUR/EnableAUR/g' /etc/pamac.conf
     sed -i 's/#CheckAURUpdates/CheckAURUpdates/g' /etc/pamac.conf
+    echo 'EnableFlatpak' >> /etc/pamac.conf
 fi
 
 yes | pacman -S libxft-bgra

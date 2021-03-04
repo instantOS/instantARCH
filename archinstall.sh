@@ -64,14 +64,16 @@ if command -v python; then
     pkill python3
 fi
 
-while [ -z "$CONTINUEINSTALLATION" ]; do
-    if ! pacman -Sy --noconfirm || ! pacman -S git --noconfirm --needed; then
-        yes | pacman -Scc
-        pacman -Sy --noconfirm
-    else
-        export CONTINUEINSTALLATION="true"
-    fi
-done
+if ! command -v git; then
+    while [ -z "$CONTINUEINSTALLATION" ]; do
+        if ! pacman -Sy --noconfirm || ! pacman -S git --noconfirm --needed; then
+            yes | pacman -Scc
+            pacman -Sy --noconfirm
+        else
+            export CONTINUEINSTALLATION="true"
+        fi
+    done
+fi
 
 cd /root || exit 1
 [ -e instantARCH ] && rm -rf instantARCH

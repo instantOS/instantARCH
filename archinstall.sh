@@ -187,19 +187,23 @@ for assistance or error reporting" 1000 1000
 }
 
 # ask to reboot, upload error data if install failed
-if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
-    if command -v installapplet; then
-        notify-send "rebooting"
-        sleep 2
-        if iroot logging; then
-            uploadlogs
+if [ -z "$INSTANTARCHTESTING" ]; then
+    if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
+        if command -v installapplet; then
+            notify-send "rebooting"
             sleep 2
+            if iroot logging; then
+                uploadlogs
+                sleep 2
+            fi
+            reboot
         fi
-        reboot
+    else
+        echo "installaion failed"
+        echo "uploading error data"
+        uploadlogs
     fi
 else
-    echo "installaion failed"
-    echo "uploading error data"
     uploadlogs
 fi
 

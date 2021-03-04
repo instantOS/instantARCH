@@ -47,6 +47,7 @@ if ! grep -iq Manjaro /etc/os-release && ! command -v pamac; then
 fi
 
 yes | pacman -S libxft-bgra
+yes | pacman -S neofetch-git
 
 cd ~/instantOS || exit 1
 

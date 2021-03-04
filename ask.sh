@@ -38,7 +38,9 @@ else
         exit 1
     fi
     if iroot installtest; then
-        imenu -m "WARNING: you're running a test version of the installer"
+        imenu -m "WARNING: you're running a test version of the installer
+    branch: $TESTBRANCH
+    pacman repo: ${CUSTOMINSTANTREPO:-default}"
     fi
 fi
 

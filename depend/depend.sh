@@ -48,17 +48,51 @@ if ! grep -i 'manjaro' /etc/os-release && command -v systemctl; then
     done
 fi
 
-while ! pacman -S --noconfirm --needed \
-    fzf \
-    expect \
-    git \
-    os-prober \
-    dialog \
-    imvirt \
-    lshw \
-    bash \
-    pacman-contrib \
-    curl; do
+checkpackage() {
+    if command -v "$1" || pacman -Qi "$1" &>/dev/null; then
+        echo "$1 is installed"
+    else
+        pacman -S --noconfirm --needed "$1"
+    fi
+}
+
+installdepends() {
+
+    if ! [ -e /usr/share/liveutils ]; then
+        pacman -S --noconfirm --needed \
+            fzf \
+            expect \
+            git \
+            os-prober \
+            dialog \
+            imvirt \
+            lshw \
+            bash \
+            pacman-contrib \
+            curl
+
+    else
+        echo "installing without upgrading"
+
+        checkpackage fzf || return 1
+        checkpackage expect || return 1
+        checkpackage git || return 1
+        checkpackage os-prober || return 1
+        checkpackage dialog || return 1
+        checkpackage imvirt || return 1
+        checkpackage lshw || return 1
+        checkpackage bash || return 1
+        checkpackage pacman-contrib || return 1
+        checkpackage curl || return 1
+
+    fi
+}
+
+while ! installdepends; do
+    if command -v notify-send &>/dev/null && pgrep Xorg; then
+        notify-send "downloading packages failed, please reconnect to internet"
+    fi
+
     echo "downloading packages failed, please reconnect to internet"
     sleep 10
 

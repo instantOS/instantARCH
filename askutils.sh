@@ -911,10 +911,10 @@ $SUMMARY"
 
     SUMMARY="$(sed 's/^/> /g' <<<"$SUMMARY")
 > 
-continue
+:gcontinue
 edit options
-restart installation
-cancel installation"
+:yrestart installation
+:rcancel installation"
 
     CHOICE="$(
         imenu -l "installation summary" <<<"$SUMMARY"
@@ -933,7 +933,7 @@ cancel installation"
         echo "editing options"
         questionmenu
         ;;
-    "restart installation")
+    ":yrestart installation")
         unset IMENUACCEPTEMPTY
         if imenu -c "are you sure you want to restart the installation from the beginning?"; then
             export ASKTASK="artix"
@@ -941,7 +941,7 @@ cancel installation"
         export IMENUACCEPTEMPTY="true"
         return
         ;;
-    "cancel installation")
+    ":rcancel installation")
         unset IMENUACCEPTEMPTY
         if imenu -c "are you sure you want to cancel the installation?"; then
             iroot cancelinstall 1

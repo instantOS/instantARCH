@@ -882,7 +882,7 @@ confirmask() {
 manual partitioning: "
         disksum() {
             if iroot "part${1}"; then
-                addsum "$1 partition" "$1"
+                addsum "$1 partition" "part$1"
             fi
         }
         disksum "root"

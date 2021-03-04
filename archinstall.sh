@@ -76,7 +76,11 @@ if ! command -v git; then
 fi
 
 cd /root || exit 1
-[ -e instantARCH ] && rm -rf instantARCH
+
+if [ -e instantARCH ]; then
+    echo "removing previous instantARCH data"
+    rm -rf instantARCH
+fi
 
 if [ "$1" = "test" ]; then
     echo "switching to testing branch"

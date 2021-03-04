@@ -54,38 +54,39 @@ wallstatus() {
     [ -e /usr/share/liveutils/"$1".jpg ] && guimode && feh --bg-scale /usr/share/liveutils/"$1".jpg &
 }
 
+echoerr() { echo "$@" 1>&2; }
+
 # menu that allows choosing a partition and put it in stdout
 # no var
 choosepart() {
     unset RETURNPART
 
-    while :; do
+    RETURNPART="$({
+        fdisk -l | grep '^/dev' | sed 's/\*/ b /g'
+        echo "I already mounted ${2:-the partition}"
+    } | imenu -l "$1" | grep -o '^[^ ]*')"
 
-        RETURNPART="$({
-            fdisk -l | grep '^/dev' | sed 's/\*/ b /g'
-            echo "I already mounted ${2:-the partition}"
-        } | imenu -l "$1" | grep -o '^[^ ]*')"
-
-        if grep -q 'already' <<<"$RETURNPART"; then
-            RETURNMOUNT="$(imenu -i 'enter mountpoint')"
-            if ! [ -e "$RETURNMOUNT" ]; then
-                imenu -m "$RETURNMOUNT does not exist"
-                return 1
-            fi
-        fi
-
-        if [ -z "$RETURNPART" ]; then
+    if grep -q 'already' <<<"$RETURNPART"; then
+        RETURNMOUNT="$(imenu -i 'enter mountpoint')"
+        if ! [ -e "$RETURNMOUNT" ]; then
+            imenu -m "$RETURNMOUNT does not exist"
             return 1
         fi
+    fi
 
-        if ! [ -e "$RETURNPART" ]; then
-            imenu -m "$RETURNPART does not exist" &>/dev/null
-        fi
+    # not using a loop to allow going back
+    [ -z "$RETURNPART" ] && return 1
 
-        # check if partition is already used as root/home/swap etc
+    if ! [ -e "$RETURNPART" ]; then
+        imenu -m "$RETURNPART does not exist" &>/dev/null
+        return 1
+    fi
+
+    # check if partition is already used as root/home/swap etc
+    if ls "$IROOT"/part* &>/dev/null; then
         for i in "$IROOT"/part*; do
             if grep "^$RETURNPART$" "$i"; then
-                echo "partition $RETURNPART already taken"
+                echoerr "partition $RETURNPART already taken"
                 imenu -m "partition $RETURNPART is already selected as $i"
 
                 while [ -z "$CANCELOPTION" ]; do
@@ -101,8 +102,7 @@ cancel partition selection' | imenu -l ' ')"
                 fi
             fi
         done
-
-    done
+    fi
 
     echo "$RETURNPART"
 }

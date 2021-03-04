@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# new insteractive loop for ask.sh
+# insteractive loop for ask.sh
+# allows going back, cancelling the installation etc
 
 source <(curl -Ls git.io/paperbash)
 pb dialog

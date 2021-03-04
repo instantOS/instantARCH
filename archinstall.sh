@@ -1,8 +1,8 @@
 #!/bin/bash
 
-###################################################
-## This is the official installer for instantOS  ##
-###################################################
+##############################################
+## The official installer for instantOS     ##
+##############################################
 
 if ! whoami | grep -iq '^root'; then
     echo "not running as root, switching"

@@ -20,7 +20,6 @@ fi
 
 chrootscript "network/network" "setting up networkmanager" &&
     chrootscript "user/user" "setting up user" &&
-    chrootscript "user/shell" "setting up instantshell zsh configuration" &&
     chrootscript "bootloader/config" "configuring bootloader"
 
 touch /opt/noerror
@@ -30,7 +29,11 @@ chrootscript "lang/locale" "setting locale"
 # make instantOS packages optional
 if ! iroot onlyarch &&
     ! [ -e /opt/onlyarch ]; then
+
+    # important stuff
     chrootscript "instantos/install" "configuring instantOS, this will take a while"
+    chrootscript "user/shell" "setting up instantshell zsh configuration"
+
     if grep -iq 'manjaro' /etc/os-release; then
         echo "manjaro extra steps"
         chrootscript "chroot/chroot" "extra steps for manjaro"

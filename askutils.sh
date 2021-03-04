@@ -312,6 +312,7 @@ sort all mirrors by speed' | imenu -l 'choose mirror settings')"
 # var: installdisk
 askinstalldisk() {
     wallstatus install
+    iroot -r manualpartitioning
     DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed -e "\$amanual partitioning" |
         imenu -l "select disk> ")
 
@@ -359,6 +360,7 @@ this will delete all existing data" | imenu -C
 
 # var: partitioning
 askpartitioning() {
+    iroot manualpartitioning 1
     STARTCHOICE="$(echo 'edit partitions
 choose partitions
 use auto partitioning' | imenu -l)"
@@ -373,6 +375,7 @@ use auto partitioning' | imenu -l)"
         export ASKTASK="root"
         ;;
     *partitioning)
+        iroot -r manualpartitioning
         export ASKTASK="installdisk"
         ;;
     esac
@@ -458,7 +461,7 @@ askhome() {
     [ -z "$HOMEPART" ] && goback
 
     case "$(echo 'keep current home data
-erase partition to start fresh' | imenu -l)" in
+erase data' | imenu -l)" in
     keep*)
         echo "keeping data"
         imenu -c "overwrite dotfiles? ( warning, disabling this can impact functionality )"
@@ -488,7 +491,7 @@ use a swap file
 use a swap partition' | imenu -l)"
 
     [ -z "$CHOICE" ] && goback
-    export ASKTASK="advanced"
+    export ASKTASK="grub"
 
     case "$CHOICE" in
     *file)
@@ -502,9 +505,8 @@ use a swap partition' | imenu -l)"
         echo "using systemd-swap"
         ;;
     *partition)
-        askpartswap
-        export ASKTASK="advanced"
         echo "using a swap partition"
+        export ASKTASK="partswap"
         ;;
     esac
 
@@ -798,6 +800,22 @@ OK' | imenu -l 'select option')"
         backpush advanced
         export ASKTASK="confirm"
         return
+    fi
+
+    unset SWAPCONFIRM
+    if grep -q swap <<<"$CHOICE"; then
+        while [ -z "$SWAPCONFIRM" ]; do
+            askswap
+            if grep -q 'partswap' <<<"$ASKTASK"; then
+                askpartswap
+                if iroot partswap; then
+                    export SWAPCONFIRM="1"
+                fi
+            else
+                export SWAPCONFIRM="1"
+            fi
+        done
+        CHOICE="advanced"
     fi
 
     export ASKTASK="$CHOICE"

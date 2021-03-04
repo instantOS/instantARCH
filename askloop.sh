@@ -94,6 +94,9 @@ askquestion() {
     swap)
         askswap
         ;;
+    partswap)
+        askpartswap
+        ;;
         ## naming/account questions
     user)
         askuser

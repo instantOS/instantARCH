@@ -79,6 +79,11 @@ cd /root || exit 1
 if [ "$1" = "test" ]; then
     echo "switching to testing branch"
     export TESTBRANCH="${2:-testing}"
+
+    if [ -n "$3" ]; then
+        export CUSTOMINSTANTREPO="$3"
+    fi
+
     echo "using installer branch $TESTBRANCH"
     git clone --single-branch --branch "$TESTBRANCH" --depth=1 https://github.com/instantos/instantARCH.git
     export INSTANTARCHTESTING="true"
@@ -137,8 +142,7 @@ cd /root/instantARCH || exit
     fi
 }
 
-if ! iroot confirm
-then
+if ! iroot confirm; then
     echo "no confirmation found, installation cancelled"
     exit
 fi

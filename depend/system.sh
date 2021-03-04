@@ -23,7 +23,7 @@ while ! pacman -S --noconfirm --needed \
     zsh \
     xterm \
     systemd-swap \
-    neofetch \
+    neofetch-git \
     pulseaudio \
     granite \
     alsa-utils \

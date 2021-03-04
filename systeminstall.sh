@@ -40,7 +40,9 @@ if ! iroot onlyarch &&
     fi
 fi
 
+chrootscript "lang/locale" "setting locale"
 chrootscript "artix/postinstall" "checking for reverting artix fixes"
+chrootscript "chroot/cacheclean" "checking for reverting artix fixes"
 
 # mark installation as susccessful
 touch /opt/installsuccess

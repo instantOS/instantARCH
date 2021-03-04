@@ -180,9 +180,6 @@ uploadlogs() {
     cd /opt || exit
     cp /root/instantARCH/data/netrc ~/.netrc
     curl -n -F 'f:1=@install.log' ix.io
-    dialog --msgbox "installation failed
-please go to https://instantos.github.io/instantos.github.io/support
-for assistance or error reporting" 1000 1000
 
 }
 
@@ -199,8 +196,11 @@ if [ -z "$INSTANTARCHTESTING" ]; then
             reboot
         fi
     else
-        echo "installaion failed"
+        dialog --msgbox "installation failed
+please go to https://instantos.github.io/instantos.github.io/support
+for assistance or error reporting" 1000 1000
         echo "uploading error data"
+        echo "installaion failed"
         uploadlogs
     fi
 else

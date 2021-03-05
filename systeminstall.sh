@@ -23,7 +23,6 @@ chrootscript "network/network" "setting up networkmanager" &&
     chrootscript "bootloader/config" "configuring bootloader"
 
 touch /opt/noerror
-chrootscript "lang/locale" "setting locale"
 [ -e /opt/noerror ] && rm /opt/noerror
 
 # make instantOS packages optional
@@ -42,7 +41,7 @@ fi
 
 chrootscript "lang/locale" "setting locale"
 chrootscript "artix/postinstall" "checking for reverting artix fixes"
-chrootscript "chroot/cacheclean" "checking for reverting artix fixes"
+chrootscript "chroot/cacheclean" "cleaning pacman cache"
 
 # mark installation as susccessful
 touch /opt/installsuccess

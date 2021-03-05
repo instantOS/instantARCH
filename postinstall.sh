@@ -3,11 +3,12 @@
 # This is run as root by instantautostart
 # on the actual installation after the first reboot
 
-cd /root/instantARCH
+cd /root/instantARCH || exit 1
 
 bash ./lang/xorg.sh
 sleep 0.5
 bash ./lang/locale.sh
+bash ./lang/apply.sh
 bash ./vm/guestadditions.sh
 
 # restore selected mirrorlist

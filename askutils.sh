@@ -844,6 +844,7 @@ questionmenu() {
         export MANUALSETTINGS=true
         [ -n "$ASKTASK" ] && askquestion
         unset MANUALSETTINGS
+        export ASKTASK="confirm"
 
     done
 }

@@ -14,3 +14,5 @@ else
     echo 'export LANG="'"$SETLOCALE"'"' >/etc/locale.conf
     echo 'export LC_COLLATE="C"' >>/etc/locale.conf
 fi
+
+echo "finished applying locale"

@@ -3,7 +3,7 @@
 # read out user selected locale
 # generate it
 
-INSTANTARCH="${INSTANTARCH:-/root/instantARCH}"
+export INSTANTARCH="${INSTANTARCH:-/root/instantARCH}"
 
 # clear previous locale settings
 

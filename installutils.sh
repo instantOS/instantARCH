@@ -32,23 +32,34 @@ setinfo() {
     echo "$@"
 }
 
+testecho() {
+    if [ -n "$INSTANTARCHTESTING" ]; then
+        echo "test-message:" "$@"
+        notify-send "$@"
+    fi
+}
+
 # run a script inside the installation medium
 escript() {
     setinfo "${2:-info}"
     rcd
-    ./$1.sh || serror
+    testecho "running native script $1"
+    ./"$1".sh || serror
     echo "$1" >>/tmp/instantprogress
 }
 
 # scripts executed in installed environment
 chrootscript() {
     setinfo "${2:-info}"
+    # check if chroot environment is working
     if ! mount | grep -q '/mnt'; then
         echo "mount failed"
         exit 1
     fi
 
     rcd
+
+    testecho "running chroot script $1"
 
     if command -v arch-chroot; then
         arch-chroot /mnt "/root/instantARCH/${1}.sh" || serror

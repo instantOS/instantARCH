@@ -143,8 +143,8 @@ $(localectl list-x11-keymap-layouts | sed 's/^/- /g')"
     [ -z "$NEWKEY" ] && goback
 
     if grep -q '^-' <<<"$NEWKEY"; then
-        iroot otherkey "$NEWKEY"
         NEWKEY="$(sed 's/- //g' <<<"$NEWKEY")"
+        iroot otherkey "$NEWKEY"
         echo "
 $NEWKEY" >"$INSTANTARCH"/data/lang/keyboard/other
     fi
@@ -153,7 +153,7 @@ $NEWKEY" >"$INSTANTARCH"/data/lang/keyboard/other
 
     if iroot otherkey; then
         iroot keyboard other
-        NEWKEY="other"
+        export NEWKEY="other"
     else
         iroot keyboard "$NEWKEY"
     fi
@@ -161,7 +161,8 @@ $NEWKEY" >"$INSTANTARCH"/data/lang/keyboard/other
     if guimode; then
         setxkbmap -layout "$(tail -1 "$INSTANTARCH"/data/lang/keyboard/"$NEWKEY")"
     else
-        if head -1 "$INSTANTARCH"/data/lang/keyboard/"$NEWKEY" | grep -q '[^ ][^ ]'; then
+        if ! iroot otherkey &&
+            head -1 "$INSTANTARCH"/data/lang/keyboard/"$NEWKEY" | grep -q '[^ ][^ ]'; then
             loadkeys "$(head -1 "$INSTANTARCH"/data/lang/keyboard/"$NEWKEY")"
         fi
     fi

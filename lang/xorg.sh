@@ -5,17 +5,22 @@
 KEYLANG=$(iroot keyboard)
 
 NEWXORG="$(tail -1 /root/instantARCH/data/lang/keyboard/"$KEYLANG")"
-NEWKEYMAP="$(head -1 /root/instantARCH/data/lang/keyboard/"$KEYLANG")"
 
-echo "setting keymap to $NEWXORG"
+if ! iroot otherkey; then
+    NEWKEYMAP="$(head -1 /root/instantARCH/data/lang/keyboard/"$KEYLANG")"
+fi
+
+echo "setting xorg keymap to $NEWXORG"
+
+if pgrep Xorg; then
+    setxkbmap -layout "$NEWXORG"
+fi
 
 if command -v localectl; then
     localectl --no-convert set-x11-keymap "$NEWXORG"
-fi
-setxkbmap -layout "$NEWXORG"
-
-if grep -q .. <<<"$NEWKEYMAP"; then
-    if command -v localectl; then
+    if [ -n "$NEWKEYMAP" ]; then
+        echo "setting global keymap to $NEWKEYMAP"
+        # set tty keymap
         localectl --no-convert set-keymap "$NEWKEYMAP"
     fi
 fi

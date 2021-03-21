@@ -23,7 +23,7 @@ backmenu() {
         backpop
         return 0
         ;;
-    *installation)
+    *Cancel*)
         unset IMENUACCEPTEMPTY
         if imenu -c "are you sure you want to cancel the installation?"; then
             iroot cancelinstall 1

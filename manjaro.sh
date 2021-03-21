@@ -1,17 +1,18 @@
 #!/bin/bash
 
-##################################
-## an instantOS install script  ##
-## using calamares as a wrapper ##
-##################################
+######################################
+## an instantOS install script      ##
+## using calamares as a wrapper     ##
+## currently not actively developed ##
+######################################
 
 echo "installing instantOS manjaro edition"
 
-cd /root
+cd /root || exit 1
 [ -e instantARCH ] && rm -rf instantARCH
 git clone --depth=1 https://github.com/instantos/instantARCH.git
-cd instantARCH
-chmod +x *.sh
+cd instantARCH || exit 1
+chmod +x ./*.sh
 chmod 755 ./*/*.sh
 
 ./depend/depend.sh

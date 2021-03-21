@@ -23,12 +23,12 @@ while ! pacman -S --noconfirm --needed \
     zsh \
     xterm \
     systemd-swap \
-    neofetch \
     pulseaudio \
     granite \
     alsa-utils \
     usbutils \
     lightdm-gtk-greeter \
+    noto-fonts \
     inetutils \
     xdg-desktop-portal-gtk \
     xorg-xinit \
@@ -36,7 +36,6 @@ while ! pacman -S --noconfirm --needed \
     nitrogen \
     lshw \
     gxkb \
-    udiskie \
     ntfs-3g \
     gedit \
     ttf-liberation \
@@ -48,6 +47,7 @@ while ! pacman -S --noconfirm --needed \
     unzip \
     engrampa \
     unrar \
+    sushi \
     p7zip \
     xdg-user-dirs-gtk \
     noto-fonts-emoji \
@@ -55,6 +55,8 @@ while ! pacman -S --noconfirm --needed \
     xf86-input-synaptics \
     accountsservice \
     cups \
+    samba \
+    gvfs-smb \
     system-config-printer \
     gnome-font-viewer \
     grub; do # install end

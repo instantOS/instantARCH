@@ -16,7 +16,13 @@ cd instantOS || exit 1
 bash repo.sh
 pacman -Sy --noconfirm
 
-while ! pacman -S instantos instantdepend --noconfirm; do
+if command -v systemctl; then
+    DEPENDPACKAGE="instantdepend"
+else
+    DEPENDPACKAGE="instantdepend-nosystemd"
+fi
+
+while ! pacman -S instantos "$DEPENDPACKAGE" --noconfirm; do
     if [ -e /usr/share/liveutils ] && ! grep -iq manjaro /etc/os-release; then
         imenu -m "package installation failed.
 Please ensure you are connected to the internet"
@@ -34,10 +40,14 @@ done
 # don't install arch pamac on Manjaro
 if ! grep -iq Manjaro /etc/os-release && ! command -v pamac; then
     echo "installing pamac"
-    sudo pacman -S pamac-aur-git --noconfirm
+    sudo pacman -S pamac-all --noconfirm
+    sed -i 's/#EnableAUR/EnableAUR/g' /etc/pamac.conf
+    sed -i 's/#CheckAURUpdates/CheckAURUpdates/g' /etc/pamac.conf
+    echo 'EnableFlatpak' >>/etc/pamac.conf
 fi
 
 yes | pacman -S libxft-bgra
+yes | pacman -S neofetch-git
 
 cd ~/instantOS || exit 1
 
@@ -60,4 +70,10 @@ else
     # custom grub theme
     sed -i 's~^#GRUB_THEME.*~GRUB_THEME=/usr/share/grub/themes/instantos/theme.txt~g' /etc/default/grub
     update-grub
+fi
+
+# TODO: come up with alternative way for non systemd
+if command -v systemctl; then
+    echo "setting up trigger for first boot"
+    systemctl enable instantpostinstall
 fi

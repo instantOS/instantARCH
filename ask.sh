@@ -3,12 +3,12 @@
 # This is the interactive part of the installer
 # Everything requiring user input is asked first,
 # NO INSTALLATION IS DONE IN THIS SCRIPT
-# Results get saved in /root/instantARCH/config
+# Results get saved in $INSTANTARCH/config
 # and read out during installation
 # results also get copied to the target root partition
 
-mkdir /root/instantARCH/config
-mkdir config
+mkdir -p "$INSTANTARCH"/config &>/dev/null
+mkdir config &>/dev/null
 
 source <(curl -Ls git.io/paperbash)
 pb dialog
@@ -37,124 +37,30 @@ else
         touch /opt/instantos/statuscanceled
         exit 1
     fi
-    if iroot installtest
-    then
-        imenu -m "WARNING: you're running a test version of the installer"
+    if iroot installtest; then
+        imenu -m "WARNING: you're running a test version of the installer
+    branch: $TESTBRANCH
+    pacman repo: ${CUSTOMINSTANTREPO:-default}"
     fi
 fi
 
-# go back to the beginning if user isn't happy with settings
-# this loop wraps the rest of the installer
-while ! iroot confirm; do
+/root/instantARCH/askloop.sh || {
+    imenu -m "installation was canceled"
+    iroot cancelinstall 1
+    exit 0
+}
 
-    # warning message for artix
-    artixinfo
-
-    # ask for keyboard layout
-    asklayout
-    if head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY" | grep -q '[^ ][^ ]'; then
-        loadkeys "$(head -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")"
+if ! iroot confirm; then
+    if ! iroot cancelinstall; then
+        imenu -m 'there was an error, installation will not continue'
+        # TODO offer uploading logs
     fi
-    guimode && setxkbmap -layout "$(tail -1 /root/instantARCH/data/lang/keyboard/"$NEWKEY")"
-
-    asklocale
-
-    # artix and manjaro mirrors work differently
-    if command -v pacstrap; then
-        askmirrors
-    fi
-
-    askvm
-    askregion
-
-    while [ -z "$DISK" ]; do
-        wallstatus install
-        DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed -e "\$aother (experimental)" | imenu -l "select disk> ")
-        if ! grep -q '^other' <<<"$DISK"; then
-            if ! echo "Install on $DISK ?
-this will delete all existing data" | imenu -C; then
-                unset DISK
-            fi
-        else
-            chmod +x /root/instantARCH/askdisk.sh
-            /root/instantARCH/askdisk.sh
-            if [ -e /tmp/loopaskdisk ]; then
-                unset DISK
-                rm /tmp/loopaskdisk
-            fi
-        fi
-    done
-
-    if ! grep -q '^other' <<<"$DISK"; then
-
-        echo "$DISK" | grep -o '/dev/[^:]*' | iroot i disk
-
-        if ! efibootmgr; then
-            echo "$DISK" | grep -o '/dev/[^:]*' | iroot i grubdisk
-        fi
-    fi
-
-    # choice between multiple nvidia drivers
-    if ! grep -iq manjaro /etc/os-release; then
-        askdrivers
-    fi
-
-    # create user and add to groups
-    askuser
-
-    while [ -z "$NEWHOSTNAME" ]; do
-        NEWHOSTNAME=$(imenu -i "enter name of this computer")
-    done
-
-    iroot hostname "$NEWHOSTNAME"
-
-    if imenu -c -i "edit advanced settings? (use only if you know what you're doing)"; then
-        /root/instantARCH/askadvanced.sh
-    fi
-
-    wallstatus install
-    SUMMARY="Installation Summary:"
-
-    addsum "Username" "user"
-    addsum "Locale" "locale"
-    addsum "Region" "region"
-    addsum "Subregion" "city"
-    addsum "Keyboard layout" "keyboard"
-    addsum "Target install drive" "disk"
-    addsum "Hostname" "hostname"
-
-    if efibootmgr; then
-        SUMMARY="$SUMMARY
-GRUB: UEFI"
-    else
-        SUMMARY="$SUMMARY
-GRUB: BIOS"
-    fi
-
-    SUMMARY="$SUMMARY
-Should installation proceed with these parameters?"
-
-    echo "summary:
-$SUMMARY"
-
-    if imenu -C <<<"$SUMMARY"; then
-        iroot confirm 1
-    else
-        unset CITY
-        unset REGION
-        unset DISK
-        unset NEWKEY
-        unset NEWLOCALE
-        unset NEWPASS2
-        unset NEWPASS
-        unset NEWHOSTNAME
-        unset NEWUSER
-    fi
-
-done
+    exit 1
+fi
 
 imenu -M <<<'The installation will now begin.
 This could take a while.
-You can check install progress by clicking on "2" in the top right
-Keep the machine powered and connected to the internet. 
-After the installation, the machine will automatically reboot'
+You can check install progress and logs
+by clicking on "2" in the top right.
+Keep the machine powered and connected to the internet.
+When installation is finished the machine will automatically reboot'

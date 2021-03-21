@@ -1,8 +1,8 @@
 #!/bin/bash
 
-###################################################
-## This is the official installer for instantOS  ##
-###################################################
+##############################################
+## The official installer for instantOS     ##
+##############################################
 
 # Main startup script
 
@@ -78,11 +78,22 @@ if ! command -v git; then
 fi
 
 cd /root || exit 1
-[ -e instantARCH ] && rm -rf instantARCH
+
+if [ -e instantARCH ]; then
+    echo "removing previous instantARCH data"
+    rm -rf instantARCH
+fi
 
 if [ "$1" = "test" ]; then
     echo "switching to testing branch"
-    git clone --single-branch --branch testing --depth=1 https://github.com/instantos/instantARCH.git
+    export TESTBRANCH="${2:-testing}"
+
+    if [ -n "$3" ]; then
+        export CUSTOMINSTANTREPO="$3"
+    fi
+
+    echo "using installer branch $TESTBRANCH"
+    git clone --single-branch --branch "$TESTBRANCH" --depth=1 https://github.com/instantos/instantARCH.git
     export INSTANTARCHTESTING="true"
 else
     git clone --depth=1 https://github.com/instantos/instantARCH.git
@@ -127,15 +138,24 @@ fi
 cd /root/instantARCH || exit
 
 ./ask.sh || {
-    if ! [ -e /opt/instantos/installcanceled ]; then
+    if ! [ -e /opt/instantos/installcanceled ] && ! iroot cancelinstall; then
         imenu -m "ask failed"
         echo "ask failed" && exit
     else
         rm /opt/instantos/installcanceled
+        # clear up installation data
+        rm -rf /root/instantARCH
         pkill instantosinstall
         exit
     fi
 }
+
+if ! iroot confirm; then
+    echo "no confirmation found, installation cancelled"
+    exit
+fi
+
+unset IMENUACCEPTEMPTY
 
 chmod +x ./*.sh
 chmod +x ./**/*.sh
@@ -162,26 +182,30 @@ uploadlogs() {
     cd /opt || exit
     cp /root/instantARCH/data/netrc ~/.netrc
     curl -n -F 'f:1=@install.log' ix.io
-    dialog --msgbox "installation failed
-please go to https://instantos.github.io/instantos.github.io/support
-for assistance or error reporting" 1000 1000
 
 }
 
 # ask to reboot, upload error data if install failed
-if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
-    if command -v installapplet; then
-        notify-send "rebooting"
-        sleep 2
-        if iroot logging; then
-            uploadlogs
+if [ -z "$INSTANTARCHTESTING" ]; then
+    if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
+        if command -v installapplet; then
+            notify-send "rebooting"
             sleep 2
+            if iroot logging; then
+                uploadlogs
+                sleep 2
+            fi
+            reboot
         fi
-        reboot
+    else
+        dialog --msgbox "installation failed
+please go to https://instantos.github.io/instantos.github.io/support
+for assistance or error reporting" 1000 1000
+        echo "uploading error data"
+        echo "installaion failed"
+        uploadlogs
     fi
 else
-    echo "installaion failed"
-    echo "uploading error data"
     uploadlogs
 fi
 

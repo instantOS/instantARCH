@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# install instantOS on top of an existing system
+# this is currently not stable, tested or supported
+# do not use (please)
+
 # print logo
 echo ""
 echo ""
@@ -77,6 +81,8 @@ if ! ls /home/ | grep -q ..; then
 else
     ./user/user.sh
 fi
+
+./user/shell.sh
 
 ./lang/timezone.sh
 ./lang/locale.sh

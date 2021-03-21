@@ -15,6 +15,10 @@ if iroot isvm; then
         echo "installing QEMU drivers"
         pacman -S --noconfirm --needed xorg-drivers
     else
+        if iroot vmware || lspci | grep -i vmware; then
+            sudo pacman -S open-vm-tools
+            command -v systemctl && sudo systemctl enable vmtoolsd.service
+        fi
         pacman -S mesa --noconfirm
         pacman -S xf86-video-vmware --noconfirm
     fi
@@ -24,7 +28,7 @@ else
         pacman -S --noconfirm dkms
         # user chooses open source, proprietary or no driver
         if iroot graphics; then
-            DRIVERFILE="/root/instantARCH/config/graphics"
+            DRIVERFILE="$IROOT/graphics"
             if grep -iq "nodriver" "$DRIVERFILE"; then
                 exit
             elif grep -iq "dkms" "$DRIVERFILE"; then
@@ -41,6 +45,12 @@ else
             elif grep -iq "open" "$DRIVERFILE"; then
                 pacman -S --noconfirm mesa xf86-video-nouveau
             fi
+
+            if iroot graphics | grep -iEq '(|dkms)'
+            then
+                echo "installing nvidia-settings"
+                pacman -S --noconfirm nvidia-settings
+            fi
         else
             echo "defaulting to open source driver"
             pacman -S --noconfirm mesa xf86-video-nouveau
@@ -55,7 +65,7 @@ else
         pacman -S --noconfirm mesa xf86-video-intel
     else
         echo "other graphics detected"
-        pacman -S mesa --noconfirm
+        pacman -S mesa xorg-drivers --noconfirm
     fi
 fi
 

@@ -898,12 +898,17 @@ manual partitioning: "
 
     addsum "Hostname" "hostname"
 
-    if efibootmgr; then
+    if iroot manualpartitioning && iroot nobootloader; then
         SUMMARY="$SUMMARY
-GRUB: UEFI"
+GRUB: none"
     else
-        SUMMARY="$SUMMARY
+        if efibootmgr; then
+            SUMMARY="$SUMMARY
+GRUB: UEFI"
+        else
+            SUMMARY="$SUMMARY
 GRUB: BIOS"
+        fi
     fi
 
     SUMMARY="$SUMMARY

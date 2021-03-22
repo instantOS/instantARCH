@@ -62,14 +62,14 @@ else
     ## Intel
     elif lspci | grep -i vga | grep -i intel; then
         echo "intel integrated detected"
-        pacman -S --noconfirm mesa xf86-video-intel
+        pacman -S --noconfirm mesa xf86-video-intel --needed
     else
         echo "other graphics detected"
-        pacman -S mesa xorg-drivers --noconfirm
+        pacman -S mesa xorg-drivers --noconfirm --needed
     fi
 fi
 
 # 32 bit mesa
 if ! uname -m | grep -q '^i' && command -v systemctl; then
-    pacman -S --noconfirm lib32-mesa
+    pacman -S --noconfirm lib32-mesa --needed
 fi

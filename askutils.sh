@@ -545,6 +545,7 @@ askgrub() {
             imenu -c "are you sure? This could make the system unbootable. "
             if [ "$IMENUEXIT" = 0 ]; then
                 iroot nobootloader 1
+                export ASKTASK="drivers"
                 return
             fi
         else

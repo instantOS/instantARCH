@@ -59,6 +59,7 @@ while ! pacman -S --noconfirm --needed \
     gvfs-smb \
     system-config-printer \
     gnome-font-viewer \
+    neovim-qt \
     grub; do # install end
 
     sleep 10

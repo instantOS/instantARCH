@@ -547,6 +547,9 @@ askgrub() {
                 iroot nobootloader 1
                 export ASKTASK="drivers"
                 return
+            else
+                export ASKTASK="grub"
+                return
             fi
         else
             BOOTLOADERCONFIRM="true"

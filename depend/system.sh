@@ -69,10 +69,11 @@ while ! pacman -S --noconfirm --needed \
 
 done
 
-# iso for postinstall guestadditions
+# virtualbox guest additions
 if iroot guestadditions; then
     echo "installing virtualbox guest addidions"
-    pacman -S --noconfirm --needed virtualbox-guest-iso
+    pacman -S --noconfirm --needed virtualbox-guest-dkms
+    touch /opt/instantos/guestadditions
 fi
 
 # optional extra packages

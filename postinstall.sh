@@ -9,7 +9,6 @@ bash ./lang/xorg.sh
 sleep 0.5
 bash ./lang/locale.sh
 bash ./lang/apply.sh
-bash ./vm/guestadditions.sh
 
 # restore selected mirrorlist
 if [ -e "$IROOT"/mirrorlistbackup ] && grep -i "server" "$IROOT"/mirrorlistbackup; then

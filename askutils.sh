@@ -843,6 +843,11 @@ questionmenu() {
             continue
         elif [ "$CHOICE" = "OK" ]; then
             return
+        elif grep -i advanced <<< "$CHOICE"
+        then
+            # this goes right back to the end so no need to ask manually
+            export ASKTASK="advanced"
+            return
         fi
 
         export ASKTASK="$(grep "$CHOICE" /root/instantARCH/questions.txt | grep -o '^[^:]*')"

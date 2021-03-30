@@ -44,11 +44,14 @@ if command -v systemctl; then
     systemctl enable NetworkManager
 fi
 
-if ! command -v update-grub &>/dev/null; then
-    # can't include this in package
-    echo '#! /bin/sh
+if ! iroot nobootloader; then
+    if ! command -v update-grub &>/dev/null; then
+        # can't include this in package
+        echo '#! /bin/sh
 grub-mkconfig -o /boot/grub/grub.cfg' >/usr/bin/update-grub
-    chmod 755 /usr/bin/update-grub
+        chmod 755 /usr/bin/update-grub
+    fi
+
 fi
 
 # indicator file

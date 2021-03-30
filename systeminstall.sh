@@ -12,10 +12,12 @@ chrootscript "lang/timezone" "setting time"
 chrootscript "chroot/publish" "setting config permissions"
 
 # grub: install package, install, generate config
-if efibootmgr; then
-    chrootscript "bootloader/efi" "installing bootloader"
-else
-    chrootscript "bootloader/install" "installing bootloader"
+if ! iroot nobootloader; then
+    if efibootmgr; then
+        chrootscript "bootloader/efi" "installing bootloader"
+    else
+        chrootscript "bootloader/install" "installing bootloader"
+    fi
 fi
 
 chrootscript "network/network" "setting up networkmanager" &&

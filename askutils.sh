@@ -564,6 +564,7 @@ askgrub() {
         fi
 
         [ -z "$EFIPART" ] && goback
+        iroot partefi "$EFIPART"
 
     else
         GRUBDISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk for grub " | grep -o '/dev/[^:]*')

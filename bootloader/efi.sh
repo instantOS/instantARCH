@@ -10,6 +10,7 @@ if iroot nobootloader; then
 fi
 
 mkdir /efi
+echo 'trying to mount '"$(iroot partefi)"
 mount "$(iroot partefi)" /efi || exit 1
 
 sudo pacman -S efibootmgr grub --noconfirm || exit 1

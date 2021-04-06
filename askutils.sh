@@ -844,8 +844,7 @@ questionmenu() {
             continue
         elif [ "$CHOICE" = "OK" ]; then
             return
-        elif grep -i advanced <<< "$CHOICE"
-        then
+        elif grep -i advanced <<<"$CHOICE"; then
             # this goes right back to the end so no need to ask manually
             export ASKTASK="advanced"
             return
@@ -926,15 +925,26 @@ Should installation proceed with these parameters?"
     echo "installation summary:
 $SUMMARY"
 
-    SUMMARY="$(sed 's/^/> /g' <<<"$SUMMARY")
+    if guimode; then
+        SUMMARY="$(sed 's/^/> /g' <<<"$SUMMARY")
+> 
+continue
+edit options
+restart installation
+cancel installation"
+
+    else
+        SUMMARY="$(sed 's/^/> /g' <<<"$SUMMARY")
 > 
 :gcontinue
 edit options
 :yrestart installation
 :rcancel installation"
 
+    fi
+
     CHOICE="$(
-        imenu -l "installation summary" <<<"$SUMMARY"
+        imenu -l "installation summary" <<<"$SUMMARY" | sed 's/^:.//g'
     )"
 
     if [ "$CHOICE" = "continue" ]; then
@@ -950,7 +960,7 @@ edit options
         echo "editing options"
         questionmenu
         ;;
-    ":yrestart installation")
+    "restart installation")
         unset IMENUACCEPTEMPTY
         if imenu -c "are you sure you want to restart the installation from the beginning?"; then
             export ASKTASK="artix"
@@ -958,7 +968,7 @@ edit options
         export IMENUACCEPTEMPTY="true"
         return
         ;;
-    ":rcancel installation")
+    "cancel installation")
         unset IMENUACCEPTEMPTY
         if imenu -c "are you sure you want to cancel the installation?"; then
             iroot cancelinstall 1

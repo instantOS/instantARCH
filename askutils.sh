@@ -925,7 +925,7 @@ Should installation proceed with these parameters?"
     echo "installation summary:
 $SUMMARY"
 
-    if guimode; then
+    if ! guimode; then
         SUMMARY="$(sed 's/^/> /g' <<<"$SUMMARY")
 > 
 continue

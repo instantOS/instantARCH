@@ -58,9 +58,16 @@ if ! iroot confirm; then
     exit 1
 fi
 
-imenu -M <<<'The installation will now begin.
+if guimode; then
+    imenu -M <<<'The installation will now begin.
 This could take a while.
 You can check install progress and logs
 by clicking on "2" in the top right.
 Keep the machine powered and connected to the internet.
 When installation is finished the machine will automatically reboot'
+else
+    imenu -M <<<'The installation will now begin.
+This could take a while.
+Keep the machine powered and connected to the internet.
+When installation is finished the machine will automatically reboot'
+fi

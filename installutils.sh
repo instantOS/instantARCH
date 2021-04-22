@@ -66,7 +66,7 @@ chrootscript() {
     elif command -v manjaro-chroot; then
         manjaro-chroot /mnt "/root/instantARCH/${1}.sh" || serror
     else
-        artools-chroot /mnt "/root/instantARCH/${1}.sh" || serror
+        artix-chroot /mnt "/root/instantARCH/${1}.sh" || serror
     fi
 
     echo "chroot: $1" >>/tmp/instantprogress

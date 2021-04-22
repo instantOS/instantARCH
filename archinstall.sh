@@ -77,6 +77,19 @@ if ! command -v git; then
     done
 fi
 
+# ensure git is working
+if ! git --version; then
+    if git --version 2>&1 | grep -i glibc; then
+        echo "upgrading glibc"
+        pacman -Sy glibc --noconfirm || exit 1
+    fi
+    if ! git --version; then
+        echo "git is not working on your system."
+        echo "installing instantOS requires git to be installed and working"
+        exit 1
+    fi
+fi
+
 cd /root || exit 1
 
 if [ -e instantARCH ]; then

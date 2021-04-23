@@ -60,6 +60,8 @@ while ! pacman -S --noconfirm --needed \
     system-config-printer \
     gnome-font-viewer \
     neovim-qt \
+    trash-cli \
+    fd \
     grub; do # install end
 
     sleep 10

@@ -43,6 +43,7 @@ fi
 
 chrootscript "lang/locale" "setting locale"
 chrootscript "artix/postinstall" "checking for reverting artix fixes"
+chrootscript "chroot/clean" "cleaning pacman cache"
 chrootscript "chroot/cacheclean" "cleaning pacman cache"
 
 # mark installation as susccessful

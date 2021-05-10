@@ -32,7 +32,6 @@ while ! pacman -S --noconfirm --needed \
     inetutils \
     xdg-desktop-portal-gtk \
     xorg-xinit \
-    firefox \
     nitrogen \
     lshw \
     gxkb \
@@ -59,7 +58,6 @@ while ! pacman -S --noconfirm --needed \
     gvfs-smb \
     system-config-printer \
     gnome-font-viewer \
-    neovim-qt \
     trash-cli \
     fd \
     grub; do # install end
@@ -70,23 +68,6 @@ while ! pacman -S --noconfirm --needed \
         pacman -Sy --noconfirm
 
 done
-
-# virtualbox guest additions
-if iroot guestadditions; then
-    echo "installing virtualbox guest addidions"
-    pacman -S --noconfirm --needed virtualbox-guest-dkms
-    touch /opt/instantos/guestadditions
-fi
-
-# optional extra packages
-if iroot packages &>/dev/null; then
-    echo "installing extra packages"
-    iroot packages | pacman -S --noconfirm --needed -
-fi
-
-if command -v systemctl; then
-    pacman -S --noconfirm --needed steam steam-native-runtime
-fi
 
 # artix packages
 if command -v sv; then

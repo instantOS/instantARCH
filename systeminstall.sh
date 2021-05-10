@@ -8,6 +8,7 @@ chrootscript "artix/preinstall" "applying artix fixes"
 chrootscript "depend/system" "installing dependencies"
 chrootscript "chroot/chroot" "configuring system"
 chrootscript "chroot/drivers" "installing drivers"
+chrootscript "depend/extras" "installing extras"
 chrootscript "lang/timezone" "setting time"
 chrootscript "chroot/publish" "setting config permissions"
 

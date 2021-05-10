@@ -1,6 +1,6 @@
 <div align="center">
     <h1>instantARCH</h1>
-    <p>the new instantOS installer</p>
+    <p>the official instantOS installer</p>
     <img width="300" height="300" src="https://raw.githubusercontent.com/instantOS/instantLOGO/master/png/arch.png">
 </div>
 
@@ -8,19 +8,27 @@
 
 ----------
 
-instantARCH is a super lightweight and quick & easy to use installer for instantOS.
+instantARCH is a super lightweight quick & easy to use installer for instantOS.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/instantOS/instantLOGO/master/screeenshots/instantarch.png">
 </p>
 
-# Features
+## Features
 
 - Ask all user input before installation
-- GUI and cli install possible
-- Extremely lightweight
+- Graphical and command line interface
+- Lightweight
 - Easy to use
 - Netinstall that stays pretty close to Arch
+
+## Usage
+
+instantARCH is preinstalled on all instantOS iso files (duh) and can be launched through the welcome app or the widget in the top right.  
+It can also be run as a command line application on a vanilla arch live disk. 
+```sh
+bash <(curl -L instantos.io/install)
+```
 
 ## Comparison with other installers
 

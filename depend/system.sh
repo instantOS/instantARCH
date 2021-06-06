@@ -22,6 +22,7 @@ while ! pacman -S --noconfirm --needed \
     bash \
     zsh \
     xterm \
+    hdparm \
     systemd-swap \
     pulseaudio \
     granite \

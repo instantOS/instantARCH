@@ -1,9 +1,13 @@
 #!/bin/bash
 
-source /root/instantARCH/installutils.sh
+# installation steps after the base system has been installed
 
+source /root/instantARCH/installutils.sh || exit 1
+
+# running twice is necessary
 chrootscript "depend/depend" "preparing installer packages"
 chrootscript "depend/depend" "preparing installer packages"
+
 chrootscript "artix/preinstall" "applying artix fixes"
 chrootscript "depend/system" "installing dependencies"
 chrootscript "chroot/chroot" "configuring system"
@@ -11,6 +15,7 @@ chrootscript "chroot/drivers" "installing drivers"
 chrootscript "depend/extras" "installing extras"
 chrootscript "lang/timezone" "setting time"
 chrootscript "chroot/publish" "setting config permissions"
+chrootscript "disk/trim" "checking for trim support"
 
 # grub: install package, install, generate config
 if ! iroot nobootloader; then

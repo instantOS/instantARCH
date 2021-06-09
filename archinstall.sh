@@ -114,6 +114,9 @@ fi
 
 cd instantARCH || exit 1
 
+mkdir config &>/dev/null
+git rev-parse HEAD >config/instantarchversion
+
 # use alternative versions of the installer
 if [ -n "$1" ]; then
     case "$1" in
@@ -173,6 +176,7 @@ unset IMENUACCEPTEMPTY
 chmod +x ./*.sh
 chmod +x ./**/*.sh
 
+# pacstrap base system
 echo "local install"
 ./localinstall.sh 2>&1 | tee /opt/localinstall &&
     echo "system install" &&

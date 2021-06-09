@@ -45,6 +45,12 @@ fi
 cd /root || exit 1
 
 cp -r ./instantARCH /mnt/root/instantARCH
+if [ -e /etc/instantos/liveversion ]; then
+    cat /etc/instantos/liveversion >/mnt/root/instantARCH/config/liveversion
+else
+    echo 'old iso used, unversioned'
+fi
+
 {
     cat /etc/pacman.d/mirrorlist
     echo ''

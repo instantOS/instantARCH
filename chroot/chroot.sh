@@ -37,6 +37,8 @@ if ! [ -e /opt/topinstall ] && ! iroot partswap; then
 fi
 
 sed -i 's/# %wheel/%wheel/g' /etc/sudoers
+sed -i '/wheel.*NOPASSWD/s/^/# /g' /etc/sudoers
+
 echo 'Defaults env_reset,pwfeedback' >>/etc/sudoers
 
 if command -v systemctl; then

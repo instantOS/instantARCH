@@ -30,6 +30,8 @@ while ! pacman -S --noconfirm --needed \
     usbutils \
     lightdm-gtk-greeter \
     noto-fonts \
+    otf-ipafont \
+    wqy-microhei \
     inetutils \
     xdg-desktop-portal-gtk \
     xorg-xinit \

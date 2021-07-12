@@ -49,6 +49,8 @@ while ! pacman -S --noconfirm --needed \
     unrar \
     sushi \
     nano \
+    exa \
+    bat \
     p7zip \
     xdg-user-dirs-gtk \
     noto-fonts-emoji \

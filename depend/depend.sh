@@ -56,6 +56,7 @@ updaterepos
 if ! grep -i 'manjaro' /etc/os-release && command -v systemctl; then
     while ! pacman -S --noconfirm --needed reflector; do
         echo "reflector install failed"
+        updaterepos
         sleep 10
     done
 fi

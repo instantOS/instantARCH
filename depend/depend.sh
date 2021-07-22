@@ -18,6 +18,18 @@ setinfo() {
     echo "$@"
 }
 
+updaterepos() {
+    pacman -Sy --noconfirm || return 1
+    if pacman -Si bash 2>&1 | grep -iq 'unrecognized archive'; then
+        curl -s 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&use_mirror_status=on' >/etc/pacman.d/mirrorlist
+        pacman -Sy --noconfirm || return 1
+        if pacman -Si bash 2>&1 | grep -iq 'unrecognized archive'; then
+            curl -s 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&use_mirror_status=on' | shuf >/etc/pacman.d/mirrorlist
+        fi
+        pacman -Sy --noconfirm || return 1
+    fi
+}
+
 setinfo "downloading installer dependencies"
 
 # mark install as non-topinstall
@@ -38,7 +50,7 @@ if command -v systemctl; then
     fi
 fi
 
-pacman -Sy --noconfirm
+updaterepos
 
 # install reflector for automirror
 if ! grep -i 'manjaro' /etc/os-release && command -v systemctl; then
@@ -104,7 +116,7 @@ while ! installdepends; do
             pacman-mirrors --geoip
         fi
     fi
-    pacman -Sy --noconfirm
+    updaterepos
 
 done
 

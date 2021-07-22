@@ -66,11 +66,23 @@ if command -v python; then
     pkill python3
 fi
 
+updaterepos() {
+    pacman -Sy --noconfirm || return 1
+    if pacman -Si bash 2>&1 | grep -iq 'unrecognized archive'; then
+        curl -s 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&use_mirror_status=on' >/etc/pacman.d/mirrorlist
+        pacman -Sy --noconfirm || return 1
+        if pacman -Si bash 2>&1 | grep -iq 'unrecognized archive'; then
+            curl -s 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&use_mirror_status=on' | shuf >/etc/pacman.d/mirrorlist
+        fi
+        pacman -Sy --noconfirm || return 1
+    fi
+}
+
 if ! command -v git; then
     while [ -z "$CONTINUEINSTALLATION" ]; do
-        if ! pacman -Sy --noconfirm || ! pacman -S git --noconfirm --needed; then
+        if ! updaterepos || ! pacman -S git --noconfirm --needed; then
             yes | pacman -Scc
-            pacman -Sy --noconfirm
+            updaterepos
         else
             export CONTINUEINSTALLATION="true"
         fi

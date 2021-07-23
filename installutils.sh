@@ -41,15 +41,18 @@ testecho() {
 
 # run a script inside the installation medium
 escript() {
+    STARTDURATION="$SECONDS"
     setinfo "${2:-info}"
     rcd
     testecho "running native script $1"
     ./"$1".sh || serror
     echo "$1" >>/tmp/instantprogress
+    debugmenu "$1"
 }
 
 # scripts executed in installed environment
 chrootscript() {
+    STARTDURATION="$SECONDS"
     setinfo "${2:-info}"
     # check if chroot environment is working
     if ! mount | grep -q '/mnt'; then
@@ -70,5 +73,42 @@ chrootscript() {
     fi
 
     echo "chroot: $1" >>/tmp/instantprogress
+
+    debugmenu "$1"
+}
+
+# allows pausing the installer after each step
+debugmenu() {
+    {
+        [ -n "$INSTALLDEBUG" ] || [ -e /tmp/installdebug ]
+    } || return 0
+    DURATION="$((SECONDS - STARTDURATION))"
+    DEBUGCHOICE="$(
+        {
+            echo "> ran task $1"
+            echo "> took $DURATION seconds"
+            echo ":ypause"
+            echo ":rcancel"
+            echo ":gcontinue"
+        } | imenu -l "debug menu"
+    )"
+    case "$DEBUGCHOICE" in
+    *pause)
+        echo 'pausing installation'
+        touch /tmp/installpause
+        echo 'installation paused, waiting for removal of /tmp/installpause'
+        while [ -e /tmp/installpause ]; do
+            sleep 10
+        done
+        ;;
+    *cancel)
+        echo 'quitting installation'
+        echo 'TODO: implement'
+        ;;
+    *continue)
+        echo "continuing installation"
+        ;;
+    esac
+    STARTDURATION=0
 
 }

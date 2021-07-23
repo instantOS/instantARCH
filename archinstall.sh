@@ -192,7 +192,7 @@ chmod +x ./**/*.sh
 echo "local install"
 ./localinstall.sh 2>&1 | tee /opt/localinstall &&
     echo "system install" &&
-    ./systeminstall.sh 2>&1 | tee /opt/systeminstall
+    ./systeminstall.sh 2>&1 | tee /opt/systeminstall # install rest of the system
 
 pkill imenu
 pkill instantmenu

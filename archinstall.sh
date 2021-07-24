@@ -178,6 +178,12 @@ cd /root/instantARCH || exit
         # clear up installation data
         rm -rf /root/instantARCH
         pkill instantosinstall
+        sleep 1
+        pkill -f instantosinstall
+
+        pkill instantosinstaller
+        sleep 1
+        pkill -f instantosinstaller
         exit
     fi
 }

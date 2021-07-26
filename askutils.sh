@@ -56,6 +56,32 @@ wallstatus() {
 
 echoerr() { echo "$@" 1>&2; }
 
+getisopart() {
+    mount | grep 'on /run/archiso/sfs/airootfs' | grep -o '^[^ ]*'
+}
+
+getisodevice() {
+    lsblk -no pkname "$(getisopart)"
+}
+
+getdisks() {
+    DISKS="$(fdisk -l | grep -i '^Disk /.*:' | sed 's/^Disk //g')"
+    if [ -z "$IGNOREWARNINGS" ]; then
+        grep -v "^/dev/$(getisodevice) " <<<"$DISKS"
+    else
+        echo "$DISKS"
+    fi
+}
+
+getpartitions() {
+    PARTITIONS="$(fdisk -l | grep '^/dev' | sed 's/\*/ b /g')"
+    if [ -z "$IGNOREWARNINGS" ]; then
+        grep -v "^$(getisopart) " <<<"$PARTITIONS"
+    else
+        echo "$PARTITIONS"
+    fi
+}
+
 # menu that allows choosing a partition and put it in stdout
 # no var
 choosepart() {
@@ -314,8 +340,14 @@ sort all mirrors by speed' | imenu -l 'choose mirror settings')"
 askinstalldisk() {
     wallstatus install
     iroot -r manualpartitioning
-    DISK=$(fdisk -l | grep -i '^Disk /.*:' | sed -e "\$amanual partitioning" |
-        imenu -l "select disk> ")
+    DISK="$(
+        {
+            fdisk -l | grep -i '^Disk /.*:' |
+                sed 's/^Disk //g'
+            echo 'manual partitioning'
+        }
+        imenu -l "select disk> "
+    )"
 
     [ -z "$DISK" ] && goback
 

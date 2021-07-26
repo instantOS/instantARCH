@@ -67,7 +67,7 @@ getisodevice() {
 getdisks() {
     DISKS="$(fdisk -l | grep -i '^Disk /.*:' | sed 's/^Disk //g')"
     if [ -z "$IGNOREWARNINGS" ]; then
-        grep -v "^/dev/$(getisodevice) " <<<"$DISKS"
+        grep -v "^/dev/$(getisodevice):" <<<"$DISKS" | grep -v "^$(getisopart):"
     else
         echo "$DISKS"
     fi
@@ -88,7 +88,7 @@ choosepart() {
     unset RETURNPART
 
     RETURNPART="$({
-        fdisk -l | grep '^/dev' | sed 's/\*/ b /g'
+        getpartitions
         echo "I already mounted ${2:-the partition}"
     } | imenu -l "$1" | grep -o '^[^ ]*')"
 
@@ -342,8 +342,7 @@ askinstalldisk() {
     iroot -r manualpartitioning
     DISK="$(
         {
-            fdisk -l | grep -i '^Disk /.*:' |
-                sed 's/^Disk //g'
+            getdisks
             echo 'manual partitioning'
         }
         imenu -l "select disk> "
@@ -456,7 +455,7 @@ The Bootloader requires
  - a disk to install it to on legacy-bios systems
 ' | imenu -M
 
-    EDITDISK="$(fdisk -l | grep -i '^Disk /.*:' | imenu -l 'choose disk to edit> ' | grep -o '/dev/[^:]*')"
+    EDITDISK="$(getdisks | imenu -l 'choose disk to edit> ' | grep -o '/dev/[^:]*')"
     echo "editing disk $EDITDISK"
 
     if guimode; then
@@ -472,7 +471,6 @@ The Bootloader requires
     fi
 
     iroot disk "$EDITDISK"
-    startchoice
     export ASKTASK="root"
 }
 
@@ -599,7 +597,7 @@ askgrub() {
         iroot partefi "$EFIPART"
 
     else
-        GRUBDISK=$(fdisk -l | grep -i '^Disk /.*:' | imenu -l "select disk for grub " | grep -o '/dev/[^:]*')
+        GRUBDISK=$(getdisks | imenu -l "select disk for grub " | grep -o '/dev/[^:]*')
         [ -z "$GRUBDISK" ] && goback
         echo "grub disk $GRUBDISK"
         iroot grubdisk "$GRUBDISK"

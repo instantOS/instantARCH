@@ -177,7 +177,6 @@ cd /root/instantARCH || exit
         rm /opt/instantos/installcanceled
         instantwallpaper set /usr/share/instantwallpaper/defaultphoto.png
         # clear up installation data
-        rm -rf /root/instantARCH
 
         rm -rf /root/instantARCH
         pkill instantosinstall

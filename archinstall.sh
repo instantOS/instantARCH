@@ -29,6 +29,7 @@ if [ -e /tmp/instantarchpid ]; then
     echo "pidfile found"
     if kill -0 "$(cat /tmp/instantarchpid)"; then
         notify-send "installer already running, please do not start multiple instances"
+        exit 1
     fi
 else
     echo "$$" >/tmp/instantarchpid

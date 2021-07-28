@@ -344,8 +344,7 @@ askinstalldisk() {
         {
             getdisks
             echo 'manual partitioning'
-        }
-        imenu -l "select disk> "
+        } | imenu -l "select disk> "
     )"
 
     [ -z "$DISK" ] && goback
@@ -404,6 +403,19 @@ use auto partitioning' | imenu -l)"
         export ASKTASK="editparts"
         ;;
     choose*)
+        if [ -z "$(getpartitions)" ]; then
+            echo 'warning: your disk does not appear to have any partitions.
+            instantOS requires at least one partition.
+            If you are unsure what this means it is suggested you use automatic partitioning' | imenu -M
+
+            imenu -c 'warning: installation without any partitions will likely not work. force continuation?'
+            checkback
+            if ! [ "$IMENUEXIT" = 0 ]; then
+                export ASKTASK="root"
+            else
+                export ASKTASK="installdisk"
+            fi
+        fi
         export ASKTASK="root"
         ;;
     *partitioning)

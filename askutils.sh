@@ -453,19 +453,23 @@ askroot() {
 # cfdisk wrapper to modify partition table during installation
 # var: editparts
 askeditparts() {
-    echo 'instantOS requires the following paritions: 
+    {
+        echo 'instantOS requires the following paritions: 
  - a root partition, all data on it will be erased
  - an optional home partition.
        If not specified, the same partition as root will be used. 
        Gives you the option to keep existing data on the partition
  - an optional swap partition. 
        If not specified a swap file will be used. 
+installing a bootloader is optional'
+        echo ''
+        if efibootmgr &> /dev/null; then
+            echo 'uefi system detected, installing a bootloader requires an efi partition'
+        else
+            echo 'legacy bios sytem detected, might not support gpt'
+        fi
 
-The Bootloader requires
-
- - an EFI partition on uefi systems
- - a disk to install it to on legacy-bios systems
-' | imenu -M
+    } | imenu -M
 
     EDITDISK="$(getdisks | imenu -l 'choose disk to edit> ' | grep -o '/dev/[^:]*')"
     echo "editing disk $EDITDISK"

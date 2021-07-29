@@ -340,6 +340,36 @@ sort all mirrors by speed' | imenu -l 'choose mirror settings')"
 askinstalldisk() {
     wallstatus install
     iroot -r manualpartitioning
+    if [ -z "$(getdisks)" ]; then
+        DISKCHOICE="$(
+            {
+                echo '> warning: no disk found'
+                echo '> make sure your hard drive is plugged in and functioning correctly'
+                echo '> '
+                echo 'continue regardless'
+                echo 'cancel install'
+            } | imenu -l 'disk error'
+        )"
+
+        [ -z "$DISKCHOICE" ] && return
+        case "$DISKCHOICE" in
+        cancel*)
+
+            unset IMENUACCEPTEMPTY
+            if imenu -c "are you sure you want to cancel the installation?"; then
+                iroot cancelinstall 1
+                exit
+            fi
+            export IMENUACCEPTEMPTY="true"
+
+            ;;
+        *)
+            echo 'forcing installation to continue'
+            ;;
+        esac
+
+    fi
+
     DISK="$(
         {
             getdisks
@@ -463,7 +493,7 @@ askeditparts() {
        If not specified a swap file will be used. 
 installing a bootloader is optional'
         echo ''
-        if efibootmgr &> /dev/null; then
+        if efibootmgr &>/dev/null; then
             echo 'uefi system detected, installing a bootloader requires an efi partition'
         else
             echo 'legacy bios sytem detected, might not support gpt'

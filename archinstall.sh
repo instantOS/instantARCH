@@ -256,3 +256,11 @@ if [ -e /tmp/removeimenu ]; then
 fi
 
 echo "installation finished"
+
+echo ""
+echo ""
+curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt' | sed 's/^/    /g'
+echo ""
+echo ""
+
+echo "the system can now be safely rebooted"

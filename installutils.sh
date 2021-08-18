@@ -39,6 +39,17 @@ testecho() {
     fi
 }
 
+isdebug() {
+    if {
+        [ -n "$INSTALLDEBUG" ] || [ -e /tmp/installdebug ]
+    }; then
+        echo 'debugging mode is enabled'
+        return 0
+    else
+        return 1
+    fi
+}
+
 # run a script inside the installation medium
 escript() {
     STARTDURATION="$SECONDS"

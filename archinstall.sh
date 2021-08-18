@@ -158,6 +158,25 @@ fi
 chmod +x ./*.sh
 chmod +x ./*/*.sh
 
+isdebug() {
+    if {
+        [ -n "$INSTALLDEBUG" ] || [ -e /tmp/installdebug ]
+    }; then
+        echo 'debugging mode is enabled'
+        return 0
+    else
+        return 1
+    fi
+}
+
+if isdebug; then
+    echo 'debugging mode enabled'
+    if [ -e /tmp/debugname ]; then
+        echo "debugging name: $(cat /tmp/installdebug)"
+
+    fi
+fi
+
 ./depend/depend.sh
 ./artix/preinstall.sh
 
@@ -227,8 +246,12 @@ uploadlogs() {
 
 }
 
+if isdebug && [ -e /tmp/debugname ]; then
+    echo "debug name: $(cat /tmp/debugname)"
+fi
+
 # ask to reboot, upload error data if install failed
-if [ -z "$INSTANTARCHTESTING" ]; then
+if [ -z "$INSTANTARCHTESTING" ] && ! isdebug; then
     if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
         if command -v installapplet; then
             notify-send "rebooting"

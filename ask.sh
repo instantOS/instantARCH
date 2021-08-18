@@ -42,6 +42,14 @@ else
     branch: $TESTBRANCH
     pacman repo: ${CUSTOMINSTANTREPO:-default}"
     fi
+
+    if imenu -c 'enable debug mode?'
+    then
+        echo 'enabling debug mode'
+        touch /tmp/installdebug
+        export INSTALLDEBUG='true'
+    fi
+
 fi
 
 /root/instantARCH/askloop.sh || {

@@ -26,8 +26,11 @@ pacloop() {
         echo 'Package installation failed
 Please ensure you are connected to the internet' | imenu -M
         if ! [ -e /root/instantARCH/refreshedkeyring ] || [ -z "$REFRESHEDKEYRING" ]; then
-            pacman -Sy archlinux-keyring
+            pacman -Sy archlinux-keyring --noconfirm
             export REFRESHEDKEYRING="true"
+            mkdir /root/instantARCH
+            touch /root/instantARCH/refreshedkeyring
+            continue
         fi
 
         if command -v reflector; then

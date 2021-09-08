@@ -227,6 +227,7 @@ askvm() {
 giving the wrong answer here might greatly decrease performance. " | imenu -C
         checkback
         if [ "$IMENUEXIT" = 0 ]; then
+            iroot isvm 0
             return
         fi
     fi

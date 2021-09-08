@@ -18,7 +18,7 @@ if iroot isvm; then
         pacloop xorg-drivers
     else
         if iroot vmware || lspci | grep -i vmware; then
-            sudo pacman -S open-vm-tools
+            pacloop open-vm-tools
             command -v systemctl && sudo systemctl enable vmtoolsd.service
         fi
         pacloop mesa xf86-video-vmware

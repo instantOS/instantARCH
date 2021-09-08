@@ -3,6 +3,8 @@
 # this installs dependencies needed for the installer
 # like fzf for menus
 
+source /root/instantARCH/moduleutils.sh
+
 if [ -e /opt/instantos/buildmedium ]; then
     echo "skipping dependencies"
     exit
@@ -16,22 +18,6 @@ setinfo() {
     fi
     echo "$@" >/opt/instantprogress
     echo "$@"
-}
-
-updaterepos() {
-    pacman -Sy --noconfirm || return 1
-    if pacman -Si bash 2>&1 | grep -iq 'unrecognized archive'; then
-        echo 'getting new mirrorlist'
-        curl -s 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&use_mirror_status=on' | sed 's/^#//g' >/etc/pacman.d/mirrorlist
-        rm /var/lib/pacman/sync/*
-        pacman -Sy --noconfirm || return 1
-        if pacman -Si bash 2>&1 | grep -iq 'unrecognized archive'; then
-            echo 'still problems, shuffling mirrorlist'
-            curl -s 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&use_mirror_status=on' | sed 's/^#//g' | shuf >/etc/pacman.d/mirrorlist
-            rm /var/lib/pacman/sync/*
-        fi
-        pacman -Sy --noconfirm || return 1
-    fi
 }
 
 setinfo "downloading installer dependencies"

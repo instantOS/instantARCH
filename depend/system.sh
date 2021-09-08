@@ -2,6 +2,8 @@
 
 # installs basic dependencies not specific to instantOS
 
+source /root/instantARCH/moduleutils.sh
+
 echo "installing additional system software"
 
 pacman -Sy --noconfirm
@@ -16,8 +18,8 @@ done
 # the comments are used for parsing while building a live iso. Do not remove
 
 # install begin
-while ! pacman -S --noconfirm --needed \
-    sudo \
+
+pacloop sudo \
     lightdm \
     bash \
     zsh \
@@ -66,19 +68,12 @@ while ! pacman -S --noconfirm --needed \
     gnome-font-viewer \
     trash-cli \
     fd \
-    grub; do # install end
-
-    sleep 10
-    command -v reflector &&
-        reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist &&
-        pacman -Sy --noconfirm
-
-done
+    grub
 
 # artix packages
 if command -v sv; then
     echo "installing additional runit packages"
-    pacman -S --noconfirm --needed lightdm-runit networkmanager-runit
+    pacloop lightdm-runit networkmanager-runit
 fi
 
 # auto install processor microcode
@@ -86,9 +81,9 @@ if uname -m | grep '^x'; then
     echo "installing microcode"
     if lscpu | grep -i 'name' | grep -i 'amd'; then
         echo "installing AMD microcode"
-        pacman -S --noconfirm --needed amd-ucode
+        pacloop amd-ucode
     elif lscpu | grep -i 'name' | grep -i 'intel'; then
         echo "installing Intel microcode"
-        pacman -S --noconfirm --needed intel-ucode
+        pacloop intel-ucode
     fi
 fi

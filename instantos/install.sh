@@ -2,6 +2,7 @@
 
 # install all instantOS software
 # and apply instantOS specific changes and workarounds
+source /root/instantARCH/moduleutils.sh
 
 cd || exit 1
 
@@ -22,20 +23,9 @@ else
     DEPENDPACKAGE="instantdepend-nosystemd"
 fi
 
-while ! pacman -S instantos "$DEPENDPACKAGE" --noconfirm; do
-    if [ -e /usr/share/liveutils ] && ! grep -iq manjaro /etc/os-release; then
-        imenu -m "package installation failed.
-Please ensure you are connected to the internet"
-    fi
-    # fetch new mirrors if on arch
-    if command -v reflector; then
-        reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-    else
-        pacman-mirrors --geoip
-    fi
-    pacman -Sy --noconfirm
 
-done
+pacloop instantos "$DEPENDPACKAGE"
+
 
 # don't install arch pamac on Manjaro
 if ! grep -iq Manjaro /etc/os-release && ! command -v pamac; then
@@ -46,6 +36,7 @@ if ! grep -iq Manjaro /etc/os-release && ! command -v pamac; then
     echo 'EnableFlatpak' >>/etc/pamac.conf
 fi
 
+# needs yes because replacing packages has default no
 yes | pacman -S libxft-bgra
 yes | pacman -S neofetch-git
 

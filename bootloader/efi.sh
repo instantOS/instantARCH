@@ -4,6 +4,8 @@
 # runs from inside the installation
 # unlike the legacy bios grub script
 
+source /root/instantARCH/moduleutils.sh
+
 if iroot nobootloader; then
     echo "skipping bootloader install"
     exit
@@ -13,7 +15,7 @@ mkdir /efi
 echo 'trying to mount '"$(iroot partefi)"
 mount "$(iroot partefi)" /efi || exit 1
 
-sudo pacman -S efibootmgr grub --noconfirm || exit 1
+pacloop efibootmgr grub
 
 if ! grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB; then
     umount /efi || exit 1

@@ -43,11 +43,12 @@ else
     pacman repo: ${CUSTOMINSTANTREPO:-default}"
     fi
 
-    if imenu -c 'enable debug mode?'
-    then
-        echo 'enabling debug mode'
-        touch /tmp/installdebug
-        export INSTALLDEBUG='true'
+    if [ -n "$INSTANTARCHTESTING" ]; then
+        if imenu -c 'enable debug mode?'; then
+            echo 'enabling debug mode'
+            touch /tmp/installdebug
+            export INSTALLDEBUG='true'
+        fi
     fi
 
 fi

@@ -11,8 +11,8 @@ fi
 sudo sed -i 's/postcfg/postcfg\n        - shellprocess/g' \
     /etc/calamares/settings.conf
 
-curl -s 'https://raw.githubusercontent.com/instantOS/instantARCH/master/manjaro/shellprocess.conf' |
+curl -s 'https://raw.githubusercontent.com/instantOS/instantARCH/main/manjaro/shellprocess.conf' |
     sudo tee /etc/calamares/modules/shellprocess.conf
 
-curl -s 'https://raw.githubusercontent.com/instantOS/instantARCH/master/calamares.sh' | sudo tee /usr/bin/instantcalamares
+curl -s 'https://raw.githubusercontent.com/instantOS/instantARCH/main/calamares.sh' | sudo tee /usr/bin/instantcalamares
 sudo chmod +x /usr/bin/instantcalamares

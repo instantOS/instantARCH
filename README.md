@@ -1,7 +1,7 @@
 <div align="center">
     <h1>instantARCH</h1>
     <p>the official instantOS installer</p>
-    <img width="300" height="300" src="https://raw.githubusercontent.com/instantOS/instantLOGO/master/png/arch.png">
+    <img width="300" height="300" src="https://raw.githubusercontent.com/instantOS/instantLOGO/main/png/arch.png">
 </div>
 
 #
@@ -11,7 +11,7 @@
 instantARCH is a super lightweight quick & easy to use installer for instantOS.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/instantOS/instantLOGO/master/screeenshots/instantarch.png">
+  <img src="https://raw.githubusercontent.com/instantOS/instantLOGO/main/screeenshots/instantarch.png">
 </p>
 
 ## Features

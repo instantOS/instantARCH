@@ -49,6 +49,7 @@ pacloop sudo \
     gvfs-mtp \
     exfat-utils \
     unzip \
+    neofetch \
     engrampa \
     unrar \
     sushi \

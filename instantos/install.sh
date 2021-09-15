@@ -38,7 +38,6 @@ fi
 
 # needs yes because replacing packages has default no
 yes | pacman -S libxft-bgra
-yes | pacman -S neofetch-git
 
 cd ~/instantOS || exit 1
 
@@ -51,7 +50,7 @@ bash rootinstall.sh
 
 # change greeter appearance
 [ -e /etc/lightdm ] || mkdir -p /etc/lightdm
-cat /usr/share/instantdotfiles/lightdm-gtk-greeter.conf >/etc/lightdm/lightdm-gtk-greeter.conf
+cat /usr/share/instantdotfiles/rootconfig/lightdm-gtk-greeter.conf >/etc/lightdm/lightdm-gtk-greeter.conf
 
 if ! iroot nobootloader; then
     # fix grub on manjaro

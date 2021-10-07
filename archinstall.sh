@@ -41,6 +41,8 @@ if ! command -v imenu; then
     touch /tmp/removeimenu
 fi
 
+command -v tzupdate && ! pgrep tzupdate && sudo tzupdate &
+
 # updated mirrorlist
 echo "updating mirrorlist"
 curl -s https://raw.githubusercontent.com/instantOS/instantOS/main/repo.sh | bash

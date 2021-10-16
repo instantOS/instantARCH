@@ -21,7 +21,7 @@ else
     # print logo
     echo ""
     echo ""
-    curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt' | sed 's/^/    /g'
+    curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/main/ascii.txt' | sed 's/^/    /g'
     echo ""
     echo ""
 fi
@@ -43,15 +43,15 @@ fi
 
 # updated mirrorlist
 echo "updating mirrorlist"
-curl -s https://raw.githubusercontent.com/instantOS/instantOS/master/repo.sh | bash
+curl -s https://raw.githubusercontent.com/instantOS/instantOS/main/repo.sh | bash
 
 # download imenu
-curl -s https://raw.githubusercontent.com/instantOS/imenu/master/imenu.sh >/usr/bin/imenu
+curl -s https://raw.githubusercontent.com/instantOS/imenu/main/imenu.sh >/usr/bin/imenu
 chmod 755 /usr/bin/imenu
 
 while ! command -v imenu; do
     echo "installing imenu"
-    curl -s https://raw.githubusercontent.com/instantOS/imenu/master/imenu.sh >/usr/bin/imenu
+    curl -s https://raw.githubusercontent.com/instantOS/imenu/main/imenu.sh >/usr/bin/imenu
     chmod 755 /usr/bin/imenu
 done
 
@@ -268,7 +268,7 @@ echo "installation finished"
 
 echo ""
 echo ""
-curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt' | sed 's/^/    /g'
+curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/main/ascii.txt' | sed 's/^/    /g'
 echo ""
 echo ""
 

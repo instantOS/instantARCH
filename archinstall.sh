@@ -8,6 +8,24 @@
 
 source /root/instantARCH/moduleutils.sh
 
+# this is duplicate code but getting rid of it would require much more code
+
+updaterepos() {
+    pacman -Sy --noconfirm || return 1
+    if pacman -Si bash 2>&1 | grep -iq 'unrecognized archive'; then
+        echo 'getting new mirrorlist'
+        curl -s 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&use_mirror_status=on' | sed 's/^#//g' >/etc/pacman.d/mirrorlist
+        rm /var/lib/pacman/sync/*
+        pacman -Sy --noconfirm || return 1
+        if pacman -Si bash 2>&1 | grep -iq 'unrecognized archive'; then
+            echo 'still problems, shuffling mirrorlist'
+            curl -s 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&use_mirror_status=on' | sed 's/^#//g' | shuf >/etc/pacman.d/mirrorlist
+            rm /var/lib/pacman/sync/*
+        fi
+        pacman -Sy --noconfirm || return 1
+    fi
+}
+
 if ! whoami | grep -iq '^root'; then
     echo "not running as root, switching"
     curl -Lg git.io/instantarch | sudo bash

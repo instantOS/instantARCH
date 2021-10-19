@@ -50,6 +50,7 @@ pacloop sudo \
     exfat-utils \
     unzip \
     neofetch \
+    lsb-release \
     engrampa \
     unrar \
     sushi \

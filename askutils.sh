@@ -288,10 +288,10 @@ askregion() {
 
     TIMEZONE="$(
         {
-            if command -v tzupdate &>/dev/null && command -v timedatectl &>/dev/null; then
+            if command -v tzupdate &>/dev/null; then
                 # suggest auto detected region
                 CURZONE="$(
-                    timedatectl | grep 'Time zone' | grep -o '[^:]*$' |
+                    realpath /etc/localtime | sed 's~/usr/share/zoneinfo/~~g' |
                         sed 's/(.*)//g' | sed 's/^ *//g' | sed 's/ *$//g' | sed 's/\//   /g'
                 )"
                 if [ -n "$CURZONE" ]; then

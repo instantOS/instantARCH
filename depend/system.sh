@@ -41,6 +41,7 @@ pacloop sudo \
     lshw \
     gxkb \
     ntfs-3g \
+    pamixer \
     gedit \
     ttf-liberation \
     ttf-joypixels \

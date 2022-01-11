@@ -44,18 +44,14 @@ updaterepos
 
 # install reflector for automirror
 if ! grep -i 'manjaro' /etc/os-release && command -v systemctl; then
-    while ! pacman -S --noconfirm --needed reflector; do
-        echo "reflector install failed"
-        updaterepos
-        sleep 10
-    done
+    pacloop reflector
 fi
 
 checkpackage() {
     if command -v "$1" || pacman -Qi "$1" &>/dev/null; then
         echo "$1 is installed"
     else
-        pacman -S --noconfirm --needed "$1"
+        pacloop "$1"
     fi
 }
 
@@ -87,7 +83,6 @@ installdepends() {
         checkpackage bash || return 1
         checkpackage pacman-contrib || return 1
         checkpackage curl || return 1
-
     fi
 }
 

@@ -9,29 +9,19 @@ if iroot noregion; then
     exit
 fi
 
-if ! iroot region; then
+if ! iroot timezone; then
     echo "setting region failed"
     exit
 fi
 
-REGION="$(iroot region)"
+REGION="$(iroot timezone)"
 
-if iroot city; then
-    CITY="$(iroot city)"
-fi
-
-if [ -n "$CITY" ]; then
-    ln -sf /usr/share/zoneinfo/$REGION/$CITY /etc/localtime
-    if command -v timedatectl; then
-        timedatectl set-timezone "$REGION/$CITY"
-    fi
-    echo "setting timezone to $REGION/$CITY"
-else
-    ln -sf /usr/share/zoneinfo/$REGION /etc/localtime
-    if command -v timedatectl; then
-        timedatectl set-timezone "$REGION"
-    fi
-    echo "setting timezone to $REGION"
+ln -sf /usr/share/zoneinfo/$REGION /etc/localtime
+if command -v timedatectl; then
+    timedatectl set-timezone "$REGION"
 fi
 
 hwclock --systohc
+
+echo "set timezone to $REGION"
+

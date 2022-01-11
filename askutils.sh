@@ -281,22 +281,42 @@ until this is fixed" | imenu -M
 
 }
 
-# ask for region with region/city
+# ask for region
 # var: region
 askregion() {
     cd /usr/share/zoneinfo || return 1
-    REGION=$(ls | imenu -l "select region ")
 
-    [ -z "$REGION" ] && goback
+    TIMEZONE="$(
+        {
+            if command -v tzupdate &>/dev/null; then
+                # suggest auto detected region
+                CURZONE="$(
+                    realpath /etc/localtime | sed 's~/usr/share/zoneinfo/~~g' |
+                        sed 's/(.*)//g' | sed 's/^ *//g' | sed 's/ *$//g' | sed 's/\//   /g'
+                )"
+                if [ -n "$CURZONE" ]; then
+                    echo "auto-detect: $CURZONE"
+                fi
 
-    if [ -d "$REGION" ]; then
-        cd "$REGION" || return 1
-        CITY="$(ls | imenu -l "select the City nearest to you ")"
-        [ -z "$CITY" ] && unset REGION && goback
+            fi
+            find . -type f | sort -u | sed 's/\.\///g' | grep -Eo '.{2,}' | sed 's/\//   /g'
+        } | imenu -l "Select region "
+    )"
+
+    [ -z "$TIMEZONE" ] && goback
+
+    # remove markup
+    TIMEZONE="$(
+        sed 's/   /\//g' <<<"$TIMEZONE" | sed 's/^.*: *//g'
+    )"
+
+    if [ -e "./$TIMEZONE" ]; then
+        iroot timezone "$TIMEZONE"
+    else
+        imenu -e "region $TIMEZONE does not exist"
+        unset TIMEZONE
+        goback
     fi
-
-    iroot region "$REGION"
-    [ -n "$CITY" ] && iroot city "$CITY"
 
     backpush region
     export ASKTASK="installdisk"

@@ -41,6 +41,7 @@ pacloop sudo \
     lshw \
     gxkb \
     ntfs-3g \
+    pamixer \
     gedit \
     ttf-liberation \
     ttf-joypixels \
@@ -49,6 +50,8 @@ pacloop sudo \
     gvfs-mtp \
     exfat-utils \
     unzip \
+    neofetch \
+    lsb-release \
     engrampa \
     unrar \
     sushi \

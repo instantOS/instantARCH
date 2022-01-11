@@ -7,7 +7,7 @@
 # print logo
 echo ""
 echo ""
-curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/master/ascii.txt' | sed 's/^/    /g'
+curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/main/ascii.txt' | sed 's/^/    /g'
 echo ""
 echo ""
 
@@ -17,7 +17,7 @@ if ! whoami | grep -iq '^root'; then
 fi
 
 if ! command -v imenu; then
-    curl -s https://raw.githubusercontent.com/instantOS/imenu/master/imenu.sh >/usr/local/bin/imenu
+    curl -s https://raw.githubusercontent.com/instantOS/imenu/main/imenu.sh >/usr/local/bin/imenu
     chmod 755 /usr/local/bin/imenu
 fi
 

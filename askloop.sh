@@ -11,12 +11,19 @@ command -v guimode || source /root/instantARCH/askutils.sh
 # enable choosing nothing to go back
 export IMENUACCEPTEMPTY="true"
 
-# very WIP back menu
 # TODO make questions activate this when canceled
 backmenu() {
-    BACKCHOICE="$(echo ':g Continue installation
+    if ! [ -e /tmp/climenu ]; then
+        BACKCHOICE="$(echo ':g Continue installation
 :b Back
 :r ﰸCancel installation' | instantmenu -q 'back menu' -i -l 209 -h -1 -bw 8 -a 20 -w -1 -c)"
+
+    else
+        BACKCHOICE="$(echo 'Continue installation
+ Back
+ Cancel installation' | imenu -l)"
+
+    fi
 
     case $BACKCHOICE in
     *Back)

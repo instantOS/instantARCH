@@ -1,12 +1,15 @@
-<div align="center">
-    <h1>instantARCH</h1>
-    <p>the official instantOS installer</p>
-    <img width="300" height="300" src="https://raw.githubusercontent.com/instantOS/instantLOGO/main/png/arch.png">
-</div>
+<p align="center"><a href="https://newpipe.net"><img src="https://raw.githubusercontent.com/instantOS/instantLOGO/main/png/arch.png" width="150"></a></p> 
+<h2 align="center"><b>instantARCH</b></h2>
+<h4 align="center">A user friendly minimal installer for instantOS</h4>
 
-#
+<p align="center">
+<a href="https://www.gnu.org/licenses/gpl-2.0" alt="License: GPLv2"><img src="https://img.shields.io/badge/License-GPL%20v2-blue.svg"></a>
+<a href="https://www.codacy.com/gh/instantOS/instantARCH/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=instantOS/instantARCH&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/916f92be466b4f398b47c106255ac11b" alt="Codacy Badge"></a>
+<img src="https://img.shields.io/discord/683782260071071764" alt="Discord">
+<img src="https://img.shields.io/maintenance/yes/2022" alt="Maintenance">
+</p>
+<hr>
 
-----------
 
 instantARCH is a super lightweight quick & easy to use installer for instantOS.
 

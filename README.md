@@ -1,4 +1,4 @@
-<p align="center"><a href="https://newpipe.net"><img src="https://raw.githubusercontent.com/instantOS/instantLOGO/main/png/arch.png" width="150"></a></p> 
+<p align="center"><img src="https://raw.githubusercontent.com/instantOS/instantLOGO/main/png/arch.png" width="150"></p> 
 <h2 align="center"><b>instantARCH</b></h2>
 <h4 align="center">A user friendly minimal installer for instantOS</h4>
 

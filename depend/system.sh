@@ -17,9 +17,9 @@ done
 
 # the comments are used for parsing while building a live iso. Do not remove
 
+pacloop \
 # install begin
-
-pacloop sudo \
+    sudo \
     lightdm \
     bash \
     zsh \
@@ -72,6 +72,7 @@ pacloop sudo \
     trash-cli \
     fd \
     grub
+# install end
 
 # artix packages
 if command -v sv; then

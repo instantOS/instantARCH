@@ -15,63 +15,7 @@ while ! pacman -S xorg --noconfirm --needed; do
 
 done
 
-# the comments are used for parsing while building a live iso. Do not remove
-
-# install begin
-
-pacloop sudo \
-    lightdm \
-    bash \
-    zsh \
-    xterm \
-    hdparm \
-    systemd-swap \
-    pulseaudio \
-    granite \
-    alsa-utils \
-    usbutils \
-    lightdm-gtk-greeter \
-    noto-fonts \
-    otf-ipafont \
-    wqy-microhei \
-    inetutils \
-    xdg-desktop-portal-gtk \
-    xorg-xinit \
-    nitrogen \
-    lshw \
-    gxkb \
-    ntfs-3g \
-    pamixer \
-    gedit \
-    ttf-liberation \
-    ttf-joypixels \
-    mpv \
-    bc \
-    gvfs-mtp \
-    exfat-utils \
-    unzip \
-    neofetch \
-    lsb-release \
-    engrampa \
-    unrar \
-    sushi \
-    nano \
-    exa \
-    bat \
-    p7zip \
-    xdg-user-dirs-gtk \
-    noto-fonts-emoji \
-    xf86-input-evdev \
-    xf86-input-synaptics \
-    accountsservice \
-    cups \
-    samba \
-    gvfs-smb \
-    system-config-printer \
-    gnome-font-viewer \
-    trash-cli \
-    fd \
-    grub
+pacloop $(cat depends) 
 
 # artix packages
 if command -v sv; then

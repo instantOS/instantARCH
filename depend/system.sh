@@ -15,7 +15,7 @@ while ! pacman -S xorg --noconfirm --needed; do
 
 done
 
-pacloop $(cat depends) 
+pacloop $(cat "$INSTANTARCH"/data/packages/system)
 
 # artix packages
 if command -v sv; then

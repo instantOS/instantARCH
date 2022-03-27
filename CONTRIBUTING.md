@@ -21,6 +21,18 @@ and later reading it out during installation.
 You should be able to answer all questions before installation and then letting the computer sit for a while. 
 There's nothing more frustrating than letting your computer with german internet sit for an entire night to discover that it stopped at some confirmation prompt you didn't anticipate. 
 
+## Stability
+
+Because instantARCH is the onboarding process for instantOS, breaking it makes
+the entire rest inaccessible for new or reinstalling users, so it is crucial to
+keep uptime as high as possible. Before contributing any changes in
+functionality or architecture make sure you did at least one test installation
+to check that it doesn't prevent installing instantOS from working. If that is
+not possible for you or the feature might require some more testing, PR to the
+testing branch instead of main. The testing branch will not be distributed to
+the iso automatically and is safe to break as it is opt-in through the
+development tools. 
+
 ## Getting started with instantARCH development
 
 instantARCH uses different modules for different stages of the installation. 

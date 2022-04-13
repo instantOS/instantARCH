@@ -73,3 +73,8 @@ fi
 if ! uname -m | grep -q '^i' && command -v systemctl; then
     pacloop lib32-mesa
 fi
+
+if lspci | grep -i marvell; then
+    echo "installing firmware needed for marvell wifi"
+    pacloop linux-firmware-marvell
+fi

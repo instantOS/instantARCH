@@ -21,7 +21,7 @@ if [ -e /usr/share/liveutils ] && ! [ -e /tmp/nogui ] && ! [ -n "$CLIMODE" ]; th
     GUIMODE="True"
 fi
 
-# switch imenu to fzf and dialog
+# switch imenu to using fzf and dialog
 if ! guimode; then
     touch /tmp/climenu
     imenu -m "Welcome to the instantOS installer"

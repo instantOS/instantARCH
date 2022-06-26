@@ -4,7 +4,7 @@
 
 echo "cleaning installation leftovers"
 
-if iroot hasnvidia
+if iroot hasnvidia || sudo lshw -C display | grep -i '^ *vendor' | grep -qi intel
 then
     echo "clearing unneeded vulkan drivers"
     if pacman -Q amdvlk

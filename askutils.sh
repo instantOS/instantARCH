@@ -682,7 +682,7 @@ askgrub() {
 # var: drivers
 askdrivers() {
 
-    export ASKTASK="user"
+    export ASKTASK="logs"
     grep -iq manjaro /etc/os-release && return
     if lspci | grep -iq 'nvidia'; then
         echo "nvidia card detected"
@@ -720,6 +720,18 @@ This could prevent the system from booting" | imenu -C
     fi
 
     backpush drivers
+}
+
+asklogs() {
+    imenu -c "backup installation logs to ix.io ? (disabled by default)"
+    checkback
+    if [ "$IMENUEXIT" = 0 ]; then
+        iroot logging 1
+    else
+        iroot r logging
+    fi
+    backpush logs
+    export ASKTASK="user"
 }
 
 # ask for user details
@@ -866,16 +878,6 @@ virtualbox-host-modules-arch"
     export ASKTASK="advanced"
 }
 
-asklogs() {
-    imenu -c "backup installation logs to ix.io ? (disabled by default)"
-    checkback
-    if [ "$IMENUEXIT" = 0 ]; then
-        iroot logging 1
-    else
-        iroot r logging
-    fi
-    export ASKTASK="advanced"
-}
 
 # var: advanced
 askadvanced() {
@@ -890,7 +892,6 @@ askadvanced() {
     CHOICE="$(echo 'autologin
 plymouth
 kernel
-logs
 swap
 packages
 keyboardvariant

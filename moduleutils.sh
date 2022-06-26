@@ -51,3 +51,26 @@ Please ensure you are connected to the internet' | imenu -M
         sleep 4
     done
 }
+
+# pacstrap wrapper to accomodate different arch based systems and install isos
+pacstraploop() {
+
+    PACSTRAP_ARGLIST=()
+
+    # use host package cache if installation disk is an instantOS iso
+    # TODO function to better check if we are on an instantOS iso
+    if [ -e /usr/share/liveutils ]; then
+        PACSTRAP_ARGLIST+=("-c")
+    fi
+
+    while ! {
+        if command -v pacstrap &>/dev/null; then
+            pacstrap "${PACSTRAP_ARGLIST[@]}" /mnt $@
+        else
+            basestrap "${PACSTRAP_ARGLIST[@]}" /mnt $@
+        fi
+    }; do
+        imenu -m "package installation failed. ensure you are connected to the internet"
+        sleep 2
+    done
+}

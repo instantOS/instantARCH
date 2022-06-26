@@ -21,20 +21,14 @@ fi
 
 # we're on arch
 if command -v pacstrap; then
-    while ! pacstrap /mnt base ${KERNEL} ${KERNEL}-headers linux-firmware reflector; do
-        imenu -e "package installation failed \nplease reconnect to internet"
-    done
+    pacstraploop base ${KERNEL} ${KERNEL}-headers linux-firmware reflector
 else
-    # artix or manjaro
+    # manjaro probably
     if command -v systemctl; then
-        while ! basestrap /mnt base ${KERNEL} ${KERNEL}-headers linux-firmware; do
-            imenu -e "manjaro package installation failed \nplease reconnect to internet"
-        done
+        pacstraploop base ${KERNEL} ${KERNEL}-headers linux-firmware
     else
-        while ! basestrap /mnt runit elogind-runit base base-devel ${KERNEL} ${KERNEL}-headers linux-firmware; do
-            sleep 2
-            imenu -e "artix package installation failed \nplease reconnect to internet"
-        done
+        # non-systemd distro, probably artix
+        pacstraploop runit elogind-runit base base-devel ${KERNEL} ${KERNEL}-headers linux-firmware
     fi
 fi
 

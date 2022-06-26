@@ -2,6 +2,8 @@
 
 # install base system to target root partition
 
+source "$INSTANTARCH"/moduleutils.sh
+
 if ! mount | grep '/mnt'; then
     echo "mount failed"
     exit 1

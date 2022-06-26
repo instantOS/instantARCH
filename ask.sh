@@ -10,7 +10,7 @@
 mkdir -p "$INSTANTARCH"/config &>/dev/null
 mkdir config &>/dev/null
 
-source <(curl -Ls git.io/paperbash)
+source <(curl -Ls 'https://raw.githubusercontent.com/paperbenni/bash/master/import.sh')
 pb dialog
 
 source /root/instantARCH/askutils.sh

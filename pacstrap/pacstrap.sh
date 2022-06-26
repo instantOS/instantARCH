@@ -2,6 +2,7 @@
 
 # install base system to target root partition
 
+export INSTANTARCH="${INSTANTARCH:-/root/instantARCH}"
 source "$INSTANTARCH"/moduleutils.sh
 
 if ! mount | grep '/mnt'; then
@@ -34,6 +35,7 @@ else
     fi
 fi
 
+# Some arch based distros have the command renamed to fstabgen
 if command -v genfstab; then
     genfstab -U /mnt >>/mnt/etc/fstab
 else
@@ -43,6 +45,8 @@ fi
 cd /root || exit 1
 
 cp -r ./instantARCH /mnt/root/instantARCH
+
+# record installer iso version on installed system
 if [ -e /etc/instantos/liveversion ]; then
     cat /etc/instantos/liveversion >/mnt/root/instantARCH/config/liveversion
 else

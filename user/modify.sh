@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # modify existing users to work with instantOS
 
 echo "adding groups"
@@ -7,6 +8,7 @@ groupadd wheel &>/dev/null
 groupadd docker &>/dev/null
 
 REALUSERS="$(ls /home/ | grep -v '+')"
+
 for i in $REALUSERS; do
     echo "processing user $i"
     usermod -a -G wheel "$i"

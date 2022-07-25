@@ -10,7 +10,7 @@
 mkdir -p "$INSTANTARCH"/config &>/dev/null
 mkdir config &>/dev/null
 
-source <(curl -Ls https://raw.githubusercontent.com/paperbenni/bash/master/import.sh)
+source <(curl -Ls 'https://raw.githubusercontent.com/paperbenni/bash/master/import.sh')
 pb dialog
 
 source /root/instantARCH/askutils.sh
@@ -21,7 +21,7 @@ if [ -e /usr/share/liveutils ] && ! [ -e /tmp/nogui ] && ! [ -n "$CLIMODE" ]; th
     GUIMODE="True"
 fi
 
-# switch imenu to fzf and dialog
+# switch imenu to using fzf and dialog
 if ! guimode; then
     touch /tmp/climenu
     imenu -m "Welcome to the instantOS installer"

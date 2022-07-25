@@ -2,12 +2,17 @@
 
 # install base system to target root partition
 
+export INSTANTARCH="${INSTANTARCH:-/root/instantARCH}"
+source "$INSTANTARCH"/moduleutils.sh
+
 if ! mount | grep '/mnt'; then
     echo "mount failed"
     exit 1
 fi
 
 pacman -Sy --noconfirm
+# needed to get pacstrap working on isos with expired keys
+pacloop archlinux-keyring
 
 # kernel selection
 if iroot kernel; then
@@ -19,23 +24,18 @@ fi
 
 # we're on arch
 if command -v pacstrap; then
-    while ! pacstrap /mnt base ${KERNEL} ${KERNEL}-headers linux-firmware reflector; do
-        dialog --msgbox "package installation failed \nplease reconnect to internet" 700 700
-    done
+    pacstraploop base ${KERNEL} ${KERNEL}-headers linux-firmware reflector
 else
-    # artix or manjaro
+    # manjaro probably
     if command -v systemctl; then
-        while ! basestrap /mnt base ${KERNEL} ${KERNEL}-headers linux-firmware; do
-            dialog --msgbox "manjaro package installation failed \nplease reconnect to internet" 700 700
-        done
+        pacstraploop base ${KERNEL} ${KERNEL}-headers linux-firmware
     else
-        while ! basestrap /mnt runit elogind-runit base base-devel ${KERNEL} ${KERNEL}-headers linux-firmware; do
-            sleep 2
-            dialog --msgbox "artix package installation failed \nplease reconnect to internet" 700 700
-        done
+        # non-systemd distro, probably artix
+        pacstraploop runit elogind-runit base base-devel ${KERNEL} ${KERNEL}-headers linux-firmware
     fi
 fi
 
+# Some arch based distros have the command renamed to fstabgen
 if command -v genfstab; then
     genfstab -U /mnt >>/mnt/etc/fstab
 else
@@ -45,6 +45,8 @@ fi
 cd /root || exit 1
 
 cp -r ./instantARCH /mnt/root/instantARCH
+
+# record installer iso version on installed system
 if [ -e /etc/instantos/liveversion ]; then
     cat /etc/instantos/liveversion >/mnt/root/instantARCH/config/liveversion
 else

@@ -3,7 +3,7 @@
 # insteractive loop for ask.sh
 # allows going back, cancelling the installation etc
 
-source <(curl -Ls https://raw.githubusercontent.com/paperbenni/bash/master/import.sh)
+source <(curl -Ls 'https://raw.githubusercontent.com/paperbenni/bash/master/import.sh')
 pb dialog
 
 command -v guimode || source /root/instantARCH/askutils.sh

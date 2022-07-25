@@ -28,7 +28,7 @@ updaterepos() {
 
 if ! whoami | grep -iq '^root'; then
     echo "not running as root, switching"
-    curl -s https://raw.githubusercontent.com/instantos/instantARCH/master/archinstall.sh | sudo bash
+    curl -s https://raw.githubusercontent.com/instantos/instantARCH/main/archinstall.sh | sudo bash
     exit
 fi
 
@@ -287,9 +287,9 @@ if [ -z "$INSTANTARCHTESTING" ] && ! isdebug; then
             reboot
         fi
     else
-        dialog --msgbox "installation failed
+        echo "installation failed
 please go to https://instantos.github.io/instantos.github.io/support
-for assistance or error reporting" 1000 1000
+for assistance or error reporting" | imenu -M
         echo "uploading error data"
         echo "installaion failed"
         uploadlogs

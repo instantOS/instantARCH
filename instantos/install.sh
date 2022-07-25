@@ -14,6 +14,7 @@ done
 
 cd instantOS || exit 1
 
+# install pacman repos
 bash repo.sh
 pacman -Sy --noconfirm
 

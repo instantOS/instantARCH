@@ -58,8 +58,7 @@ checkpackage() {
 installdepends() {
 
     if ! [ -e /usr/share/liveutils ]; then
-        pacman -S --noconfirm --needed \
-            fzf \
+        pacloop fzf \
             expect \
             git \
             os-prober \
@@ -108,7 +107,7 @@ done
 
 # upgrade instantmenu
 if command -v instantmenu; then
-    pacman -S instantmenu --noconfirm
+    pacloop instantmenu
 fi
 
 if [ -e /usr/share/liveutils ]; then

@@ -28,7 +28,7 @@ updaterepos() {
 
 if ! whoami | grep -iq '^root'; then
     echo "not running as root, switching"
-    curl -Lg git.io/instantarch | sudo bash
+    curl -s https://raw.githubusercontent.com/instantos/instantARCH/master/archinstall.sh | sudo bash
     exit
 fi
 

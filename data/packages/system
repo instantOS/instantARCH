@@ -8,7 +8,7 @@ systemd-swap
 pipewire
 pipewire-pulse
 pipewire-jack
-pipewire-media-session
+wireplumber
 granite
 alsa-utils
 usbutils

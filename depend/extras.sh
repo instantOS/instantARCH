@@ -2,10 +2,18 @@
 
 # installs extra third party applications
 
+source /root/instantARCH/moduleutils.sh
 pacman -Sy --noconfirm
 
 if command -v systemctl; then
-    pacman -S --noconfirm --needed steam steam-native-runtime
+    pacloop steam steam-native-runtime
+fi
+
+pacloop lshw
+HWINFO=:$(lshw)
+if grep -q 'dvd' <<<"$HWINFO" || grep -q 'cdrom' <<<"$HWINFO"; then
+    echo "fixing dvd playback"
+    pacloop libdvdread libdvdcss libdvdnav
 fi
 
 # virtualbox guest additions

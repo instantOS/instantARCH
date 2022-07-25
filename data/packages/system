@@ -5,7 +5,10 @@ zsh
 xterm
 hdparm
 systemd-swap
-pulseaudio
+pipewire
+pipewire-pulse
+pipewire-jack
+pipewire-media-session
 granite
 alsa-utils
 usbutils

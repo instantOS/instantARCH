@@ -51,6 +51,12 @@ addsum() {
 
 # set status wallpaper
 wallstatus() {
+    if [ -n "$INSTANTARCHWALL" ]; then
+        if [ "$INSTANTARCHWALL" = "$1" ]; then
+            return
+        fi
+    fi
+    INSTANTARCHWALL="$1"
     [ -e /usr/share/liveutils/"$1".jpg ] && guimode && feh --bg-scale /usr/share/liveutils/"$1".jpg &
 }
 
@@ -157,7 +163,7 @@ systemd-swap (obviously)" | imenu -M
 # var: layout
 asklayout() {
     cd "$INSTANTARCH"/data/lang/keyboard || return 1
-    wallstatus worldmap
+    wallstatus region
 
     LAYOUTLIST="$(ls)"
     if command -v localectl; then
@@ -200,6 +206,7 @@ $NEWKEY" >"$INSTANTARCH"/data/lang/keyboard/other
 # ask for default locale
 # var: locale
 asklocale() {
+    wallstatus region
     cd "$INSTANTARCH"/data/lang/locale || return 1
     # TODO: preselect based on language choice
     NEWLOCALE="$(ls | imenu -l 'Select language> ')"
@@ -284,6 +291,7 @@ until this is fixed" | imenu -M
 # ask for region
 # var: region
 askregion() {
+    wallstatus region
     cd /usr/share/zoneinfo || return 1
 
     TIMEZONE="$(
@@ -325,6 +333,7 @@ askregion() {
 # offer to choose mirror country
 # var: mirrors
 askmirrors() {
+    wallstatus region
     export ASKTASK="vm"
     if command -v pacstrap; then
         echo "pacstrap detected"
@@ -359,7 +368,7 @@ sort all mirrors by speed' | imenu -l 'choose mirror settings')"
 # choose between disks and manual partitioning
 # var: installdisk
 askinstalldisk() {
-    wallstatus install
+    wallstatus partitioning
     iroot -r manualpartitioning
     if [ -z "$(getdisks)" ]; then
         DISKCHOICE="$(
@@ -442,6 +451,7 @@ this will delete all existing data" | imenu -C
 
 # var: partitioning
 askpartitioning() {
+    wallstatus partitioning
     iroot manualpartitioning 1
     STARTCHOICE="$(echo 'edit partitions
 choose partitions
@@ -481,6 +491,7 @@ use auto partitioning' | imenu -l)"
 # choose root partition for programs etc
 # var: root
 askroot() {
+    wallstatus partitioning
     PARTROOT="$(choosepart 'choose root partition (required) ')"
     if [ -n "$CANCELPARTITIONING" ]; then
         export ASKTASK="installdisk"
@@ -504,6 +515,7 @@ askroot() {
 # cfdisk wrapper to modify partition table during installation
 # var: editparts
 askeditparts() {
+    wallstatus partitioning
     {
         echo 'instantOS requires the following paritions: 
  - a root partition, all data on it will be erased
@@ -543,6 +555,7 @@ installing a bootloader is optional'
 
 # choose home partition, allow using existing content or reformatting
 askhome() {
+    wallstatus partitioning
     imenu -c "do you want to use a seperate home partition?"
     checkback
     if ! [ "$IMENUEXIT" = 0 ]; then
@@ -584,6 +597,7 @@ erase data' | imenu -l)" in
 # choose swap partition or swap file
 # var: swap
 askswap() {
+    wallstatus partitioning
     CHOICE="$(echo 'auto allocate swap (default)
 use a swap file
 use a swap partition' | imenu -l)"
@@ -611,6 +625,7 @@ use a swap partition' | imenu -l)"
 }
 
 askpartswap() {
+    wallstatus partitioning
     PARTSWAP="$(choosepart 'choose swap partition> ')"
     if [ -n "$CANCELPARTITIONING" ]; then
         export ASKTASK="installdisk"
@@ -878,9 +893,9 @@ virtualbox-host-modules-arch"
     export ASKTASK="advanced"
 }
 
-
 # var: advanced
 askadvanced() {
+    wallstatus advanced
     if ! iroot advancedsettings && ! imenu -c -i "edit advanced settings? (use only if you know what you're doing)"; then
         backpush advanced
         export ASKTASK="confirm"

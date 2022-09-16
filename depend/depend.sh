@@ -85,25 +85,8 @@ installdepends() {
     fi
 }
 
-while ! installdepends; do
-    if command -v notify-send &>/dev/null && pgrep Xorg; then
-        notify-send "downloading packages failed, please reconnect to internet"
-    fi
-
-    echo "downloading packages failed, please reconnect to internet"
-    sleep 10
-
-    if iroot automirror; then
-        # download new mirrors if on arch
-        if command -v reflector; then
-            reflector --latest 40 --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-        else
-            pacman-mirrors --geoip
-        fi
-    fi
-    updaterepos
-
-done
+pacman -Sy
+installdepends || exit 1
 
 # upgrade instantmenu
 if command -v instantmenu; then

@@ -206,13 +206,15 @@ fi
 
 # ensure instantmenu is working
 if ! instantmenu -v; then
-    if git -v 2>&1 | grep -i glibc; then
+    if instantmenu -v 2>&1 | grep -i glibc; then
         echo "upgrading glibc"
-        pacman -Sy glibc --noconfirm || exit 1
+        pacman -Sy
+        pacman -S archlinux-keyring --noconfirm || exit 1
+        pacman -S glibc --noconfirm || exit 1
     fi
     if ! instantmenu -v; then
         echo "instantmenu is not working on your system."
-        echo "installing instantOS requires git to be installed and working"
+        echo "installing instantOS requires instantmenu to be installed and working"
         exit 1
     fi
 fi

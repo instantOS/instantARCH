@@ -51,6 +51,11 @@ checkpackage() {
     if command -v "$1" || pacman -Qi "$1" &>/dev/null; then
         echo "$1 is installed"
     else
+        if [ -z "$CHECKPACKAGEKEYRING" ]; then
+            pacman -Sy
+            pacman -S archlinux-keyring --noconfirm || exit 1
+            export CHECKPACKAGEKEYRING="true"
+        fi
         pacloop "$1"
     fi
 }

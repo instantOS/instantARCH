@@ -204,6 +204,19 @@ fi
 ./depend/depend.sh
 ./artix/preinstall.sh
 
+# ensure instantmenu is working
+if ! instantmenu -v; then
+    if git -v 2>&1 | grep -i glibc; then
+        echo "upgrading glibc"
+        pacman -Sy glibc --noconfirm || exit 1
+    fi
+    if ! instantmenu -v; then
+        echo "instantmenu is not working on your system."
+        echo "installing instantOS requires git to be installed and working"
+        exit 1
+    fi
+fi
+
 if [ -n "$INSTANTARCHTESTING" ]; then
     echo "install config"
     iroot installtest 1

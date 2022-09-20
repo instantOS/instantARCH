@@ -24,11 +24,18 @@ fi
 
 # we're on arch
 if command -v pacstrap; then
-    pacstraploop base ${KERNEL} ${KERNEL}-headers linux-firmware reflector
+    pacstraploop base
+    pacstraploop ${KERNEL}
+    pacstraploop ${KERNEL}-headers
+    pacstraploop linux-firmware
+    pacstraploop reflector
 else
     # manjaro probably
     if command -v systemctl; then
-        pacstraploop base ${KERNEL} ${KERNEL}-headers linux-firmware
+        pacstraploop base
+        pacstraploop ${KERNEL}
+        pacstraploop ${KERNEL}-headers
+        pacstraploop linux-firmware
     else
         # non-systemd distro, probably artix
         pacstraploop runit elogind-runit base base-devel ${KERNEL} ${KERNEL}-headers linux-firmware

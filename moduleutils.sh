@@ -73,4 +73,6 @@ pacstraploop() {
         imenu -m "package installation failed. ensure you are connected to the internet"
         sleep 2
     done
+    # clean up cache so ramfs doesn't fill up
+    yes | pacman -Scc
 }

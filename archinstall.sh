@@ -294,12 +294,18 @@ if [ -z "$INSTANTARCHTESTING" ] && ! isdebug; then
     if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
         echo 'installation was successful'
         if command -v installapplet; then
-            notify-send "updloading logs"
+            notify-send "uploading logs"
             sleep 2
             if iroot logging; then
                 uploadlogs
                 sleep 2
             fi
+        fi
+        # xorg breaks on isos older than beta 7, instantdotfiles cli was removed in beta 7
+        # auto restart should only happen on beta 7 iso and newer
+        if command -v instantdotfiles
+        then
+            reboot
         fi
     else
         echo "installation failed

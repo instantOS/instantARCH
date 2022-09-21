@@ -292,14 +292,14 @@ fi
 # ask to reboot, upload error data if install failed
 if [ -z "$INSTANTARCHTESTING" ] && ! isdebug; then
     if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
+        echo 'installation was successful'
         if command -v installapplet; then
-            notify-send "rebooting"
+            notify-send "updloading logs"
             sleep 2
             if iroot logging; then
                 uploadlogs
                 sleep 2
             fi
-            reboot
         fi
     else
         echo "installation failed

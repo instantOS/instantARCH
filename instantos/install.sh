@@ -37,9 +37,6 @@ if ! grep -iq Manjaro /etc/os-release && ! command -v pamac; then
     echo 'EnableFlatpak' >>/etc/pamac.conf
 fi
 
-# needs yes because replacing packages has default no
-yes | pacman -S libxft-bgra
-
 cd ~/instantOS || exit 1
 
 # disable plymouth on artix

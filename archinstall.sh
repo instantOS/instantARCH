@@ -303,9 +303,17 @@ if [ -z "$INSTANTARCHTESTING" ] && ! isdebug; then
         fi
         # xorg breaks on isos older than beta 7, instantdotfiles cli was removed in beta 7
         # auto restart should only happen on beta 7 iso and newer
-        if command -v instantdotfiles
-        then
+        if command -v instantdotfiles; then
             reboot
+        else
+            # TODO: offer choice of uploading logs
+            FINISHCHOICE="$(echo '>>h              instantOS was installed successfully
+:g Continue using live session
+:y 勒Reboot Now' | instantmenu -q 'select using the mouse, keywords and arrow keys' -i -l 209 -h -1 -bw 8 -a 60 -w -1 -c)"
+            if grep -iq 'reboot now' <<<"$FINISHCHOICE"; then
+                echo "rebooting now"
+                reboot
+            fi
         fi
     else
         echo "installation failed

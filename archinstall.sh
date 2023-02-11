@@ -5,39 +5,34 @@
 ##############################################
 
 # Main startup script
+if [ "$1" = "test" ]; then
+    echo "using testing branch"
+    export TESTBRANCH="${2:-testing}"
+
+    if [ -n "$3" ]; then
+        export CUSTOMINSTANTREPO="$3"
+    fi
+    echo "using installer branch $TESTBRANCH"
+fi
+
+USEBRANCH="${TESTBRANCH:-main}"
+GITHUBRAW='https://raw.githubusercontent.com/instantos'
 
 source /root/instantARCH/moduleutils.sh
 
-# this is duplicate code but getting rid of it would require much more code
-
-updaterepos() {
-    pacman -Sy --noconfirm || return 1
-    if pacman -Si bash 2>&1 | grep -iq 'unrecognized archive'; then
-        echo 'getting new mirrorlist'
-        curl -s 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&use_mirror_status=on' | sed 's/^#//g' >/etc/pacman.d/mirrorlist
-        rm /var/lib/pacman/sync/*
-        pacman -Sy --noconfirm || return 1
-        if pacman -Si bash 2>&1 | grep -iq 'unrecognized archive'; then
-            echo 'still problems, shuffling mirrorlist'
-            curl -s 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&use_mirror_status=on' | sed 's/^#//g' | shuf >/etc/pacman.d/mirrorlist
-            rm /var/lib/pacman/sync/*
-        fi
-        pacman -Sy --noconfirm || return 1
-        if [ -z "$UPDATEDKEYRING" ]; then
-            pacman -S archlinux-keyring --noconfirm || exit 1
-            pacman-key --populate || exit 1
-            export UPDATEDKEYRING="true"
-        fi
-    fi
-}
-
-GITHUBRAW='https://raw.githubusercontent.com/instantos'
-
 if ! whoami | grep -iq '^root'; then
     echo "not running as root, switching"
-    curl -s "$GITHUBRAW"/instantARCH/main/archinstall.sh | sudo bash
+    curl -s "$GITHUBRAW/instantARCH/$USEBRANCH/archinstall.sh" | sudo bash
     exit
 fi
+
+# import general utils
+source <(curl -Ls "$GITHUBRAW/instantARCH/$USEBRANCH/utils.sh")
+
+command -v updaterepos &>/dev/null || {
+    echo "failed to import utils, github might be down"
+    exit 1
+}
 
 if [ -e /usr/share/liveutils ]; then
     pgrep instantmenu || echo "preparing installation
@@ -46,7 +41,7 @@ else
     # print logo
     echo ""
     echo ""
-    curl -s "$GITHUBRAW"'/instantLOGO/main/ascii.txt' | sed 's/^/    /g'
+    curl -s "$GITHUBRAW/instantLOGO/$USEBRANCH/ascii.txt" | sed 's/^/    /g'
     echo ""
     echo ""
 fi
@@ -129,10 +124,7 @@ if [ -e instantARCH ]; then
     rm -rf instantARCH
 fi
 
-if [ "$1" = "test" ]; then
-    echo "switching to testing branch"
-    export TESTBRANCH="${2:-testing}"
-
+if [ -n "$TESTBRANCH" ]; then
     if [ -n "$3" ]; then
         export CUSTOMINSTANTREPO="$3"
     fi

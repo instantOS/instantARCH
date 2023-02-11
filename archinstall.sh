@@ -23,6 +23,11 @@ updaterepos() {
             rm /var/lib/pacman/sync/*
         fi
         pacman -Sy --noconfirm || return 1
+        if [ -z "$UPDATEDKEYRING" ]; then
+            pacman -S archlinux-keyring --noconfirm || exit 1
+            pacman-key --populate || exit 1
+            export UPDATEDKEYRING="true"
+        fi
     fi
 }
 
@@ -47,27 +52,6 @@ else
 fi
 
 # this is duplicate code but getting rid of it would require much more code
-
-updaterepos() {
-    pacman -Sy --noconfirm || return 1
-    if pacman -Si bash 2>&1 | grep -iq 'unrecognized archive'; then
-        echo 'getting new mirrorlist'
-        curl -s 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&use_mirror_status=on' | sed 's/^#//g' >/etc/pacman.d/mirrorlist
-        rm /var/lib/pacman/sync/*
-        pacman -Sy --noconfirm || return 1
-        if pacman -Si bash 2>&1 | grep -iq 'unrecognized archive'; then
-            echo 'still problems, shuffling mirrorlist'
-            curl -s 'https://archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&use_mirror_status=on' | sed 's/^#//g' | shuf >/etc/pacman.d/mirrorlist
-            rm /var/lib/pacman/sync/*
-        fi
-        pacman -Sy --noconfirm || return 1
-        if [ -z "$UPDATEDKEYRING" ]; then
-            pacman -S archlinux-keyring --noconfirm || exit 1
-            pacman-key --populate || exit 1
-            export UPDATEDKEYRING="true"
-        fi
-    fi
-}
 
 # prevent multiple instances from being launched
 if [ -e /tmp/instantarchpid ]; then

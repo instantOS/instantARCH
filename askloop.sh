@@ -6,7 +6,8 @@
 source <(curl -Ls 'https://raw.githubusercontent.com/paperbenni/bash/master/import.sh')
 pb dialog
 
-command -v guimode || source /root/instantARCH/askutils.sh
+command -v backpush || source /root/instantARCH/askutils.sh
+source /root/instantARCH/utils.sh
 
 # enable choosing nothing to go back
 export IMENUACCEPTEMPTY="true"

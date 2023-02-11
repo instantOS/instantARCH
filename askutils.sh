@@ -1,9 +1,12 @@
 #!/bin/bash
 
+source /root/instantARCH/utils.sh
+
 # User questions are seperated into functions to be reused in alternative installers
 # like topinstall.sh
 
 # check if the install session is GUI or cli
+
 
 if [ -z "$INSTANTARCH" ]; then
     echo "defaulting instantarch location to /root/instantARCH"
@@ -15,18 +18,6 @@ alias goback='backmenu && return'
 alias checkback='IMENUEXIT="$?" && [ "$IMENUEXIT" = 2 ] && backmenu && return'
 
 IMENUEXIT=0
-
-guimode() {
-    if [ -e /opt/noguimode ]; then
-        return 1
-    fi
-
-    if [ -n "$GUIMODE" ]; then
-        return 0
-    else
-        return 1
-    fi
-}
 
 BACKSTACK="artix"
 

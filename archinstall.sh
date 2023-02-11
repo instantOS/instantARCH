@@ -26,9 +26,11 @@ updaterepos() {
     fi
 }
 
+GITHUBRAW='https://raw.githubusercontent.com/instantos'
+
 if ! whoami | grep -iq '^root'; then
     echo "not running as root, switching"
-    curl -s https://raw.githubusercontent.com/instantos/instantARCH/main/archinstall.sh | sudo bash
+    curl -s "$GITHUBRAW"/instantARCH/main/archinstall.sh | sudo bash
     exit
 fi
 
@@ -39,7 +41,7 @@ else
     # print logo
     echo ""
     echo ""
-    curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/main/ascii.txt' | sed 's/^/    /g'
+    curl -s "$GITHUBRAW"'/instantLOGO/main/ascii.txt' | sed 's/^/    /g'
     echo ""
     echo ""
 fi
@@ -59,6 +61,11 @@ updaterepos() {
             rm /var/lib/pacman/sync/*
         fi
         pacman -Sy --noconfirm || return 1
+        if [ -z "$UPDATEDKEYRING" ]; then
+            pacman -S archlinux-keyring --noconfirm || exit 1
+            pacman-key --populate || exit 1
+            export UPDATEDKEYRING="true"
+        fi
     fi
 }
 
@@ -81,15 +88,15 @@ command -v tzupdate && ! pgrep tzupdate && sudo tzupdate &
 
 # updated mirrorlist
 echo "updating mirrorlist"
-curl -s https://raw.githubusercontent.com/instantOS/instantOS/main/repo.sh | bash
+curl -s "$GITHUBRAW"/instantOS/main/repo.sh | bash
 
 # download imenu
-curl -s https://raw.githubusercontent.com/instantOS/imenu/main/imenu.sh >/usr/bin/imenu
+curl -s "$GITHUBRAW"/imenu/main/imenu.sh >/usr/bin/imenu
 chmod 755 /usr/bin/imenu
 
 while ! command -v imenu; do
     echo "installing imenu"
-    curl -s https://raw.githubusercontent.com/instantOS/imenu/main/imenu.sh >/usr/bin/imenu
+    curl -s "$GITHUBRAW"/imenu/main/imenu.sh >/usr/bin/imenu
     chmod 755 /usr/bin/imenu
 done
 
@@ -109,7 +116,7 @@ fi
 
 if ! command -v git; then
     while [ -z "$CONTINUEINSTALLATION" ]; do
-        if ! updaterepos || ! pacman -S git --noconfirm --needed; then
+        if ! updaterepos || ! yes | pacman -S git --needed; then
             yes | pacman -Scc
             updaterepos
         else
@@ -294,9 +301,9 @@ if [ -z "$INSTANTARCHTESTING" ] && ! isdebug; then
     if ! [ -e /opt/installfailed ] || ! [ -e /opt/installsuccess ]; then
         echo 'installation was successful'
         if command -v installapplet; then
-            notify-send "uploading logs"
             sleep 2
             if iroot logging; then
+                notify-send "uploading logs"
                 uploadlogs
                 sleep 2
             fi
@@ -335,7 +342,7 @@ echo "installation finished"
 
 echo ""
 echo ""
-curl -s 'https://raw.githubusercontent.com/instantOS/instantLOGO/main/ascii.txt' | sed 's/^/    /g'
+curl -s "$GITHUBRAW"'/instantLOGO/main/ascii.txt' | sed 's/^/    /g'
 echo ""
 echo ""
 

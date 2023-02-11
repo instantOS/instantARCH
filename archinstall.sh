@@ -187,18 +187,20 @@ fi
 ./depend/depend.sh
 ./artix/preinstall.sh
 
-# ensure instantmenu is working
-if ! instantmenu -v; then
-    if instantmenu -v 2>&1 | grep -i glibc; then
-        echo "upgrading glibc"
-        pacman -Sy
-        pacman -S archlinux-keyring --noconfirm || exit 1
-        pacman -S glibc --noconfirm || exit 1
-    fi
+if guimode; then
+    # ensure instantmenu is working
     if ! instantmenu -v; then
-        echo "instantmenu is not working on your system."
-        echo "installing instantOS requires instantmenu to be installed and working"
-        exit 1
+        if instantmenu -v 2>&1 | grep -i glibc; then
+            echo "upgrading glibc"
+            pacman -Sy
+            pacman -S archlinux-keyring --noconfirm || exit 1
+            pacman -S glibc --noconfirm || exit 1
+        fi
+        if ! instantmenu -v; then
+            echo "instantmenu is not working on your system."
+            echo "installing instantOS requires instantmenu to be installed and working"
+            exit 1
+        fi
     fi
 fi
 
@@ -290,7 +292,6 @@ if [ -z "$INSTANTARCHTESTING" ] && ! isdebug; then
             reboot
         else
             # TODO: offer choice of uploading logs
-            source /root/instantARCH/askutils.sh
             if guimode; then
                 while [ -z "$FINISHCHOICE" ]; do
                     FINISHCHOICE="$(echo '>>h              instantOS was installed successfully

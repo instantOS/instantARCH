@@ -314,9 +314,17 @@ if [ -z "$INSTANTARCHTESTING" ] && ! isdebug; then
             reboot
         else
             # TODO: offer choice of uploading logs
-            FINISHCHOICE="$(echo '>>h              instantOS was installed successfully
+            source /root/instantARCH/askutils.sh
+            if guimode; then
+                while [ -z "$FINISHCHOICE" ]; do
+                    FINISHCHOICE="$(echo '>>h              instantOS was installed successfully
 :g Continue using live session
 :y 勒Reboot Now' | instantmenu -q 'select using the mouse, keywords and arrow keys' -i -l 209 -h -1 -bw 8 -a 60 -w -1 -c)"
+                done
+            else
+                FINISHCHOICE="$(echo 'Continue using live session
+Reboot Now' | imenu -l "installation successful")"
+            fi
             if grep -iq 'reboot now' <<<"$FINISHCHOICE"; then
                 echo "rebooting now"
                 reboot

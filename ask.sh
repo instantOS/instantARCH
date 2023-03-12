@@ -13,6 +13,7 @@ mkdir config &>/dev/null
 source <(curl -Ls 'https://raw.githubusercontent.com/paperbenni/bash/master/import.sh')
 pb dialog
 
+source /root/instantARCH/utils.sh
 source /root/instantARCH/askutils.sh
 
 if [ -e /usr/share/liveutils ] && ! [ -e /tmp/nogui ] && ! [ -n "$CLIMODE" ]; then

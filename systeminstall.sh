@@ -42,6 +42,7 @@ if ! iroot onlyarch &&
     chrootscript "instantos/version" "collecting version info"
     chrootscript "user/shell" "setting up instantshell zsh configuration"
     chrootscript "user/appearance" "setting up default themes"
+    chrootscript "user/flatpak" "setting up flatpak"
 
     if grep -iq 'manjaro' /etc/os-release; then
         echo "manjaro extra steps"

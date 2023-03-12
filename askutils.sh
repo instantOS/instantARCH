@@ -63,7 +63,7 @@ wallstatus() {
 echoerr() { echo "$@" 1>&2; }
 
 getisopart() {
-    mount | grep 'on /run/archiso/sfs/airootfs' | grep -o '^[^ ]*'
+    mount | grep 'on /run/archiso\(/sfs\)\?/airootfs' | grep -o '^[^ ]*'
 }
 
 getisodevice() {

@@ -23,6 +23,11 @@ if command -v sv; then
     pacloop lightdm-runit networkmanager-runit
 fi
 
+if iroot encrypt
+then
+    pacloop lvm2
+fi
+
 # auto install processor microcode
 if uname -m | grep '^x'; then
     echo "installing microcode"

@@ -6,4 +6,5 @@ if iroot nobootloader; then
 fi
 
 # update grub to detect operating systems and apply the instantOS theme
+[ -e /boot/grub ] || mkdir /boot/grub
 grub-mkconfig -o /boot/grub/grub.cfg

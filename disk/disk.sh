@@ -34,10 +34,11 @@ type=83, bootable" | sfdisk "${DISK}"
         echo "encrypting disk"
         CPASSWORD="$(iroot cryptpassword)"
         echo -n "$CPASSWORD" | cryptsetup luksFormat "$ROOTPART" -
-        echo -n "$CPASSWORD" | cryptsetup open cryptlvm -
+        echo -n "$CPASSWORD" | cryptsetup open "$ROOTPART" cryptlvm -
         pvcreate /dev/mapper/cryptlvm
         vgcreate vg1 /dev/mapper/cryptlvm
         lvcreate -l '100%FREE' vg1 -n root
+        iroot lvmpart "$ROOTPART"
         iroot partroot /dev/vg1/root
     fi
 

@@ -22,6 +22,17 @@ updaterepos() {
     fi
 }
 
+# check if installation is run from an instantOS gui session or
+# other desktop or tty
+# all instantMENU specific features are turned off without guimode
+checkguimode() {
+    if [ -e /usr/share/liveutils ] && ! [ -e /tmp/nogui ] && [ -z "$CLIMODE" ]; then
+        echo "GUI Mode active"
+        export GUIMODE="True"
+        GUIMODE="True"
+    fi
+}
+
 guimode() {
     if [ -e /opt/noguimode ]; then
         return 1

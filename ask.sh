@@ -16,11 +16,7 @@ pb dialog
 source /root/instantARCH/utils.sh
 source /root/instantARCH/askutils.sh
 
-if [ -e /usr/share/liveutils ] && ! [ -e /tmp/nogui ] && ! [ -n "$CLIMODE" ]; then
-    echo "GUI Mode active"
-    export GUIMODE="True"
-    GUIMODE="True"
-fi
+checkguimode
 
 # switch imenu to using fzf and dialog
 if ! guimode; then

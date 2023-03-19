@@ -187,6 +187,8 @@ fi
 ./depend/depend.sh
 ./artix/preinstall.sh
 
+checkguimode
+
 if guimode; then
     # ensure instantmenu is working
     if ! instantmenu -v; then

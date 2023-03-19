@@ -309,11 +309,14 @@ Reboot Now' | imenu -l "installation successful")"
         fi
     else
         echo "installation failed
-please go to https://instantos.github.io/instantos.github.io/support
+please go to https://instantos.io/support
 for assistance or error reporting" | imenu -M
+
         echo "uploading error data"
         echo "installaion failed"
-        uploadlogs
+        if imenu -c "upload installation log for easier troubleshooting?"; then
+            uploadlogs
+        fi
     fi
 else
     uploadlogs

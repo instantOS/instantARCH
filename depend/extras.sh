@@ -5,10 +5,6 @@
 source /root/instantARCH/moduleutils.sh
 pacman -Sy --noconfirm
 
-if command -v systemctl; then
-    pacloop steam steam-native-runtime
-fi
-
 pacloop lshw
 HWINFO=:$(lshw)
 if grep -q 'dvd' <<<"$HWINFO" || grep -q 'cdrom' <<<"$HWINFO"; then

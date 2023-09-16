@@ -7,20 +7,18 @@ if [ -e /opt/topinstall ] || grep -iq manjaro /etc/os-release; then
     exit
 fi
 
-gensystemdswap() {
-    if command -v systemctl; then
-        # enable swap
-        systemctl enable systemd-swap
-        {
-            echo "swapfc_enabled=1"
-            echo "swapfc_max_count=8"
-        } >>/etc/systemd/swap.conf
+getswapfilesize() {
+    SIZE="$(free -g | awk '/^Mem:/ {print int(($2 + 1) / 2)}')"
+    if [ "$SIZE" -lt 1 ]
+    then
+        echo "1"
+    else
+        echo "$SIZE"
     fi
-    echo "installed systemd-swap"
 }
 
 genswapfile() {
-    dd if=/dev/zero of=/swapfile bs=1M count=512 status=progress
+    dd if=/dev/zero of=/swapfile bs=1M count="$(getswapfilesize)k" status=progress
     chmod 600 /swapfile
     mkswap /swapfile
     swapon /swapfile
@@ -35,10 +33,6 @@ if ! iroot swapmethod; then
 fi
 
 case $(iroot swapmethod) in
-systemd-swap)
-    gensystemdswap
-    exit
-    ;;
 swapfile)
     genswapfile
     ;;
@@ -46,6 +40,6 @@ none)
     exit
     ;;
 *)
-    gensystemdswap
+    genswapfile
     ;;
 esac

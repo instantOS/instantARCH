@@ -4,7 +4,6 @@ bash
 zsh
 xterm
 hdparm
-systemd-swap
 pipewire
 pipewire-pulse
 pipewire-jack

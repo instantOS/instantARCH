@@ -9,6 +9,7 @@ bash ./lang/xorg.sh
 sleep 0.5
 bash ./lang/locale.sh
 bash ./lang/apply.sh
+bash ./desktop/lightdm.sh
 
 # restore selected mirrorlist
 if [ -e "$IROOT"/mirrorlistbackup ] && grep -i "server" "$IROOT"/mirrorlistbackup; then

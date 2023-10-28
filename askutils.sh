@@ -145,8 +145,7 @@ Support for non-systemd setups is experimental
 Any issues should be solvable with manual intervention
 Here's a list of things that do not work from the installer and how to work around them:
 disk editor: set up partitions beforehand or use automatic partitioning
-keyboard locale: set it manually after installation in the settings
-systemd-swap (obviously)" | imenu -M
+keyboard locale: set it manually after installation in the settings" | imenu -M
 
 }
 
@@ -589,23 +588,19 @@ erase data' | imenu -l)" in
 # var: swap
 askswap() {
     wallstatus partitioning
-    CHOICE="$(echo 'auto allocate swap (default)
-use a swap file
+    CHOICE="$(echo 'use a swap file (default)
 use a swap partition' | imenu -l)"
 
     [ -z "$CHOICE" ] && goback
     export ASKTASK="grub"
 
     case "$CHOICE" in
-    *file)
+    *"(default)")
         echo "using a swap file"
         iroot swapmethod "swapfile"
         iroot swapfile 1
         iroot -r partswap
         # TODO
-        ;;
-    *"(default)")
-        echo "using systemd-swap"
         ;;
     *partition)
         echo "using a swap partition"
@@ -818,8 +813,7 @@ askplymouth() {
 }
 
 askswapfile() {
-    SWAPMETHOD="$(echo 'systemd-swap
-swapfile
+    SWAPMETHOD="$(echo 'swapfile
 none' | imenu -l 'choose swap method')"
 
     iroot swapmethod "$SWAPMETHOD"

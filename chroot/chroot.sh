@@ -22,20 +22,6 @@ sed -i 's/^#logind-check-graphical=.*/logind-check-graphical=true/' /etc/lightdm
 echo '
 # modified by instantARCH' >>/etc/lightdm/lightdm.conf
 
-# needed to get internet to work
-if ! [ -e /opt/topinstall ] && ! iroot partswap; then
-    if command -v systemctl; then
-        if ! grep -iq manjaro /etc/os-release; then
-            # enable swap
-            systemctl enable systemd-swap
-            {
-                echo "swapfc_enabled=1"
-                echo "swapfc_max_count=8"
-            } >>/etc/systemd/swap.conf
-        fi
-    fi
-fi
-
 sed -i 's/# %wheel/%wheel/g' /etc/sudoers
 sed -i '/wheel.*NOPASSWD/s/^/# /g' /etc/sudoers
 

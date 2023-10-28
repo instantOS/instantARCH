@@ -15,5 +15,6 @@ echo "
 
 " >>/etc/locale.gen
 sleep 0.3
+echo "generating locales"
 locale-gen
 

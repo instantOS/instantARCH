@@ -13,5 +13,8 @@ bash ./desktop/lightdm.sh
 
 # restore selected mirrorlist
 if [ -e "$IROOT"/mirrorlistbackup ] && grep -i "server" "$IROOT"/mirrorlistbackup; then
+    echo "restoring mirrorlist"
     cat "$IROOT"/mirrorlistbackup >/etc/pacman.d/mirrorlist
 fi
+
+echo "instantARCH postinstall finished"

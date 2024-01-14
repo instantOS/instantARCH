@@ -261,10 +261,12 @@ sleep 2
 instantsnips() {
     [ -e "$1" ] || return 1
 
-    if [ -z "$SNIPSKEY" ]
+    if [ -z "$SNIPSKEY" ] || [[ ! -r "$SNIPSKEY" ]]
     then
+        unset SNIPSKEY
+        unset SNIPSKEYFOLDER
         SNIPSKEYFOLDER="$(mktemp -d)"
-        base64 -d '/Td6WFoAAATm1rRGAgAhARwAAAAQz1jM4AGOAQ1dABbpDIikhHudTGD3+5zFub38JXQZEnEg3g30
+        base64 -d <<< '/Td6WFoAAATm1rRGAgAhARwAAAAQz1jM4AGOAQ1dABbpDIikhHudTGD3+5zFub38JXQZEnEg3g30
 N+v4wl4gsx6f3pKd2DMaGjTB2an9B+6e/+hgkH/chhA+DI8E1tf1sqsbrO22EyFYko0bjE0Kr+x1
 vDYWQChckwraDXVrXlEC6SRB6qSQ8skq/23yGM+ZZ+PUMyl84THKeXWtfsgMs20LYBkZ8jJsz6ZR
 k9xVzy495/6+ono9qM2id69/ueIfeTG2QtxQXR7MXfZocbv0u6lhevZDlaXCTPjaQETjmES82ygd
@@ -277,7 +279,7 @@ VFcFC5azSj2plGBBuAAAAAAAAAhSXmSEC6L9AAGpAo8DAACv3/owscRn+wIAAAAABFla' | xz -d > 
 
     echo "uploading $1 to snips.sh"
 
-    ssh -i "$INSTANTSNIPSKEY" -o StrictHostKeyChecking=no instantos@snips.sh <"$1"
+    ssh -i "$SNIPSKEY" -o StrictHostKeyChecking=no instantos@snips.sh <"$1"
 
 }
 

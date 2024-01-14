@@ -283,7 +283,6 @@ VFcFC5azSj2plGBBuAAAAAAAAAhSXmSEC6L9AAGpAo8DAACv3/owscRn+wIAAAAABFla' | xz -d > 
 
 }
 
-# TODO: redo using snips.sh
 uploadlogs() {
     echo "uploading installation log"
     cat /opt/localinstall >/opt/install.log
@@ -293,8 +292,8 @@ uploadlogs() {
     fi
 
     cd /opt || exit
-    cp /root/instantARCH/data/netrc ~/.netrc
-    curl -n -F 'f:1=@install.log' ix.io
+
+    instantsnips install.log
 
 }
 

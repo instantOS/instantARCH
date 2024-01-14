@@ -724,7 +724,7 @@ This could prevent the system from booting" | imenu -C
 }
 
 asklogs() {
-    imenu -c "backup installation logs to ix.io ? (disabled by default)"
+    imenu -c "backup installation logs to snips.sh ? (disabled by default)"
     checkback
     if [ "$IMENUEXIT" = 0 ]; then
         iroot logging 1

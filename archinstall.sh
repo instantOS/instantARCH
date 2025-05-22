@@ -18,7 +18,11 @@ fi
 USEBRANCH="${TESTBRANCH:-main}"
 GITHUBRAW='https://raw.githubusercontent.com/instantos'
 
-source /root/instantARCH/moduleutils.sh
+# TODO: why is this here?
+if [ -e /root/instantARCH/moduleutils.sh ]
+then
+    source /root/instantARCH/moduleutils.sh
+fi
 
 if ! whoami | grep -iq '^root'; then
     echo "not running as root, switching"

@@ -263,8 +263,6 @@ sudo pkill instantmenu
 sleep 2
 
 instantsnips() {
-    [ -e "$1" ] || return 1
-
     if [ -z "$SNIPSKEY" ] || [[ ! -r "$SNIPSKEY" ]]
     then
         unset SNIPSKEY
@@ -281,9 +279,9 @@ VFcFC5azSj2plGBBuAAAAAAAAAhSXmSEC6L9AAGpAo8DAACv3/owscRn+wIAAAAABFla' | xz -d > 
     fi
 
 
-    echo "uploading $1 to snips.sh"
+    echo "uploading to snips.sh"
 
-    ssh -i "$SNIPSKEY" -o StrictHostKeyChecking=no instantos@snips.sh <"$1"
+    ssh -i "$SNIPSKEY" -o StrictHostKeyChecking=no instantos@snips.sh
 
 }
 
@@ -297,7 +295,7 @@ uploadlogs() {
 
     cd /opt || exit
 
-    instantsnips install.log
+    instantsnips < install.log
 
 }
 

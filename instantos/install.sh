@@ -18,14 +18,7 @@ cd instantOS || exit 1
 bash repo.sh
 pacman -Sy --noconfirm
 
-if command -v systemctl; then
-    DEPENDPACKAGE="instantdepend"
-else
-    DEPENDPACKAGE="instantdepend-nosystemd"
-fi
-
-
-pacloop instantos "$DEPENDPACKAGE"
+pacloop instantos instantdepend
 
 
 # don't install arch pamac on Manjaro

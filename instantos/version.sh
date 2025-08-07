@@ -3,7 +3,7 @@
 # record version info for upgrading purposes
 
 echo "getting installation information"
-INSTANTOSVERSION=6
+INSTANTOSVERSION=8
 export INSTANTOSVERSION
 
 mkdir -p /etc/instantos

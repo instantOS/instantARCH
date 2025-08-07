@@ -19,6 +19,7 @@ REGION="$(iroot timezone)"
 ln -sf /usr/share/zoneinfo/$REGION /etc/localtime
 if command -v timedatectl; then
     timedatectl set-timezone "$REGION"
+    timedatectl set-ntp true
 fi
 
 hwclock --systohc

@@ -18,7 +18,11 @@ fi
 USEBRANCH="${TESTBRANCH:-main}"
 GITHUBRAW='https://raw.githubusercontent.com/instantos'
 
-source /root/instantARCH/moduleutils.sh
+# TODO: why is this here?
+if [ -e /root/instantARCH/moduleutils.sh ]
+then
+    source /root/instantARCH/moduleutils.sh
+fi
 
 if ! whoami | grep -iq '^root'; then
     echo "not running as root, switching"
@@ -293,8 +297,7 @@ VFcFC5azSj2plGBBuAAAAAAAAAhSXmSEC6L9AAGpAo8DAACv3/owscRn+wIAAAAABFla' | xz -d >"
     fi
 
     echo "uploading $1 to snips.sh"
-
-    ssh -i "$SNIPSKEY" -o StrictHostKeyChecking=no instantos@snips.sh <"$1"
+    ssh -i "$SNIPSKEY" -o StrictHostKeyChecking=no instantos@snips.sh
 
 }
 
@@ -308,7 +311,7 @@ uploadlogs() {
 
     cd /opt || exit
 
-    instantsnips install.log
+    instantsnips < install.log
 
 }
 

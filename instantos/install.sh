@@ -20,20 +20,15 @@ pacman -Sy --noconfirm
 
 pacloop instantos instantdepend
 
-
-# don't install arch pamac on Manjaro
-if ! grep -iq Manjaro /etc/os-release && ! command -v pamac; then
-    echo "installing pamac"
-    sudo pacman -S pamac-all --noconfirm
-    sed -i 's/#EnableAUR/EnableAUR/g' /etc/pamac.conf
-    sed -i 's/#CheckAURUpdates/CheckAURUpdates/g' /etc/pamac.conf
-    echo 'EnableFlatpak' >>/etc/pamac.conf
-fi
+echo "installing pamac"
+sudo pacman -S pamac-all --noconfirm
+sed -i 's/#EnableAUR/EnableAUR/g' /etc/pamac.conf
+sed -i 's/#CheckAURUpdates/CheckAURUpdates/g' /etc/pamac.conf
+echo 'EnableFlatpak' >>/etc/pamac.conf
 
 cd ~/instantOS || exit 1
 
-# disable plymouth on artix
-if ! command -v systemctl || iroot noplymouth; then
+if iroot noplymouth; then
     touch /opt/instantos/noplymouth
 fi
 
@@ -44,19 +39,10 @@ bash rootinstall.sh
 cat /usr/share/instantdotfiles/rootconfig/lightdm-gtk-greeter.conf >/etc/lightdm/lightdm-gtk-greeter.conf
 
 if ! iroot nobootloader; then
-    # fix grub on manjaro
-    if grep -iq 'manjaro' /etc/os-release; then
-        update-grub
-        mkinitcpio -P
-    else
-        # custom grub theme
-        sed -i 's~^#GRUB_THEME.*~GRUB_THEME=/usr/share/grub/themes/instantos/theme.txt~g' /etc/default/grub
-        update-grub
-    fi
+    # custom grub theme
+    sed -i 's~^#GRUB_THEME.*~GRUB_THEME=/usr/share/grub/themes/instantos/theme.txt~g' /etc/default/grub
+    update-grub
 fi
 
-# TODO: come up with alternative way for non systemd
-if command -v systemctl; then
-    echo "setting up trigger for first boot"
-    systemctl enable instantpostinstall
-fi
+echo "setting up trigger for first boot"
+systemctl enable instantpostinstall

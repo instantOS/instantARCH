@@ -2,3 +2,8 @@ keylayout
 config
 tags
 .nvimlog
+
+
+# Added by cargo
+
+/target

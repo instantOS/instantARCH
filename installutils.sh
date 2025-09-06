@@ -75,13 +75,7 @@ chrootscript() {
 
     testecho "running chroot script $1"
 
-    if command -v arch-chroot; then
-        arch-chroot /mnt "/root/instantARCH/${1}.sh" || serror
-    elif command -v manjaro-chroot; then
-        manjaro-chroot /mnt "/root/instantARCH/${1}.sh" || serror
-    else
-        artix-chroot /mnt "/root/instantARCH/${1}.sh" || serror
-    fi
+    arch-chroot /mnt "/root/instantARCH/${1}.sh" || serror
 
     echo "chroot: $1" >>/tmp/instantprogress
 

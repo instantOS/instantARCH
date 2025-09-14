@@ -23,14 +23,19 @@ impl StepCondition {
     }
 }
 
+//Todo answer enumm
+
 struct InstallationEngine {
     steps: Vec<InstallationStep>,
+    //Todo: hashmap with  answerss
 }
 
 impl InstallationEngine {
-    fn get_bext_step(self) -> Option<&mut InstallationStep> {
+    fn get_bext_step(self) -> Option<StepId> {
         for step in self.steps {
-
+            if step.condition.evaluate() {
+                return step.id.clone()
+            }
         }
     }
 }

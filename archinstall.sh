@@ -206,7 +206,6 @@ if isdebug; then
 fi
 
 ./depend/depend.sh
-./artix/preinstall.sh
 
 checkguimode
 

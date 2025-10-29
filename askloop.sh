@@ -27,22 +27,22 @@ backmenu() {
     fi
 
     case $BACKCHOICE in
-    *Back)
-        backpop
-        return 0
-        ;;
-    *Cancel*)
-        unset IMENUACCEPTEMPTY
-        if imenu -c "are you sure you want to cancel the installation?"; then
-            iroot cancelinstall 1
-            exit
-        fi
-        export IMENUACCEPTEMPTY="true"
-        ;;
-    *)
-        echo "continuing installation"
-        return 0
-        ;;
+        *Back)
+            backpop
+            return 0
+            ;;
+        *Cancel*)
+            unset IMENUACCEPTEMPTY
+            if imenu -c "are you sure you want to cancel the installation?"; then
+                iroot cancelinstall 1
+                exit
+            fi
+            export IMENUACCEPTEMPTY="true"
+            ;;
+        *)
+            echo "continuing installation"
+            return 0
+            ;;
     esac
 
 }
@@ -58,93 +58,93 @@ installerror() {
 askquestion() {
     echo "asking question $ASKTASK"
     case "$ASKTASK" in
-    ## artix warning
-    artix)
-        artixinfo
-        ;;
-        ## localisation questions
-    layout)
-        asklayout || installerror
-        ;;
-    locale)
-        asklocale || installerror
-        ;;
-    mirrors)
-        askmirrors
-        ;;
-    region)
-        askregion
-        ;;
-    drivers)
-        askdrivers
-        ;;
-    vm)
-        askvm
-        ;;
-        ## disk questions
-    installdisk)
-        askinstalldisk
-        ;;
-    partitioning)
-        askpartitioning
-        ;;
-    editparts)
-        askeditparts
-        ;;
-    root)
-        askroot
-        ;;
-    home)
-        askhome
-        ;;
-    grub)
-        askgrub
-        ;;
-    swap)
-        askswap
-        ;;
-    partswap)
-        askpartswap
-        ;;
-        ## naming/account questions
-    user)
-        askuser
-        ;;
-    hostname)
-        askhostname
-        ;;
-        ## Advanced options
-    advanced)
-        askadvanced
-        ;;
-    plymouth)
-        askplymouth
-        ;;
-    autologin)
-        askautologin
-        ;;
-    swapfile)
-        askswapfile
-        ;;
-    kernel)
-        askkernel
-        ;;
-    packages)
-        askpackages
-        ;;
-    logs)
-        asklogs
-        ;;
-    keyboardvariant)
-        askkeyboardvariant
-        ;;
-    confirm)
-        confirmask
-        ;;
-    *)
-        echo "error: unknown question"
-        exit 1
-        ;;
+        ## artix warning
+        artix)
+            artixinfo
+            ;;
+            ## localisation questions
+        layout)
+            asklayout || installerror
+            ;;
+        locale)
+            asklocale || installerror
+            ;;
+        mirrors)
+            askmirrors
+            ;;
+        region)
+            askregion
+            ;;
+        drivers)
+            askdrivers
+            ;;
+        vm)
+            askvm
+            ;;
+            ## disk questions
+        installdisk)
+            askinstalldisk
+            ;;
+        partitioning)
+            askpartitioning
+            ;;
+        editparts)
+            askeditparts
+            ;;
+        root)
+            askroot
+            ;;
+        home)
+            askhome
+            ;;
+        grub)
+            askgrub
+            ;;
+        swap)
+            askswap
+            ;;
+        partswap)
+            askpartswap
+            ;;
+            ## naming/account questions
+        user)
+            askuser
+            ;;
+        hostname)
+            askhostname
+            ;;
+            ## Advanced options
+        advanced)
+            askadvanced
+            ;;
+        plymouth)
+            askplymouth
+            ;;
+        autologin)
+            askautologin
+            ;;
+        swapfile)
+            askswapfile
+            ;;
+        kernel)
+            askkernel
+            ;;
+        packages)
+            askpackages
+            ;;
+        logs)
+            asklogs
+            ;;
+        keyboardvariant)
+            askkeyboardvariant
+            ;;
+        confirm)
+            confirmask
+            ;;
+        *)
+            echo "error: unknown question"
+            exit 1
+            ;;
     esac
 
 }

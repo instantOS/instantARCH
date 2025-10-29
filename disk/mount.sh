@@ -8,8 +8,7 @@ mountpart() {
         TMPPART="$(iroot "part$1")"
         echo "mounting $TMPPART to $2"
 
-        if ! [ -e "$2" ]
-        then
+        if ! [ -e "$2" ]; then
             echo "creating mount point $2"
             mkdir -p "$2"
         fi

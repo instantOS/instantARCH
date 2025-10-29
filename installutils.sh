@@ -98,21 +98,21 @@ debugmenu() {
         } | imenu -l "debug menu"
     )"
     case "$DEBUGCHOICE" in
-    *pause)
-        echo 'pausing installation'
-        touch /tmp/installpause
-        echo 'installation paused, waiting for removal of /tmp/installpause'
-        while [ -e /tmp/installpause ]; do
-            sleep 10
-        done
-        ;;
-    *cancel)
-        echo 'quitting installation'
-        echo 'TODO: implement'
-        ;;
-    *continue)
-        echo "continuing installation"
-        ;;
+        *pause)
+            echo 'pausing installation'
+            touch /tmp/installpause
+            echo 'installation paused, waiting for removal of /tmp/installpause'
+            while [ -e /tmp/installpause ]; do
+                sleep 10
+            done
+            ;;
+        *cancel)
+            echo 'quitting installation'
+            echo 'TODO: implement'
+            ;;
+        *continue)
+            echo "continuing installation"
+            ;;
     esac
     STARTDURATION=0
 

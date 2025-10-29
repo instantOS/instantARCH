@@ -7,7 +7,6 @@ source /root/instantARCH/utils.sh
 
 # check if the install session is GUI or cli
 
-
 if [ -z "$INSTANTARCH" ]; then
     echo "defaulting instantarch location to /root/instantARCH"
     INSTANTARCH="/root/instantARCH"
@@ -239,40 +238,40 @@ other" | imenu -l "which hypervisor is being used?")"
     [ -z "$HYPERVISOR" ] && goback
 
     case "$HYPERVISOR" in
-    kvm*)
-        if grep 'vendor' /proc/cpuinfo | grep -iq 'AMD'; then
-            echo "WARNING:
+        kvm*)
+            if grep 'vendor' /proc/cpuinfo | grep -iq 'AMD'; then
+                echo "WARNING:
         kvm/QEMU on AMD is not meant for desktop use and
         is lacking some graphics features.
         This installation will work, but some features will have to be disabled and
         others might not perform well. 
         It is highly recommended to use Virtualbox instead." | imenu -M
-            iroot kvm 1
-            if lshw -c video | grep -iq 'qxl'; then
-                echo "WARNING:
+                iroot kvm 1
+                if lshw -c video | grep -iq 'qxl'; then
+                    echo "WARNING:
 QXL graphics detected
 These may trigger a severe Xorg memory leak on kvm/QEMU on AMD,
 leading to degraded video and input performance,
 please switch your video card to either virtio or passthrough
 until this is fixed" | imenu -M
+                fi
             fi
-        fi
-        ;;
-    vmware)
-        iroot vmware 1
-        ;;
-    virtualbox)
-        iroot virtualbox 1
-        imenu -c "would you like to install virtualbox guest additions?"
-        checkback
-        if [ "$IMENUEXIT" = 0 ]; then
-            iroot guestadditions 1
-        fi
-        ;;
-    other)
-        iroot othervm 1
-        echo "selecting other"
-        ;;
+            ;;
+        vmware)
+            iroot vmware 1
+            ;;
+        virtualbox)
+            iroot virtualbox 1
+            imenu -c "would you like to install virtualbox guest additions?"
+            checkback
+            if [ "$IMENUEXIT" = 0 ]; then
+                iroot guestadditions 1
+            fi
+            ;;
+        other)
+            iroot othervm 1
+            echo "selecting other"
+            ;;
     esac
     backpush vm
 
@@ -373,19 +372,19 @@ askinstalldisk() {
 
         [ -z "$DISKCHOICE" ] && return
         case "$DISKCHOICE" in
-        cancel*)
+            cancel*)
 
-            unset IMENUACCEPTEMPTY
-            if imenu -c "are you sure you want to cancel the installation?"; then
-                iroot cancelinstall 1
-                exit
-            fi
-            export IMENUACCEPTEMPTY="true"
+                unset IMENUACCEPTEMPTY
+                if imenu -c "are you sure you want to cancel the installation?"; then
+                    iroot cancelinstall 1
+                    exit
+                fi
+                export IMENUACCEPTEMPTY="true"
 
-            ;;
-        *)
-            echo 'forcing installation to continue'
-            ;;
+                ;;
+            *)
+                echo 'forcing installation to continue'
+                ;;
         esac
 
     fi
@@ -450,29 +449,29 @@ use auto partitioning' | imenu -l)"
     [ -z "$STARTCHOICE" ] && goback
 
     case "$STARTCHOICE" in
-    edit*)
-        export ASKTASK="editparts"
-        ;;
-    choose*)
-        if [ -z "$(getpartitions)" ]; then
-            echo 'warning: your disk does not appear to have any partitions.
+        edit*)
+            export ASKTASK="editparts"
+            ;;
+        choose*)
+            if [ -z "$(getpartitions)" ]; then
+                echo 'warning: your disk does not appear to have any partitions.
             instantOS requires at least one partition.
             If you are unsure what this means it is suggested you use automatic partitioning' | imenu -M
 
-            imenu -c 'warning: installation without any partitions will likely not work. force continuation?'
-            checkback
-            if ! [ "$IMENUEXIT" = 0 ]; then
-                export ASKTASK="root"
-            else
-                export ASKTASK="installdisk"
+                imenu -c 'warning: installation without any partitions will likely not work. force continuation?'
+                checkback
+                if ! [ "$IMENUEXIT" = 0 ]; then
+                    export ASKTASK="root"
+                else
+                    export ASKTASK="installdisk"
+                fi
             fi
-        fi
-        export ASKTASK="root"
-        ;;
-    *partitioning)
-        iroot -r manualpartitioning
-        export ASKTASK="installdisk"
-        ;;
+            export ASKTASK="root"
+            ;;
+        *partitioning)
+            iroot -r manualpartitioning
+            export ASKTASK="installdisk"
+            ;;
     esac
 
     backpush partitioning
@@ -563,19 +562,19 @@ askhome() {
 
     case "$(echo 'keep current home data
 erase data' | imenu -l)" in
-    keep*)
-        echo "keeping data"
-        imenu -c "overwrite dotfiles? ( warning, disabling this can impact functionality )"
-        checkback
-        if ! [ "$IMENUEXIT" = 0 ]; then
-            iroot keepdotfiles 1
-        fi
+        keep*)
+            echo "keeping data"
+            imenu -c "overwrite dotfiles? ( warning, disabling this can impact functionality )"
+            checkback
+            if ! [ "$IMENUEXIT" = 0 ]; then
+                iroot keepdotfiles 1
+            fi
 
-        ;;
-    erase*)
-        echo "erasing"
-        iroot erasehome 1
-        ;;
+            ;;
+        erase*)
+            echo "erasing"
+            iroot erasehome 1
+            ;;
     esac
 
     iroot parthome "$HOMEPART"
@@ -595,17 +594,17 @@ use a swap partition' | imenu -l)"
     export ASKTASK="grub"
 
     case "$CHOICE" in
-    *"(default)")
-        echo "using a swap file"
-        iroot swapmethod "swapfile"
-        iroot swapfile 1
-        iroot -r partswap
-        # TODO
-        ;;
-    *partition)
-        echo "using a swap partition"
-        export ASKTASK="partswap"
-        ;;
+        *"(default)")
+            echo "using a swap file"
+            iroot swapmethod "swapfile"
+            iroot swapfile 1
+            iroot -r partswap
+            # TODO
+            ;;
+        *partition)
+            echo "using a swap partition"
+            export ASKTASK="partswap"
+            ;;
     esac
 
 }
@@ -1050,30 +1049,30 @@ edit options
     fi
 
     case "$CHOICE" in
-    *continue)
-        iroot confirm 1
-        export ASKCONFIRM="true"
-        ;;
-    *options)
-        echo "editing options"
-        questionmenu
-        ;;
-    "restart installation")
-        unset IMENUACCEPTEMPTY
-        if imenu -c "are you sure you want to restart the installation from the beginning?"; then
-            export ASKTASK="artix"
-        fi
-        export IMENUACCEPTEMPTY="true"
-        return
-        ;;
-    "cancel installation")
-        unset IMENUACCEPTEMPTY
-        if imenu -c "are you sure you want to cancel the installation?"; then
-            iroot cancelinstall 1
-            exit
-        fi
-        export IMENUACCEPTEMPTY="true"
-        ;;
+        *continue)
+            iroot confirm 1
+            export ASKCONFIRM="true"
+            ;;
+        *options)
+            echo "editing options"
+            questionmenu
+            ;;
+        "restart installation")
+            unset IMENUACCEPTEMPTY
+            if imenu -c "are you sure you want to restart the installation from the beginning?"; then
+                export ASKTASK="artix"
+            fi
+            export IMENUACCEPTEMPTY="true"
+            return
+            ;;
+        "cancel installation")
+            unset IMENUACCEPTEMPTY
+            if imenu -c "are you sure you want to cancel the installation?"; then
+                iroot cancelinstall 1
+                exit
+            fi
+            export IMENUACCEPTEMPTY="true"
+            ;;
     esac
 
 }

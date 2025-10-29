@@ -24,7 +24,7 @@ curl -s 'https://git.samba.org/samba.git/?p=samba.git;a=blob_plain;f=examples/sm
 if grep -q 'example' /tmp/sambaconfigexample; then
     echo "installing samba example config"
     mkdir /etc/samba
-    cat /tmp/sambaconfigexample > smb.conf
+    cat /tmp/sambaconfigexample >smb.conf
 fi
 pacman -S --noconfirm --needed networkmanager
 

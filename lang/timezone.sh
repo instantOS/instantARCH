@@ -25,4 +25,3 @@ fi
 hwclock --systohc
 
 echo "set timezone to $REGION"
-

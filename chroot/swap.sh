@@ -9,8 +9,7 @@ fi
 
 getswapfilesize() {
     SIZE="$(free -g | awk '/^Mem:/ {print int(($2 + 1) / 2)}')"
-    if [ "$SIZE" -lt 1 ]
-    then
+    if [ "$SIZE" -lt 1 ]; then
         echo "1"
     else
         echo "$SIZE"
@@ -33,13 +32,13 @@ if ! iroot swapmethod; then
 fi
 
 case $(iroot swapmethod) in
-swapfile)
-    genswapfile
-    ;;
-none)
-    exit
-    ;;
-*)
-    genswapfile
-    ;;
+    swapfile)
+        genswapfile
+        ;;
+    none)
+        exit
+        ;;
+    *)
+        genswapfile
+        ;;
 esac

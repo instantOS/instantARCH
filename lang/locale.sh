@@ -17,4 +17,3 @@ echo "
 sleep 0.3
 echo "generating locales"
 locale-gen
-

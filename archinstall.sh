@@ -19,8 +19,7 @@ USEBRANCH="${TESTBRANCH:-main}"
 GITHUBRAW='https://raw.githubusercontent.com/instantos'
 
 # TODO: why is this here?
-if [ -e /root/instantARCH/moduleutils.sh ]
-then
+if [ -e /root/instantARCH/moduleutils.sh ]; then
     source /root/instantARCH/moduleutils.sh
 fi
 
@@ -165,20 +164,20 @@ git rev-parse HEAD >config/instantarchversion
 # use alternative versions of the installer
 if [ -n "$1" ]; then
     case "$1" in
-    "manual")
-        if ! [ -e /root/manualarch ]; then
-            echo "no manual instantARCH version found. Please clone it to /root/manualarch"
-            sleep 5
-            echo "exiting"
-            exit
-        fi
-        rm -rf ./*
-        cp -r /root/manualarch/* .
-        export INSTANTARCHMANUAL="true"
-        ;;
-    *)
-        echo "running normal installer version"
-        ;;
+        "manual")
+            if ! [ -e /root/manualarch ]; then
+                echo "no manual instantARCH version found. Please clone it to /root/manualarch"
+                sleep 5
+                echo "exiting"
+                exit
+            fi
+            rm -rf ./*
+            cp -r /root/manualarch/* .
+            export INSTANTARCHMANUAL="true"
+            ;;
+        *)
+            echo "running normal installer version"
+            ;;
     esac
 
 fi
@@ -310,7 +309,7 @@ uploadlogs() {
 
     cd /opt || exit
 
-    instantsnips < install.log
+    instantsnips <install.log
 
 }
 

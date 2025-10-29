@@ -77,6 +77,7 @@ installdepends() {
     else
         echo "installing without upgrading"
 
+        checkpackage gum || return 1
         checkpackage fzf || return 1
         checkpackage expect || return 1
         checkpackage git || return 1

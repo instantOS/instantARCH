@@ -64,6 +64,7 @@ installdepends() {
 
     if ! [ -e /usr/share/liveutils ]; then
         pacloop fzf \
+            gum \
             expect \
             git \
             os-prober \

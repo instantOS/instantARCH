@@ -31,15 +31,10 @@ if command -v pacstrap; then
     pacstraploop reflector
 else
     # manjaro probably
-    if command -v systemctl; then
-        pacstraploop base
-        pacstraploop ${KERNEL}
-        pacstraploop ${KERNEL}-headers
-        pacstraploop linux-firmware
-    else
-        # non-systemd distro
-        pacstraploop runit elogind-runit base base-devel ${KERNEL} ${KERNEL}-headers linux-firmware
-    fi
+    pacstraploop base
+    pacstraploop ${KERNEL}
+    pacstraploop ${KERNEL}-headers
+    pacstraploop linux-firmware
 fi
 
 # Some arch based distros have the command renamed to fstabgen

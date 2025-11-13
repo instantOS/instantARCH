@@ -2,7 +2,7 @@
 
 # enables trim if the root disk supports it
 
-command -v systemctl || exit
+
 
 DISK="$(iroot disk)"
 

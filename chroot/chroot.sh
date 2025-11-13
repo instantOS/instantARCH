@@ -27,10 +27,8 @@ sed -i '/wheel.*NOPASSWD/s/^/# /g' /etc/sudoers
 
 echo 'Defaults env_reset,pwfeedback' >>/etc/sudoers
 
-if command -v systemctl; then
-    systemctl enable lightdm
-    systemctl enable NetworkManager
-fi
+systemctl enable lightdm
+systemctl enable NetworkManager
 
 if ! iroot nobootloader; then
     if ! command -v update-grub &>/dev/null; then

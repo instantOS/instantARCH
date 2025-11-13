@@ -19,7 +19,7 @@ if iroot isvm; then
     else
         if iroot vmware || lspci | grep -i vmware; then
             pacloop open-vm-tools
-            command -v systemctl && sudo systemctl enable vmtoolsd.service
+            sudo systemctl enable vmtoolsd.service
         fi
         pacloop mesa xf86-video-vmware
     fi
@@ -35,12 +35,12 @@ else
             elif grep -iq "dkms" "$DRIVERFILE"; then
                 pacloop nvidia-dkms nvidia-utils
 
-                if ! uname -m | grep -q '^i' && command -v systemctl; then
+                if ! uname -m | grep -q '^i'; then
                     pacloop lib32-nvidia-utils
                 fi
             elif grep -iq "nvidia" "$DRIVERFILE"; then
                 pacloop nvidia nvidia-utils nvidia-lts
-                if ! uname -m | grep -q '^i' && command -v systemctl; then
+                if ! uname -m | grep -q '^i'; then
                     pacloop lib32-nvidia-utils
                 fi
             elif grep -iq "open" "$DRIVERFILE"; then
@@ -56,9 +56,7 @@ else
             pacloop mesa xf86-video-nouveau
         fi
         pacloop vulkan-icd-loader
-        if command -v systemctl; then
-            pacloop lib32-vulkan-icd-loader
-        fi
+        pacloop lib32-vulkan-icd-loader
     ## Intel
     elif lspci | grep -i vga | grep -i intel; then
         echo "intel integrated detected"
@@ -70,7 +68,7 @@ else
 fi
 
 # 32 bit mesa
-if ! uname -m | grep -q '^i' && command -v systemctl; then
+if ! uname -m | grep -q '^i'; then
     pacloop lib32-mesa
 fi
 

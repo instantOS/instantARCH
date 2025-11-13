@@ -18,7 +18,7 @@ alias checkback='IMENUEXIT="$?" && [ "$IMENUEXIT" = 2 ] && backmenu && return'
 
 IMENUEXIT=0
 
-BACKSTACK="artix"
+BACKSTACK=""
 
 # add element to back stack
 backpush() {
@@ -129,24 +129,7 @@ cancel partition selection' | imenu -l ' ')"
     echo "$RETURNPART"
 }
 
-# var: artix!
-artixinfo() {
-    backpush artix
-    export ASKTASK="layout"
 
-    if command -v systemctl; then
-        echo "regular arch based iso detected"
-        return
-    fi
-
-    echo "You appear to be installing the non-systemd version of instantOS.
-Support for non-systemd setups is experimental
-Any issues should be solvable with manual intervention
-Here's a list of things that do not work from the installer and how to work around them:
-disk editor: set up partitions beforehand or use automatic partitioning
-keyboard locale: set it manually after installation in the settings" | imenu -M
-
-}
 
 # ask for keyboard layout
 # var: layout
@@ -1060,7 +1043,7 @@ edit options
         "restart installation")
             unset IMENUACCEPTEMPTY
             if imenu -c "are you sure you want to restart the installation from the beginning?"; then
-                export ASKTASK="artix"
+                export ASKTASK=""
             fi
             export IMENUACCEPTEMPTY="true"
             return

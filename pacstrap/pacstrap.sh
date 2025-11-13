@@ -37,7 +37,7 @@ else
         pacstraploop ${KERNEL}-headers
         pacstraploop linux-firmware
     else
-        # non-systemd distro, probably artix
+        # non-systemd distro
         pacstraploop runit elogind-runit base base-devel ${KERNEL} ${KERNEL}-headers linux-firmware
     fi
 fi

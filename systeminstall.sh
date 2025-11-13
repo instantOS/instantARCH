@@ -8,7 +8,7 @@ source /root/instantARCH/installutils.sh || exit 1
 chrootscript "depend/depend" "preparing installer packages"
 chrootscript "depend/depend" "preparing installer packages"
 
-chrootscript "artix/preinstall" "applying artix fixes"
+
 chrootscript "depend/system" "installing dependencies"
 chrootscript "chroot/chroot" "configuring system"
 chrootscript "chroot/drivers" "installing drivers"
@@ -51,7 +51,7 @@ if ! iroot onlyarch &&
 fi
 
 chrootscript "lang/locale" "setting locale"
-chrootscript "artix/postinstall" "checking for reverting artix fixes"
+
 chrootscript "chroot/clean" "cleaning pacman cache"
 chrootscript "chroot/cacheclean" "cleaning pacman cache"
 

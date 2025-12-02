@@ -28,10 +28,6 @@ if grep -q 'example' /tmp/sambaconfigexample; then
 fi
 pacman -S --noconfirm --needed networkmanager
 
-if command -v systemctl; then
-    hostnamectl set-hostname "$NEWHOSTNAME"
-    systemctl enable NetworkManager
-    systemctl enable sshd
-else
-    echo "no systemd detected, please manually enable sshd and networkmanager"
-fi
+hostnamectl set-hostname "$NEWHOSTNAME"
+systemctl enable NetworkManager
+systemctl enable sshd

@@ -17,11 +17,7 @@ done
 
 pacloop $(cat "$INSTANTARCH"/data/packages/system)
 
-# artix packages
-if command -v sv; then
-    echo "installing additional runit packages"
-    pacloop lightdm-runit networkmanager-runit
-fi
+
 
 # auto install processor microcode
 if uname -m | grep '^x'; then

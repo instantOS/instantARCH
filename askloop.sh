@@ -48,7 +48,7 @@ backmenu() {
 }
 
 # starting point
-export ASKTASK=artix
+export ASKTASK=""
 
 installerror() {
     imenu -m "there has been an error in the installer"
@@ -58,11 +58,7 @@ installerror() {
 askquestion() {
     echo "asking question $ASKTASK"
     case "$ASKTASK" in
-        ## artix warning
-        artix)
-            artixinfo
-            ;;
-            ## localisation questions
+        ## localisation questions
         layout)
             asklayout || installerror
             ;;
@@ -151,7 +147,7 @@ askquestion() {
 
 askloop() {
     while [ -z "$ASKCONFIRM" ]; do
-        [ -z "$ASKTASK" ] && ASKTASK='artix'
+        [ -z "$ASKTASK" ] && ASKTASK='layout'
         askquestion
     done
     echo "confirmed selection"

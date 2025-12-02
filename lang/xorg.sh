@@ -16,11 +16,9 @@ if pgrep Xorg; then
     setxkbmap -layout "$NEWXORG"
 fi
 
-if command -v localectl; then
-    localectl --no-convert set-x11-keymap "$NEWXORG"
-    if [ -n "$NEWKEYMAP" ]; then
-        echo "setting global keymap to $NEWKEYMAP"
-        # set tty keymap
-        localectl --no-convert set-keymap "$NEWKEYMAP"
-    fi
+localectl --no-convert set-x11-keymap "$NEWXORG"
+if [ -n "$NEWKEYMAP" ]; then
+    echo "setting global keymap to $NEWKEYMAP"
+    # set tty keymap
+    localectl --no-convert set-keymap "$NEWKEYMAP"
 fi

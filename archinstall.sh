@@ -240,7 +240,6 @@ cd /root/instantARCH || exit
         echo "ask failed" && exit
     else
         rm /opt/instantos/installcanceled
-        instantwallpaper set /usr/share/instantwallpaper/defaultphoto.png
         # clear up installation data
 
         rm -rf /root/instantARCH
